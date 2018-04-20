@@ -1,0 +1,62 @@
+{% import "bootstrap/utils.html" as utils %}
+{% extends "bootstrap/base.html" %}
+{% block title %}
+    {% if title %}
+        {{ title }} - AutoMO
+    {% else %}
+        AutomO
+    {% endif %}
+{% endblock %}
+{% block navbar %}
+    <nav class="navbar navbar-dark navbar-expand-sm sticky-top bg-dark">
+        <a class="navbar-brand" href="{{ url_for('main.homepage') }}">
+            AutoMO
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarToggler">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main.homepage') }}">
+                        Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        Patients
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav justify-content-end">
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.user') }}">
+                        <span class="glyphicon glyphicon-user"></span>
+                        {{ current_user.complete_name }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.logout') }}">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Logout
+                    </a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.login') }}">
+                        <span class="glyphicon glyphicon-log-in"></span>
+                        Login
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    {{ utils.flashed_messages() }}
+{% endblock %}
+{% block content %}
+    <main class="container mt-2">
+        {% block main %}{% endblock %}
+    </main>
+{% endblock %}
