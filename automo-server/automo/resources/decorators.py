@@ -1,15 +1,15 @@
 from functools import wraps
-from flask import abort
-from flask_login import current_user
+from flask import g, abort
 
-from .models import Permission
+from ..models import Permission
+from .errors import forbidden
 
 def permission_required(permission):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            if not current_user.can(permission):
-                abort(403)
+            if not g.current_user.can(permission):
+                return forbidden("Insufficient Permission")
             return f(*args, **kwargs)
         return decorated_function
     return decorator
