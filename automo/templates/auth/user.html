@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}User {{ current_user.complete_name }}{% endblock %}
+
+{% block main %}
+<div class="page-header">
+    <h2>
+      {{ current_user.complete_name }}
+      <small class="text-muted">[{{ current_user.role.name }}]</small>
+    </h2>
+</div>
+<div class="col-md-4">
+    <ul class="nav">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('auth.change_password') }}">Change Password</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">.</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">.</a>
+        </li>
+      </ul>
+</div>
+{% endblock %}

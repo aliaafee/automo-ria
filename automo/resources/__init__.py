@@ -1,8 +1,7 @@
 from flask import Blueprint
-from flask_restful import Api
+#from flask_restful import Api
 
-api_bp = Blueprint('api', __name__, url_prefix="/api")
-api = Api(api_bp)
+api = Blueprint('api', __name__, url_prefix="/api")
+#api = Api(api_blueprint)
 
-from .patients import Patients
-from . import errors
+from . import users, authentication, index, patients, errors

@@ -3,10 +3,22 @@ from sqlalchemy.orm import configure_mappers
 import sqlalchemy_continuum
 
 
+def fetch_current_user():
+    from flask.globals import _app_ctx_stack, _request_ctx_stack
+    from flask import g
+
+    if _app_ctx_stack.top is None or _request_ctx_stack.top is None:
+        return
+    try:
+        return g.current_user.id
+    except AttributeError:
+        return
+
 sqlalchemy_continuum.make_versioned(
-    plugins=[sqlalchemy_continuum.plugins.FlaskPlugin()]
+    plugins=[sqlalchemy_continuum.plugins.FlaskPlugin(fetch_current_user)]
 )
 
+from .role import Role, Permission
 from .user import User
 from .icd10 import Icd10Modifier, Icd10ModifierClass, Icd10Class
 from .patient import Patient

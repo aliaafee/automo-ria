@@ -16,7 +16,7 @@ def make_shell_context():
         app=app,
         db=db,
         md=models,
-        utilities=utilities
+        util=utilities
     )
 
 manager.add_command("shell", Shell(make_context=make_shell_context))

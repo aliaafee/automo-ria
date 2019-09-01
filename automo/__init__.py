@@ -8,9 +8,9 @@ from flask_bootstrap import Bootstrap
 from config import config
 
 db = SQLAlchemy()
-login_manager = LoginManager()
+#login_manager = LoginManager()
 migrate = Migrate()
-bootstrap = Bootstrap()
+#bootstrap = Bootstrap()
 
 
 def create_app(config_name):
@@ -20,19 +20,22 @@ def create_app(config_name):
 
     db.init_app(app)
     migrate.init_app(app, db)
-    bootstrap.init_app(app)
+    #bootstrap.init_app(app)
 
-    login_manager.init_app(app)
-    login_manager.login_view = 'auth.login'
-    login_manager.login_message = "You must be logged in to access this page."
+    #login_manager.init_app(app)
+    #login_manager.login_view = 'auth.login'
+    #login_manager.login_message = "You must be logged in to access this page."
 
-    from .blueprints import main_blueprint 
-    app.register_blueprint(main_blueprint)
+    #from .blueprints import main_blueprint 
+    #app.register_blueprint(main_blueprint)
 
-    from .blueprints import auth_blueprint
-    app.register_blueprint(auth_blueprint)
+    #from .blueprints import auth_blueprint
+    #app.register_blueprint(auth_blueprint)
 
-    from .resources import api_bp
-    app.register_blueprint(api_bp)
+    #from .blueprints import admin_blueprint
+    #app.register_blueprint(admin_blueprint)
+
+    from .resources import api
+    app.register_blueprint(api)
 
     return app
