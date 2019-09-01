@@ -8,7 +8,6 @@ from .authentication import auth
 from . import errors
 
 @api.route("/")
-@auth.login_required
 def main():
     result = {
         'patients' : url_for('api.patients')

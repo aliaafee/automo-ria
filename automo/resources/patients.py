@@ -12,7 +12,6 @@ from . import errors
 
 
 @api.route("/patients/")
-@auth.login_required
 def patients():
     patients = md.Patient.query.all()
 
@@ -26,7 +25,6 @@ def patients():
 
 
 @api.route("/patients/<int:patient_id>")
-@auth.login_required
 def patient(patient_id):
     patient = md.Patient.query.get(patient_id)
 
@@ -43,7 +41,6 @@ def patient(patient_id):
 
 
 @api.route("/patients/<int:patient_id>/versions/")
-@auth.login_required
 def patient_versions(patient_id):
     patient = md.Patient.query.get(patient_id)
 
@@ -63,7 +60,6 @@ def patient_versions(patient_id):
 
 
 @api.route("/patients/<int:patient_id>/versions/<int:transaction_id>")
-@auth.login_required
 def patient_version(patient_id, transaction_id):
     PatientVersion = version_class(md.Patient)
 
@@ -83,7 +79,6 @@ def patient_version(patient_id, transaction_id):
 
 
 @api.route("/patients/<int:patient_id>/versions/<int:transaction_id>/transaction")
-@auth.login_required
 def patient_version_transaction(patient_id, transaction_id):
     PatientVersion = version_class(md.Patient)
 
