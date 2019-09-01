@@ -19,7 +19,7 @@ def patients():
     result = {}
     for patient in patients:
         result[patient.id] = {
-            'uri' : url_for('api.patient',patient_id=patient.id)
+            'uri' : url_for('api.patient', patient_id=patient.id, _external=True)
         }
 
     return jsonify(result)
@@ -36,13 +36,13 @@ def patient(patient_id):
     result = {
         'id' : patient.id,
         'name' : patient.name,
-        'versions' : url_for('api.patient_versions', patient_id=patient.id),
+        'versions' : url_for('api.patient_versions', patient_id=patient.id, _external=True),
     }
     
     return jsonify(result)
 
 
-@api.route("/patients/<int:patient_id>/versions")
+@api.route("/patients/<int:patient_id>/versions/")
 @auth.login_required
 def patient_versions(patient_id):
     patient = md.Patient.query.get(patient_id)
@@ -56,7 +56,7 @@ def patient_versions(patient_id):
     for version in versions:
         result[version.transaction_id] = {
             "url" : url_for('api.patient_version',patient_id=patient.id,
-                            transaction_id=version.transaction_id)
+                            transaction_id=version.transaction_id, _external=True)
         }
 
     return jsonify(result)   
@@ -76,7 +76,7 @@ def patient_version(patient_id, transaction_id):
         'id' : patient_id,
         'name' : patient_version.name,
         'transaction' : url_for('api.patient_version_transaction',patient_id=patient_id,
-                                transaction_id=transaction_id)
+                                transaction_id=transaction_id, _external=True)
     }
 
     return jsonify(result)
@@ -97,7 +97,7 @@ def patient_version_transaction(patient_id, transaction_id):
     result = {
         'id' : transaction.id,
         'issued_at': transaction.issued_at,
-        'user' : url_for('api.user',username=transaction.user.username),
+        'user' : url_for('api.user',username=transaction.user.username, _external=True),
         'remote_addr': transaction.remote_addr
     }
 
