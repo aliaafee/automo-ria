@@ -51,6 +51,6 @@ from .encounters import Encounter,\
 from .complicationgrade import ComplicationGrade
 from .prescription import Prescription
 from .drug import Drug
-from .personnel import Personnel
+from .personnel import Personnel, Doctor, MedicalOfficer, Nurse
 
 configure_mappers()

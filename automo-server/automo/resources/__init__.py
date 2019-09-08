@@ -4,7 +4,7 @@ from flask import Blueprint, g
 api = Blueprint('api', __name__, url_prefix="/api")
 #api = Api(api_blueprint)
 
-from . import users, authentication, index, patients, errors
+from . import users, authentication, index, patients, errors, problems, encounters
 
 @api.before_request
 @authentication.auth.login_required

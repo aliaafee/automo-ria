@@ -31,13 +31,25 @@ def patient(patient_id):
     if patient is None:
         return errors.resource_not_found("Patient with id {} not found.".format(patient_id))
 
-    result = {
-        'id' : patient.id,
-        'name' : patient.name,
-        'versions' : url_for('api.patient_versions', patient_id=patient.id, _external=True),
-    }
-    
-    return jsonify(result)
+    data = patient.get_serialized()
+
+    sane_data = {}
+    for key, value in data.items():
+        if type(value) == str:
+            sane_data[key] = value
+        elif type(value) == int:
+            sane_data[key] = value
+        elif value is None:
+            sane_data[key] = None
+        elif key == 'problems':
+            sane_data[key] = url_for('api.patient_problems', patient_id=patient.id, _external=True)
+        elif key == 'encounters':
+            sane_data[key] = url_for('api.patient_encounters', patient_id=patient.id, _external=True)
+        elif key == 'versions':
+            sane_data[key] = url_for('api.patient_versions', patient_id=patient.id, _external=True)
+        
+
+    return jsonify(sane_data)
 
 
 @api.route("/patients/<int:patient_id>/versions/")

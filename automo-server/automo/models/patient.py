@@ -168,6 +168,32 @@ class Patient(db.Model):
         self.encounters.append(encounter)
 
 
+    def get_serialized(self):
+        """Get the object as a dict"""
+        serialized_attrs = [
+            'id',
+            'hospital_no',
+            'national_id_no',
+            'name',
+            'time_of_birth',
+            'time_of_death',
+            'sex',
+            'allergies',
+            'phone_no',
+            'permanent_address',
+            'current_address',
+            'problems',
+            'encounters',
+            'active',
+            'age',
+            'versions'
+        ]
+        result = {}
+        for attr_name in serialized_attrs:
+            result[attr_name] = getattr(self, attr_name)
+        return result
+
+
     def latest_measurments(self, session=db.session):
         weight = None
         measurements = session.query(Measurements)\

@@ -106,6 +106,7 @@ class Admission(ClinicalEncounter):
     def end(self, session, end_time=None):
         """Ends the admission"""
 
+        """
         if self.complication_grade_id is None:
             surgical_enounters = session.query(SurgicalProcedure)\
                                     .filter(SurgicalProcedure.parent == self)
@@ -114,7 +115,8 @@ class Admission(ClinicalEncounter):
             else:
                 raise dbexception.AutoMODatabaseError("Surgical Complication Grade should be assigned before discharge.")
                 return
-
+        """
+        
         super(Admission, self).end(session, end_time)
 
         self.discharged_bed = self.bed
