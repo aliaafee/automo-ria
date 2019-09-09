@@ -2,9 +2,9 @@
 from .. import db
 from . import dbexception
 from .problem_encounter import problem_encounter_association_table
+from .mixins import SerializerMixin
 
-
-class Problem(db.Model):
+class Problem(SerializerMixin, db.Model):
     """The problem that the patient has, each problem has an icd10 code with relevant 
       modifiers, each problem can have multiple encounters. A problem has a start_date.
       Chronic problems eg: Hypertension do not have and end date. But acute problems that
@@ -15,6 +15,15 @@ class Problem(db.Model):
       TODO: Consider making the problems into a tree structure, eg: Dabetes Mellitus as
       root problem and child problem like Diabetic foot infections etc..."""
     __versioned__ = {}
+
+    serialized_attrs = [
+        'id',
+        'start_time',
+        'end_time',
+        'icd10class',
+        'icd10modifier_class',
+        'icd10modifier_extra_class'
+    ]
 
     id = db.Column(db.Integer, primary_key=True)
 

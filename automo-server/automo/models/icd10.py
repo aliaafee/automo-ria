@@ -1,10 +1,16 @@
 """Icd10 Classification"""
 from .. import db
+from .mixins import SerializerMixin
 
-
-class Icd10Modifier(db.Model):
+class Icd10Modifier(SerializerMixin, db.Model):
     """Icd10 Modifiers of classes"""
     __tablename__ = "icd10modifier"
+
+    serialized_attrs = [
+        'code',
+        'name',
+        'text'
+    ]
 
     code = db.Column(db.String(10), primary_key=True)
 
@@ -15,9 +21,15 @@ class Icd10Modifier(db.Model):
     classes = db.relationship("Icd10ModifierClass")
 
 
-class Icd10ModifierClass(db.Model):
+class Icd10ModifierClass(SerializerMixin, db.Model):
     """Icd10 Individual Modifier Codes"""
     __tablename__ = "icd10modifierclass"
+
+    serialized_attrs = [
+        'code',
+        'code_short',
+        'preferred'
+    ]
 
     code = db.Column(db.String(20), primary_key=True)
 
@@ -32,9 +44,14 @@ class Icd10ModifierClass(db.Model):
     modifier = db.relationship("Icd10Modifier", back_populates="classes")
 
 
-class Icd10Class(db.Model):
+class Icd10Class(SerializerMixin, db.Model):
     """Icd10 chapters, blocks and categories as a tree structure"""
     __tablename__ = "icd10class"
+
+    serialized_attrs = [
+        'code',
+        'preferred'
+    ]
 
     code = db.Column(db.String(10), primary_key=True)
 

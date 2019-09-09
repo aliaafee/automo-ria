@@ -5,9 +5,10 @@ from dateutil.relativedelta import relativedelta
 from ... import db
 from .. import dbexception
 from ..problem_encounter import problem_encounter_association_table
+from ..mixins import SerializerMixin
 
 
-class Encounter(db.Model):
+class Encounter(SerializerMixin, db.Model):
     """The encounter that the patient had with health facility, each encounter
       can be for single or multiple problems. the encounter object can be polymorphic,
       eg: HospitalStay and ClinicVisit are child classes. Possiblity of expanding
@@ -19,6 +20,17 @@ class Encounter(db.Model):
       Each encounter has a start time and end time, and is associated with a personnel, and 
       multiple notes."""
     __versioned__ = {}
+
+    serialized_attrs = [
+        'id',
+        'label',
+        'type',
+        'start_time',
+        'end_time',
+        'children',
+        'personnel_id',
+        'problems',
+    ]
 
     id = db.Column(db.Integer, primary_key=True)
 

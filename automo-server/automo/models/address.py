@@ -3,11 +3,21 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
 from .. import db
+from .mixins import SerializerMixin
 
-
-class Address(db.Model):
+class Address(SerializerMixin, db.Model):
     """Patient addresses"""
     __versioned__ = {}
+
+    serialized_attrs = [
+        'id',
+        'line_1',
+        'line_2',
+        'line_3',
+        'city',
+        'region',
+        'country'
+    ]
 
     id = db.Column(db.Integer, primary_key=True)
 

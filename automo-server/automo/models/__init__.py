@@ -18,6 +18,7 @@ sqlalchemy_continuum.make_versioned(
     plugins=[sqlalchemy_continuum.plugins.FlaskPlugin(fetch_current_user)]
 )
 
+
 from .role import Role, Permission
 from .user import User
 from .icd10 import Icd10Modifier, Icd10ModifierClass, Icd10Class
