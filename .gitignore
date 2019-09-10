@@ -7,3 +7,4 @@ patient-data*.sqlite
 *.spec
 .vscode
 __pycache__
+.directory
