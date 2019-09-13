@@ -8,7 +8,7 @@ from . import errors
 
 @api.route("/patients/<int:patient_id>/encounters/")
 def get_patient_encounters(patient_id):
-    patient = md.Patient.query.get(patient_id)
+    patient = md.Patient.query.get_or_404(patient_id)
 
     if patient is None:
         return errors.resource_not_found("Patient with id {} not found.".format(patient_id))
@@ -48,4 +48,4 @@ def get_patient_encounter(patient_id, encounter_id):
     if encounter is None:
         return errors.resource_not_found("Encounter not found.")
 
-    return jsonify(encounter.get_serilized)
+    return jsonify(encounter.get_serialized())

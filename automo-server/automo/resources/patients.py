@@ -46,10 +46,7 @@ def get_patients():
 
 @api.route("/patients/<int:patient_id>")
 def get_patient(patient_id):
-    patient = md.Patient.query.get(patient_id)
-
-    if patient is None:
-        return errors.resource_not_found("Patient with id {} not found.".format(patient_id))
+    patient = md.Patient.query.get_or_404(patient_id)
 
     data = patient.get_serialized()
 

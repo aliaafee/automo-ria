@@ -8,7 +8,7 @@ from datetime import datetime
 from flask_script import Command, Option
 
 from .icd10import import import_icd10
-from .models import User, Role, Patient, Address, Admission, Problem, Ward, Bed, Doctor, VitalSigns, SurgicalProcedure, RenalFunctionTest
+from .models import User, Role, Patient, Address, Admission, Problem, Ward, Bed, Doctor, VitalSigns, SurgicalProcedure, RenalFunctionTest, ClinicalEncounter
 from . import db
 
 
@@ -170,7 +170,7 @@ class FakeData(Command):
             db.session.commit()
 
             for patient in Patient.query.all():
-                for adm in patient.encounters:
+                for adm in ClinicalEncounter.query.filter_by(patient=patient):
                     for i in range(random.randint(1, 5)):
                         try:
                             adm.add_problem(random.choice(patient.problems))

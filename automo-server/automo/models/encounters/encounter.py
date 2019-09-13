@@ -17,8 +17,7 @@ class Encounter(SerializerMixin, db.Model):
       Each encounter instance can have multiple child encounter instances, for example
       a HospitalStay encounter instance can have a SurgicalProcedure as a child encounter
       instance.
-      Each encounter has a start time and end time, and is associated with a personnel, and 
-      multiple notes."""
+      Each encounter has a start time and end time, and is associated with a personnel."""
     __versioned__ = {}
 
     serialized_attrs = [
@@ -29,7 +28,7 @@ class Encounter(SerializerMixin, db.Model):
         'end_time',
         'children',
         'personnel_id',
-        'problems',
+        'problems'
     ]
 
     id = db.Column(db.Integer, primary_key=True)

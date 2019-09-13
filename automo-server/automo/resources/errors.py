@@ -1,4 +1,5 @@
 from flask.json import jsonify
+from . import api
 
 
 def resource_not_found(message=''):
@@ -6,14 +7,27 @@ def resource_not_found(message=''):
     response.status_code = 404
     return response
 
-
-def unauthorized(message):
+def unauthorized(message=''):
     response = jsonify({'error': 'unauthorized', 'message': message})
     response.status_code = 401
     return response
 
-
-def forbidden(message):
+def forbidden(message=''):
     response = jsonify({'error': 'forbidden', 'message': message})
     response.status_code = 403
     return response
+
+
+@api.app_errorhandler(404)
+def app_page_not_found(e):
+    return resource_not_found()
+
+
+@api.app_errorhandler(403)
+def app_forbidden(e):
+    return unauthorized()
+
+
+@api.app_errorhandler(500)
+def app_internal_server_error(e):
+    return "Internal Server Error", 500

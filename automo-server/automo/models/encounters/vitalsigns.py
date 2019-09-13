@@ -19,6 +19,19 @@ class VitalSigns(Encounter):
 
     label = "Vital Signs"
 
+    serialized_attrs = [
+        'id',
+        'label',
+        'type',
+        'start_time',
+        'record_time',
+        'pulse_rate',
+        'respiratory_rate',
+        'diastolic_bp',
+        'systolic_bp',
+        'temperature'
+    ]
+
     def set_record_time(self, record_time):
         """In this encounter start-time and end-time are same, use this attr
           to change both at the same time"""
