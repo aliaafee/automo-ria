@@ -1,5 +1,5 @@
 """Administrative Utilities"""
-from getpass import getpass
+import click
 from faker import Faker
 import random
 from datetime import timedelta
@@ -8,7 +8,7 @@ from datetime import datetime
 from flask_script import Command, Option
 
 from .icd10import import import_icd10
-from .models import User, Role, Patient, Address, Admission, Problem, Ward, Bed, Doctor
+from .models import User, Role, Patient, Address, Admission, Problem, Ward, Bed, Doctor, VitalSigns, SurgicalProcedure, RenalFunctionTest
 from . import db
 
 
@@ -30,8 +30,8 @@ class InstallCommand(Command):
         Role.insert_roles()
 
         root = User()
-        root.username = input("Administrator Username: ")
-        root.password = getpass("Administrator Password: ")
+        root.username = click.prompt("Administrator Username", type=str, default="admin", show_default=True)
+        root.password = click.prompt("Administrator Password", hide_input=True)
         root.role = Role.query.filter_by(permissions=0xff).first()
         db.session.add(root)
         db.session.commit()
@@ -50,19 +50,24 @@ class FakeData(Command):
         options = (
             Option('-d', '--doctors',
                    dest='doctors_count',
-                   default=3),
+                   default=3,
+                   type=int),
             Option('-w', '--wards',
                    dest='wards_count',
-                   default=3),
+                   default=3,
+                   type=int),
             Option('-p', '--patients',
                    dest='patients_count',
-                   default=5),
+                   default=5,
+                   type=int),
             Option('-r', '--problems',
                    dest='problems_count',
-                   default=5),
+                   default=5,
+                   type=int),
             Option('-e', '--encounters',
                    dest='encounters_count',
-                   default=5)
+                   default=5,
+                   type=int)
         )
         return options
 
@@ -90,64 +95,86 @@ class FakeData(Command):
         def f_icd10class():
             pass
 
-        docs = []
-        for i in range(doctors_count):
-            doc = Doctor()
-            doc.name = "Dr. {}".format(fake.name())
-            doc.record_card_no = str(random.randint(1000,9999))
-            db.session.add(doc)
-            docs.append(doc)
+        total_progress = doctors_count + wards_count + patients_count + patients_count
+
+        with click.progressbar(length=total_progress, label="Faking Data") as bar:
+            docs = []
+            for i in range(doctors_count):
+                doc = Doctor()
+                doc.name = "Dr. {}".format(fake.name())
+                doc.record_card_no = str(random.randint(1000,9999))
+                db.session.add(doc)
+                docs.append(doc)
+                bar.update(1)
 
 
-        wards = []
-        beds = []
-        for i in range(wards_count):
-            ward = Ward(name="Ward {}".format(i))
-            ward.bed_prefix = "w{}".format(i)
-            db.session.add(ward)
-            wards.append(ward)
-            for i in range(random.randint(10,15)):
-                bed = Bed(number=str(i))
-                db.session.add(bed)
-                beds.append(bed)
-                ward.beds.append(bed)
+            wards = []
+            beds = []
+            for i in range(wards_count):
+                ward = Ward(name="Ward {}".format(i))
+                ward.bed_prefix = "w{}".format(i)
+                db.session.add(ward)
+                wards.append(ward)
+                for i in range(random.randint(10,15)):
+                    bed = Bed(number=str(i))
+                    db.session.add(bed)
+                    beds.append(bed)
+                    ward.beds.append(bed)
+                bar.update(1)
 
 
-        for i in range(patients_count):
-            patient = Patient()
-            patient.name = fake.name()
-            patient.time_of_birth = f_datetime()
-            patient.permanent_address = address()
-            patient.current_address = address()
-            patient.phone_no = fake.phone_number()
-            patient.sex = random.choice(["F", "M"])
+            for i in range(patients_count):
+                patient = Patient()
+                patient.name = fake.name()
+                patient.time_of_birth = f_datetime()
+                patient.permanent_address = address()
+                patient.current_address = address()
+                patient.phone_no = fake.phone_number()
+                patient.sex = random.choice(["F", "M"])
 
-            db.session.add(patient)
+                db.session.add(patient)
 
-            for i in range(random.randint(1,problems_count)):
-                p = Problem()
-                p.icd10class_code = random.choice(["A","B","C"]) + "0" + str(random.randint(1,9))
-                p.start_time = f_datetime()
-                db.session.add(p)
-                patient.problems.append(p)
+                for i in range(random.randint(1,problems_count)):
+                    p = Problem()
+                    p.icd10class_code = random.choice(["A","B","C"]) + "0" + str(random.randint(1,9))
+                    p.start_time = f_datetime()
+                    db.session.add(p)
+                    patient.problems.append(p)
 
-            for i in range(random.randint(1,encounters_count)):
-                ad = patient.admit(
-                    random.choice(docs),
-                    random.choice(beds),
-                    f_datetime()
-                )
-                patient.discharge(
-                    ad.start_time + timedelta(days=(random.randint(1, 10)))
-                )
+                for i in range(random.randint(1,encounters_count)):
+                    ad = patient.admit(
+                        random.choice(docs),
+                        random.choice(beds),
+                        f_datetime()
+                    )
+                    for i in range(random.randint(0, 5)):
+                        ch = random.choice([1,2,3])
+                        e = None
+                        if ch is 1:
+                            e = VitalSigns()
+                            e.pulse_rate = 90
+                            e.diastolic_bp = 80
+                            e.systolic_bp = 120
+                        elif ch is 2:
+                            e = SurgicalProcedure()
+                            e.personnel = random.choice(docs)
+                        else:
+                            e = RenalFunctionTest()
+                            e.creatinine = 100
+                        ad.add_child_encounter(e)
+                    patient.discharge(
+                        ad.start_time + timedelta(days=(random.randint(1, 10)))
+                    )
+                bar.update(1)
 
-        db.session.commit()
+            db.session.commit()
 
-        for patient in Patient.query.all():
-            for adm in patient.encounters:
-                for i in range(random.randint(1, 5)):
-                    try:
-                        adm.add_problem(random.choice(patient.problems))
-                    except:
-                        pass
-                    db.session.commit()
+            for patient in Patient.query.all():
+                for adm in patient.encounters:
+                    for i in range(random.randint(1, 5)):
+                        try:
+                            adm.add_problem(random.choice(patient.problems))
+                        except:
+                            pass
+                        db.session.commit()
+                bar.update(1)

@@ -6,6 +6,7 @@ import dateutil.relativedelta
 from .. import db
 from .encounters import Encounter, Admission, Measurements
 from .mixins import SerializerMixin
+from . import dbexception
 
 
 class Patient(SerializerMixin, db.Model):
@@ -27,7 +28,7 @@ class Patient(SerializerMixin, db.Model):
         'permanent_address',
         'current_address',
         'problems',
-        'encounters',
+        #'encounters',
         'active'
     ]
     
@@ -127,39 +128,6 @@ class Patient(SerializerMixin, db.Model):
         )
 
         session.add(new_admission)
-
-        return new_admission
-
-
-    def admit_circumcision(self, doctor, bed, admission_time=None, session=db.session):
-        new_admission = self.admit(session, doctor, bed, admission_time=admission_time,
-                                   admission_class=CircumcisionAdmission)
-        new_admission.chief_complaints = config.CIRCUM_CHIEF_COMPLAINT
-        new_admission.preoperative_orders = config.CIRCUM_PREOP_ORDERS
-        new_admission.discharge_advice = config.CIRCUM_DISCHARGE_ADVICE
-        new_admission.follow_up = config.CIRCUM_FOLLOW_UP
-
-        problem = Problem()
-        problem.icd10class_code = "Z41.2"
-        problem.start_time = new_admission.start_time
-        self.problems.append(problem)
-        new_admission.add_problem(problem)
-
-        surgery = SurgicalProcedure()
-        surgery.personnel = doctor
-        surgery.start_time =  new_admission.start_time.date() + datetime.timedelta(days=1)
-        surgery.preoperative_diagnosis = "Circumcision"
-        surgery.postoperative_diagnosis = "Circumcision"
-        surgery.procedure_name = "Circumcision"
-        surgery.findings = ""
-        surgery.steps = ""
-        new_admission.add_child_encounter(surgery)
-
-        meds = string.split(config.CIRCUM_MEDS, ";")
-
-        for med in meds:
-            if med != "":
-                new_admission.prescribe_drug(session, None, med, "")
 
         return new_admission
 

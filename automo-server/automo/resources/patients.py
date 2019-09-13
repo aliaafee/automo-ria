@@ -1,4 +1,4 @@
-from flask import url_for, jsonify, g
+from flask import url_for, jsonify, g, request
 from flask_restful import Resource
 
 from sqlalchemy_continuum import version_class
@@ -12,20 +12,40 @@ from . import errors
 
 
 @api.route("/patients/")
-def patients():
-    patients = md.Patient.query.all()
+def get_patients():
+    page = request.args.get('page', 1, type=int)
+    pagination = md.Patient.query.paginate(
+        page, per_page=20, error_out=False
+    )
+    patients = pagination.items
+    prev = None
+    if pagination.has_prev:
+        prev = url_for('api.get_patients', page=page-1, _external=True)
+    next = None
+    if pagination.has_next:
+        next = url_for('api.get_patients', page=page+1, _external=True)
 
-    result = {}
+    patient_list = []
     for patient in patients:
-        result[patient.id] = {
-            'uri' : url_for('api.patient', patient_id=patient.id, _external=True)
-        }
+        patient_list.append({
+            'id': patient.id,
+            'hospital_no': patient.hospital_no,
+            'name': patient.name,
+            'sex': patient.sex,
+            'time_of_birth': patient.time_of_birth,
+            'url' : url_for('api.get_patient', patient_id=patient.id, _external=True)
+        })
 
-    return jsonify(result)
+    return jsonify({
+        'patients': patient_list,
+        'prev': prev,
+        'next': next,
+        'count': pagination.total
+    })
 
 
 @api.route("/patients/<int:patient_id>")
-def patient(patient_id):
+def get_patient(patient_id):
     patient = md.Patient.query.get(patient_id)
 
     if patient is None:
@@ -33,9 +53,11 @@ def patient(patient_id):
 
     data = patient.get_serialized()
 
+    data['encounters'] = url_for('api.get_patient_encounters', patient_id=patient.id, _external=True)
+
     return jsonify(data)
 
-
+"""
 @api.route("/patients/<int:patient_id>/versions/")
 def patient_versions(patient_id):
     patient = md.Patient.query.get(patient_id)
@@ -88,3 +110,4 @@ def patient_version_transaction(patient_id, transaction_id):
     }
 
     return jsonify(result)
+"""

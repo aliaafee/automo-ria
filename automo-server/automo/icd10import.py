@@ -3,6 +3,7 @@ import os.path
 import re
 from bs4 import BeautifulSoup, Tag
 from sqlalchemy import and_
+import click
 
 from .models import Icd10ModifierClass,\
                      Icd10Modifier,\
@@ -151,6 +152,7 @@ def import_icd10(filename, session):
             print("Importing Modifiers")
 
             modifiers = soup.find_all("Modifier")
+
             for modifier in modifiers:
                 if 'code' in modifier.attrs.keys():
                     new_modifier = Icd10Modifier(code=modifier['code'])
@@ -164,7 +166,7 @@ def import_icd10(filename, session):
                         new_modifier.note = rubrics['note']
 
                     session.add(new_modifier)
-            #session.commit()
+            session.commit()
 
             print("Importing Modifier Classification")
 
