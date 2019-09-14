@@ -1,0 +1,89 @@
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  background-color: rgb(245, 245, 245);
+}
+
+h1.pagetitle {
+  font-size: 12pt;
+  color: white;
+  text-align: center;
+  background-color: black;
+  margin: 0;
+  padding: 0.5em;
+}
+
+label {
+  width: 20pt;
+}
+
+body, input {
+  font: menu;
+  font-size: 11pt;
+}
+
+input, div, button {
+  outline: none;
+  margin: 0;
+  padding: 0.5em 0.5em;
+  margin: 0 0.25em;
+}
+
+.form-controls {
+  display: block;
+  text-align: center;
+}
+
+.form-actions {
+  display: block;
+  text-align: center;
+}
+
+input,button {
+  border: none;
+  padding: 0.5em 0.5em;
+  margin: 0.2em 0.2em;
+}
+
+.form-controls input {
+  width: 100%;
+}
+
+button {
+  background-color: silver;
+}
+
+button:hover {
+  background-color: rgb(214, 214, 214);
+}
+
+button:active {
+  background-color: rgb(173, 172, 172);
+}
+
+button.quit:hover {
+  background-color: rgb(250, 221, 221);
+}
+
+button.quit:active {
+  background-color: rgb(252, 181, 181);
+}
+
+.status {
+  color: red;
+}

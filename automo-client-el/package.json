@@ -1,16 +1,15 @@
 {
   "name": "automo-client-el",
   "version": "1.0.0",
-  "description": "Client for automo-server",
+  "description": "Client for AutoMO Server",
   "main": "./app/main.js",
-  "dependencies": {
-    "electron": "^6.0.8"
-  },
-  "devDependencies": {},
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ali Aafee",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^6.0.9"
+  }
 }
