@@ -10,7 +10,7 @@ app.on('ready', () => {
     show: false
   });
   mainWindow.webContents.loadURL(`file://${__dirname}/index.html`); // #A
-  //mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   loginWindow = new BrowserWindow({
     webPreferences: {nodeIntegration: true},
