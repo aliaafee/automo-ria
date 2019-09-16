@@ -3,32 +3,37 @@
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src *">
-        <link rel="stylesheet" href="css/style.css" type="text/css">
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/login.css" type="text/css">
+        <script src="jquery/jquery.min.js"></script>
+        <script>
+            window.jQuery = window.$ = require('jquery');
+        </script>
+        <script src="popper.js/umd/popper.min.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
         <title>AutoMO - Login</title>
         </head>
-    <body>
-    <section class="main">
-        <h1 class="pagetitle">AutoMO - Login</h1>
-        <form id="login-form">
-            <div class="form-controls">
-                <input id="indexurl" type="text" placeholder="Server" value="http://127.0.0.1:5000/api/">
-                <input id="username" type="text" placeholder="Username">
-                <input id="password" type="password" placeholder="Password">
+    <body class="text-center">
+    <div class="container">
+        <form id="login-form" class="form-signin">
+            <h1 class="h3 mb-3 font-weight-normal">AutoMO - Login</h1>
+            <div class="form-group">
+                <input id="indexurl" class="form-control" type="text" placeholder="Server" value="http://127.0.0.1:5000/api/">
+                <input id="username" class="form-control" type="text" placeholder="Username">
+                <input id="password" class="form-control" type="password" placeholder="Password">
             </div>
             <div class="form-actions">
-                <button id="login" type="submit">Login</button>
-                <button id="quit">Quit</button>
+                <button class="btn btn-primary btn-block" id="login" type="submit">Login</button>
+                <button class="btn btn-secondary btn-block" id="quit">Quit</button>
             </div>
-            <div class="form-controls">
-                <span class="status"></span>
+            <div class="status-bar">
+                <span id="status">&nbsp;</span>
             </div>
-        </form>  
-    </section>
+        </form>
+    </div>
 
     <script>
         require("./login")
     </script>
-
-  </body>
-
+    </body>
 </html>
