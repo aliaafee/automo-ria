@@ -64,6 +64,6 @@ body {
     border-top-right-radius: 0;
 }
 
-.form-signin .status {
-    margin: 10px;
+.form-signin #status .alert{
+    padding: 2px;
 }

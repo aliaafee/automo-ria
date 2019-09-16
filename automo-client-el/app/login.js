@@ -3,6 +3,7 @@ const ipc = require('electron').ipcRenderer;
 const txtIndexUrl = document.querySelector("#indexurl");
 const txtUsername = document.querySelector("#username");
 const txtPassword = document.querySelector("#password");
+const btnLogin = document.querySelector("#login")
 const btnQuit = document.querySelector("#quit");
 const statusBar = document.querySelector("#status");
 const loginForm = document.querySelector("#login-form");
@@ -17,7 +18,8 @@ loginForm.addEventListener('submit', (event) => {
     txtUsername.value = "";
     txtPassword.value = "";
     txtUsername.focus();
-    statusBar.innerHTML = "Logging in...";
+    statusBar.innerHTML = '<div class="alert alert-light" role="alert">&nbsp;</div>';
+    btnLogin.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Loggin in..';
 });
 
 btnQuit.addEventListener('click', () => {
@@ -25,12 +27,14 @@ btnQuit.addEventListener('click', () => {
 });
 
 ipc.on('login-failed', (event, arg) => {
-    statusBar.innerHTML = `${arg}`;
+    statusBar.innerHTML = `<div class="alert alert-danger" role="alert">${arg}</div>`;
+    btnLogin.innerHTML = 'Login';
     txtUsername.focus();
 })
 
 ipc.on('login-success', (event, arg) => {
-    statusBar.innerHTML = "";
+    btnLogin.innerHTML = 'Login';
+    statusBar.innerHTML = '<div class="alert alert-light" role="alert">&nbsp;</div>';
 })
 
 txtUsername.focus();
