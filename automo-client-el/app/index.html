@@ -1,29 +1,230 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src *">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="stylesheet" href="css/style.css" type="text/css">
-    <title>AutoMO</title>
-  </head>
-  <body>
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src *">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <h1>Patients</h1>
+    <!--<link rel="stylesheet" href="css/app.css">-->
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/index.css" type="text/css">
 
-    <section class="controls">
-      <button class="logout">Logout</button>
-      <button class="load-patient">Load Patient</button>
-    </section>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script>
+        window.jQuery = window.$ = require('jquery');
+    </script>
+    <script src="../node_modules/popper.js/dist/umd/popper.min.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../node_modules/feather-icons/dist/feather.min.js"></script>"
 
-    <section class="result">
-      
-    </section>
+    <title>AutoMO - Login</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-dark navbar-expand fixed-top bg-dark shadow p-0">
+        <!--navbar navbar-dark  bg-dark flex-md-nowrap p-0 shadow-->
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">
+            AutoMO
+        </a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+
+            </ul>
+            <ul class="navbar-nav justify-content-end">
+                <li class="nav-item">
+                    <a id="btn-username" class="nav-link" href="#">
+                        <span data-feather="user"></span>
+                        <span id="lbl-username">Username</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="btn-logout" class="nav-link" href="#">
+                        <span data-feather="log-out"></span>
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                    <!--Sidebar Section Heading-->
+                    <h6
+                        class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted">
+                        <span>Patients</span>
+                        <a class="d-flex align-items-center text-muted" href="#">
+                            <span data-feather="plus-circle"></span>
+                        </a>
+                    </h6>
+                    <!--Sidebar Section Items-->
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a id="btn-patient-list" class="nav-link" href="#">
+                                List All Patients
+                            </a>
+                        </li>
+                        <li class="nav-item pr-3 pl-3">
+                            <form>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text"><span data-feather="search"></span></div>
+                                    </div>
+                                    <input type="text" class="form-control" id="inlineFormInputGroup"
+                                        placeholder="Search">
+                                </div>
+                            </form>
+                        </li>
+                    </ul>
+                    <!--End Section-->
+                    <!--Sidebar Section Heading-->
+                    <h6
+                        class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted">
+                        <span>Section 2</span>
+                        <a class="d-flex align-items-center text-muted" href="#">
+                            <span data-feather="plus-circle"></span>
+                        </a>
+                    </h6>
+                    <!--Sidebar Section Items-->
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Item 1
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Item 2
+                            </a>
+                        </li>
+                    </ul>
+                    <!--End Section-->
+                    <!--Sidebar Section Heading-->
+                    <h6
+                        class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted">
+                        <span>Section 2</span>
+                        <a class="d-flex align-items-center text-muted" href="#">
+                            <span data-feather="plus-circle"></span>
+                        </a>
+                    </h6>
+                    <!--Sidebar Section Items-->
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Item 1
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Item 2
+                            </a>
+                        </li>
+                    </ul>
+                    <!--End Section-->
+                    <!--Sidebar Section Heading-->
+                    <h6
+                        class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted">
+                        <span>Section 2</span>
+                        <a class="d-flex align-items-center text-muted" href="#">
+                            <span data-feather="plus-circle"></span>
+                        </a>
+                    </h6>
+                    <!--Sidebar Section Items-->
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Item 1
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Item 2
+                            </a>
+                        </li>
+                    </ul>
+                    <!--End Section-->
+                    <!--Sidebar Section Heading-->
+                    <h6
+                        class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted">
+                        <span>Section 2</span>
+                        <a class="d-flex align-items-center text-muted" href="#">
+                            <span data-feather="plus-circle"></span>
+                        </a>
+                    </h6>
+                    <!--Sidebar Section Items-->
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Item 1
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Item 2
+                            </a>
+                        </li>
+                    </ul>
+                    <!--End Section-->
+                </div>
+            </nav>
+
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <div
+                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Patients</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group mr-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                            <span data-feather="calendar"></span>
+                            This week
+                        </button>
+                    </div>
+                </div>
+                <span id="results-section">
+
+                </span>
+            </main>
+        </div>
+    </div>
+
+    <footer class="footer fixed-bottom mt-auto py-2 px-2">
+        <div class="container-fluid text-muted">
+            <div class="row">
+                <div class="col-3">
+                    <span data-feather="database"></span>
+                    <span id="lbl-server-add"></span>
+                </div>
+                <div class="col">
+                    <span id="lbl-status">
+                        <span class="spinner-border spinner-border-sm"></span>
+                        <span id="lbl-status">Doing Some Work Status...</span>
+                    </span>
+
+                    <span id="lbl-status" class="text-danger">
+                        <span data-feather="alert-triangle"></span>
+                        <span id="lbl-status">Something bad</span>
+                    </span>
+
+                    <span id="lbl-status" class="text-success">
+                        <span data-feather="check-circle"></span>
+                        <span id="lbl-status">Success</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script>
-      require('./index');
+        feather.replace();
+        require("./index");
     </script>
-
-  </body>
+</body>
 
 </html>

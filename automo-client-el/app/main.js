@@ -7,7 +7,8 @@ app.on('ready', () => {
     console.log('Hello from Electron.');
     mainWindow = new BrowserWindow({
         webPreferences: { nodeIntegration: true },
-        show: false
+        show: false,
+        width: 1200, height:768
     });
     mainWindow.webContents.loadURL(`file://${__dirname}/index.html`); // #A
     mainWindow.webContents.openDevTools();

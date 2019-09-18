@@ -1,0 +1,6 @@
+// Variables -- this is where you defined the variables 
+//              BEFORE importing bootstrap which will use it's  
+//              defaults if the variable is not predefined.
+@import "_variables.scss";
+// Bootstrap
+@import '../../node_modules/bootstrap/scss/bootstrap.scss';
