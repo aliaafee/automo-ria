@@ -1,5 +1,6 @@
 const { ipcRenderer } = require('electron');
 const Connection = require("./js/connection");
+const Logger = require("./js/logger")
 
 const btn_username = document.querySelector('#btn-username');
 const lbl_username = document.querySelector('#lbl-username');
@@ -8,23 +9,26 @@ const lbl_server_add = $('#lbl-server-add');
 
 
 var conn = new Connection();
+var logger = new Logger($('#lbl-status'));
 
 
 ipcRenderer.on('login-try', (event, arg) => {
-    console.log("Trying to login");
+    logger.log_spinner("Attempting to Login...");
     conn.login(
         arg['index_url'],
         arg['username'],
         arg['password'],
         () => {
             ipcRenderer.send('login-success');
-            lbl_username.innerHTML = conn.user.username;
-            lbl_server_add.innerHTML = conn.index_url;
+            $('#lbl-username').html(conn.user.username);
+            $('#lbl-server-add').html(conn.index_url);
+            logger.log_success("Login Succesful.");
         },
         (errorMessage) => {
-            ipcRenderer.send('login-failed', errorMessage)
-            lbl_username.innerHTML = "";
-            lbl_server_add.innerHTML = "";
+            ipcRenderer.send('login-failed', errorMessage);
+            $('#lbl-username').html("");
+            $('#lbl-server-add').html("");
+            logger.log_error("Login Failed.");
         }
     )
 })
@@ -34,7 +38,7 @@ btn_logout.addEventListener('click', () => {
     conn.logout(
         () => {
             ipcRenderer.send('logout');
-            lbl_username.innerHTML = "";
+            $('#lbl-username').html("");
         }
     )
 })
@@ -60,6 +64,7 @@ function displayPatientList(data) {
 }
 
 $('#btn-patient-list').click(() => {
+    logger.log_spinner("Getting Patient List...");
     conn.get(
         conn.index_url,
         data => {
@@ -67,14 +72,17 @@ $('#btn-patient-list').click(() => {
                 data['patients'],
                 data => {
                     displayPatientList(data);
+                    logger.log_success("Got Patient List.");
                 },
                 error => {
                     console.log("Failed", error);
+                    logger.log_error("Failed to get Paient List.");
                 }
             )
         },
         errorMessage => {
             console.log("Failed:", errorMessage);
+            logger.log_error("Failed to get Paient List.");
         }
     );
 });
