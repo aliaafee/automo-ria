@@ -11,7 +11,7 @@ class Connection {
 
 
     login(index_url, username, password, on_success, on_failed) {
-        this.logger.log_spinner(`User ${username} attemting to login...`);
+        this.logger.log_spinner(`User '${username}' attemting to login...`);
         this.index_url = index_url;
         this.user = new User();
         this.user.login(
@@ -20,11 +20,11 @@ class Connection {
             password,
             () => {
                 on_success();
-                this.logger.log_success(`User ${username} logged in.`);
+                this.logger.log_success(`User '${username}' logged in.`);
             },
             (error) => {
                 on_failed(error);
-                this.logger.log_error(`Login failed for ${error.message}.`);
+                this.logger.log_error(`Login failed for '${username}'. ${error.message}`);
             }
         )
     }

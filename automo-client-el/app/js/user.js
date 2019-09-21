@@ -105,7 +105,11 @@ class User {
                 );
             })
             .catch((error) => {
-                on_failed(new Error(`Login error. ${error.message}`));
+                if (error.status == 401) {
+                    on_failed(new Error('Invalid Username or Password'));
+                } else {
+                    on_failed(new Error(`Login error. ${error.message}`));
+                }
             })
     }
 }

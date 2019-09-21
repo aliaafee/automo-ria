@@ -20,6 +20,7 @@ loginForm.addEventListener('submit', (event) => {
     txtUsername.focus();
     statusBar.innerHTML = '<div class="alert alert-light" role="alert">&nbsp;</div>';
     btnLogin.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Loggin in..';
+    $('#login').prop('disabled', true);
 });
 
 btnQuit.addEventListener('click', () => {
@@ -29,6 +30,7 @@ btnQuit.addEventListener('click', () => {
 ipc.on('login-failed', (event, arg) => {
     statusBar.innerHTML = `<div class="alert alert-danger" role="alert">${arg}</div>`;
     btnLogin.innerHTML = 'Login';
+    $('#login').prop('disabled', false);
     txtUsername.focus();
 })
 

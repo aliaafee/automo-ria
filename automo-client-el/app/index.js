@@ -23,8 +23,8 @@ ipcRenderer.on('login-try', (event, arg) => {
             $('#lbl-server-add').html(conn.index_url);
             logger.log_success("Login Succesful.");
         },
-        (errorMessage) => {
-            ipcRenderer.send('login-failed', errorMessage);
+        (error) => {
+            ipcRenderer.send('login-failed', error.message);
             $('#lbl-username').html("");
             $('#lbl-server-add').html("");
             logger.log_error("Login Failed.");

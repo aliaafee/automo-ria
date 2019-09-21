@@ -11,6 +11,7 @@ body {
   padding-top: 40px;
   padding-bottom: 40px;
   background-color: #f5f5f5;
+  overflow: hidden;
 }
 
 .form-signin {
@@ -66,4 +67,9 @@ body {
 
 .form-signin #status .alert{
     padding: 2px;
+}
+
+.alert-light {
+  background-color: transparent;
+  border-color: transparent;
 }
