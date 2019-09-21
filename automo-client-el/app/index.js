@@ -8,9 +8,8 @@ const btn_logout = document.querySelector('#btn-logout');
 const lbl_server_add = $('#lbl-server-add');
 
 
-var conn = new Connection();
 var logger = new Logger($('#lbl-status'));
-
+var conn = new Connection(logger);
 
 ipcRenderer.on('login-try', (event, arg) => {
     logger.log_spinner("Attempting to Login...");
@@ -64,7 +63,6 @@ function displayPatientList(data) {
 }
 
 $('#btn-patient-list').click(() => {
-    logger.log_spinner("Getting Patient List...");
     conn.get(
         conn.index_url,
         data => {
@@ -72,17 +70,14 @@ $('#btn-patient-list').click(() => {
                 data['patients'],
                 data => {
                     displayPatientList(data);
-                    logger.log_success("Got Patient List.");
                 },
                 error => {
-                    console.log("Failed", error);
-                    logger.log_error("Failed to get Paient List.");
+                    $('#results-section').html("");
                 }
             )
         },
-        errorMessage => {
-            console.log("Failed:", errorMessage);
-            logger.log_error("Failed to get Paient List.");
+        error => {
+            $('#results-section').html("");
         }
     );
 });

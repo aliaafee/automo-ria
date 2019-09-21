@@ -20,7 +20,7 @@
 .sidebar-sticky {
     position: relative;
     top: 0;
-    height: calc(100vh - 69px);
+    height: calc(100vh - 40px);
     padding-top: .5rem;
     overflow-x: hidden;
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
@@ -67,7 +67,7 @@
 
 @media (min-width: 768px) {
     [role="main"] {
-        padding-top: 48px; /* Space for fixed navbar */
+        padding-top: 40px; /* Space for fixed navbar */
     }
 }
 

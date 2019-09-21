@@ -4,13 +4,18 @@ const feather = require('feather-icons');
 class Logger {
     constructor (status_bar) {
         this.status_bar = status_bar;
-        this.status_bar.html("WHOHOHOH")
+    }
+
+    log(message) {
+        this.status_bar.html(
+            `<span>${message}</span>`
+        );
     }
 
     log_spinner(message) {
         this.status_bar.html(
             `<span class="spinner-border spinner-border-sm"></span>
-             <span> ${message}...</span>`
+             <span> ${message}</span>`
         );
     }
 
