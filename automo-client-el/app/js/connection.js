@@ -1,4 +1,4 @@
-const { status } = require("./status")
+const status = require("./status")
 const User = require("./user")
 
 
@@ -41,16 +41,23 @@ class Connection {
     }
 
 
-    _get(url, on_success, on_failed) {
+    _get(url, on_success, on_failed, refetchTokenOnFail = true) {
         let headers = this.user.getAuthorizationHeaders();
 
-        fetch(url, { metho: 'GET', headers: headers })
-            .then((status))
+        fetch(url, { method: 'GET', headers: headers })
+            .then(status)
             .then(response => response.json())
             .then(data => on_success(data))
-            .catch(function (error) {
-                console.log('Connection Get Error:', error);
-                on_failed('Connection Get Error: ' + error.message);
+            .catch(error => {
+                if (refetchTokenOnFail ? (error.status == 401) : false) {
+                    console.log("Get New Token and Retry");
+                    this.user.getToken(
+                        () => {this._get(url, on_success, on_failed, false)},
+                        on_failed
+                    );
+                } else {
+                    on_failed('Connection Get Error: ' + error.message);
+                }
             })
     }
 

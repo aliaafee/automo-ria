@@ -35,7 +35,7 @@ class User {
         'Basic ' + btoa(this.username + ":" + this.password)
       );
   
-      fetch(this.token_url, {metho: 'GET', headers: headers})
+      fetch(this.token_url, {method: 'GET', headers: headers})
         .then(status)
         .then(response => response.json())
         .then(data => {
@@ -63,7 +63,7 @@ class User {
     getUserData(on_success, on_failed) {
       let headers = this.getAuthorizationHeaders();
   
-      fetch(this.url, {metho: 'GET', headers: headers})
+      fetch(this.url, {method: 'GET', headers: headers})
         .then(status)
         .then(response => response.json())
         .then(data => {
@@ -96,7 +96,7 @@ class User {
         return Promise.resolve(data)
       }
   
-      fetch(index_url, {metho: 'GET', headers: headers})
+      fetch(index_url, {method: 'GET', headers: headers})
         .then(status)
         .then(response => response.json())
         .then(data => checkCredentials(data))

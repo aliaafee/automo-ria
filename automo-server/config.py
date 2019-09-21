@@ -1,9 +1,10 @@
 import os
+import uuid
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'This is is how we change the key'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or str(uuid.uuid1())
     AUTH_TOKEN_LIFE = os.environ.get('AUTH_TOKEN_LIFE') or 3600
     MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtp.googlemail.com')
     MAIL_PORT = int(os.environ.get('MAIL_PORT', '587'))

@@ -1,10 +1,16 @@
-function status(response) {
-	if (response.status === 200) {
-		return Promise.resolve(response)
-	} else if (response.status === 401) {
-		return Promise.reject(new Error("Invalid Authorization"));
+class ResponseError extends Error {
+	constructor(response) {
+		var message = `Response Error ${response.status} ${response.statusText}`;
+		super(message);
+		this.status = response.status;
 	}
-	return Promise.reject(new Error(response));
+}
+
+function status(response) {
+	if (!response.ok) {
+		return Promise.reject(new ResponseError(response));
+	}
+	return Promise.resolve(response);
 }
 
 module.exports = status;
