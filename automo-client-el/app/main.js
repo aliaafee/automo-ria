@@ -4,7 +4,14 @@ let mainWindow = null; // #A
 let loginWindow = null;
 
 app.on('ready', () => {
-    console.log('Hello from Electron.');
+    icd10CoderWindow = new BrowserWindow({
+        webPreferences: { nodeIntegration: true },
+        show: true,
+        width: 1200, height:768
+    });
+    icd10CoderWindow.webContents.loadURL(`file://${__dirname}/icd10coder.html`); // #A
+    icd10CoderWindow.webContents.openDevTools();
+    /*
     mainWindow = new BrowserWindow({
         webPreferences: { nodeIntegration: true },
         show: false,
@@ -23,6 +30,7 @@ app.on('ready', () => {
     });
     loginWindow.setMenuBarVisibility(false);
     loginWindow.loadURL(`file://${__dirname}/login.html`);
+    */
     //loginWindow.webContents.openDevTools();
 });
 

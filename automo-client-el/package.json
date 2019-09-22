@@ -6,16 +6,21 @@
   "scripts": {
     "start": "electron .",
     "scss": "node-sass --watch app/scss -o app/css",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "install-app-deps"
   },
   "author": "Ali Aafee",
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^4.3.1",
-    "electron": "^6.0.9",
+    "electron": "^6.0.10",
     "feather-icons": "^4.24.1",
     "jquery": "^3.4.1",
     "node-sass": "^4.12.0",
-    "popper.js": "^1.15.0"
+    "popper.js": "^1.15.0",
+    "sqlite3": "^4.1.0"
+  },
+  "devDependencies": {
+    "electron-builder": "^21.2.0"
   }
 }

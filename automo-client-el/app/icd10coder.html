@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src *">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!--<link rel="stylesheet" href="css/app.css">-->
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/icd10.css" type="text/css">
+
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script>
+        window.jQuery = window.$ = require('jquery');
+    </script>
+    <script src="../node_modules/popper.js/dist/umd/popper.min.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../node_modules/feather-icons/dist/feather.min.js"></script>
+
+    <title>ICD10 Browser</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3 sidebar p-0">
+                <input id="search-query" class="form-control form-control" placeholder="Search" />
+                <div id="search-box"></div>
+                <ul id="search-results" class="list-group list-group-flush sidebar-sticky">
+                    <li class="list-group-item list-group-item-action disabled">&nbsp;</li>
+                </ul>
+            </div>
+            <div class="col-sm main p-0">
+                <div id="block-list" class="category-sticky">
+                    <div id="block-header" class="bg-light p-3">
+                        <h5 id="chapter-title">&nbsp;</h5>
+                        <h6 id="block-title">&nbsp;</h6>
+                    </div>
+                    <ul id="category-list" class="list-group list-group-flush">
+
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                end suff
+            </div>
+        </div>
+    </div>
+
+    <script>
+        feather.replace();
+        require("./icd10coder");
+    </script>
+</body>
+
+</html>

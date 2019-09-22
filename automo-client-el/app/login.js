@@ -19,7 +19,7 @@ loginForm.addEventListener('submit', (event) => {
     txtPassword.value = "";
     txtUsername.focus();
     statusBar.innerHTML = '<div class="alert alert-light" role="alert">&nbsp;</div>';
-    btnLogin.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Loggin in..';
+    btnLogin.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging in..';
     $('#login').prop('disabled', true);
 });
 
@@ -36,6 +36,7 @@ ipc.on('login-failed', (event, arg) => {
 
 ipc.on('login-success', (event, arg) => {
     btnLogin.innerHTML = 'Login';
+    $('#login').prop('disabled', false);
     statusBar.innerHTML = '<div class="alert alert-light" role="alert">&nbsp;</div>';
 })
 
