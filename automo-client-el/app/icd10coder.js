@@ -73,46 +73,48 @@ function load_selected_block(on_done) {
             lusion = ""
             if (category.inclusion != null) {
                 lusion += `
-                    <table>
-                        <tr>
-                            <td><b><i>Incl.:</i></b></td>
-                            <td>${category.inclusion}</td>
-                        </tr>
-                    </table>`
+                    <div class="lusion d-flex">
+                        <div class="label"><b><i>Incl.:</i></b></div>
+                        <div >${category.inclusion}</div>
+                    </div>`
             }
             if (category.exclusion != null) {
                 lusion += `
-                    <table>
-                        <tr>
-                            <td><b><i>Excl.:</i></b></td>
-                            <td>${category.inclusion}</td>
-                        </tr>
-                    </table>`
+                    <div class="lusion d-flex">
+                        <div class="label"><b><i>Excl.:</i></b></div>
+                        <div>${category.exclusion}</div>
+                    </div>`
             }
 
             result += `
-                <li id="${gen_id(category.code)}" code="${category.code}" href="#" class="category list-group-item list-group-item-action">
+                <li id="${gen_id(category.code)}" href="#" class="category list-group-item list-group-item-action">
                     <div class="d-flex w-100">
-                        <div class="row">
-                            <div class="col-auto code">${category.code}</div>
-                            <div class="col">
-                                <div class="preferred">${category.preferred}</div>
-                                ${lusion}
+                            <div class="code">
+                                <a href="#" class="category-link" code="${category.code}">
+                                    ${category.code}
+                                </a>
                             </div>
-                        </div>
+                            <div>
+                                <div class="preferred">
+                                    ${category.preferred}
+                                </div>
+                                <div class="lusions">${lusion}</div>
+                            </div>
                     </div>
                 </li>`
         });
 
         $('#category-list').html(result);
 
-        $(".category").click(function () {
+        $(".category-link").click(function () {
+            event.preventDefault();
             set_selected_category($(this).attr("code"), () => { }, false);
         })
 
         $("a").click(function (event) {
             event.preventDefault();
-            /*//This does not work because both events happen together.
+            //This works, but at the expense of useability.
+            //Need to fix
             var query = $(this).attr('href');
             var query_data = querystring.decode(query)
             console.log(query_data);
@@ -121,7 +123,6 @@ function load_selected_block(on_done) {
             if (code != null) {
                 set_selected_category(code, () => {});
             }
-            */
         });
 
         on_done();

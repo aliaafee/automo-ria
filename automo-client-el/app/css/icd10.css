@@ -61,6 +61,15 @@ body {
 
 .category .code {
     font-weight: bold;
+    flex: 0 0 50px;
+}
+
+.lusion .label {
+    flex: 0 0 40px;
+}
+
+.lusion {
+    margin-top: 5px;
 }
 
 .category .preferred {
