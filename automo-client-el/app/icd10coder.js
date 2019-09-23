@@ -58,7 +58,9 @@ function load_selected_block(on_done) {
     if (selected_block == null) {
         return;
     }
-    $("#chapter-title").html(selected_chapter.preferred_plain);
+    $("#chapter-title").html(
+        `Chapter ${selected_chapter.code} ${selected_chapter.preferred_plain}`
+    );
     $("#block-title").html(
         `<span>${selected_block.code}</span> <span>${selected_block.preferred_plain}</span>`
     );
@@ -70,34 +72,50 @@ function load_selected_block(on_done) {
         }
         var result = ""
         categories.forEach((category) => {
-            lusion = ""
+            var main_cat = "";
+            if (category.code.length <= 3) {
+                main_cat = "main-category";
+            }
+
+            var lusion = ""
             if (category.inclusion != null) {
                 lusion += `
                     <div class="lusion d-flex">
-                        <div class="label"><b><i>Incl.:</i></b></div>
                         <div >${category.inclusion}</div>
                     </div>`
             }
             if (category.exclusion != null) {
                 lusion += `
                     <div class="lusion d-flex">
-                        <div class="label"><b><i>Excl.:</i></b></div>
+                        <div class="label">Excl.:</div>
                         <div>${category.exclusion}</div>
                     </div>`
             }
+            if (category.note != null) {
+                lusion += `
+                    <div class="lusion d-flex">
+                        <div class="label">Note:</div>
+                        <div>${category.note}</div>
+                    </div>`
+            }
+            var preferred_long = ""
+            if (category.preferred_long != null) {
+                preferred_long = `<div class="preferred-long">(${category.preferred_long})</div>`
+            }
 
             result += `
-                <li id="${gen_id(category.code)}" href="#" class="category list-group-item list-group-item-action">
+                <li id="${gen_id(category.code)}" href="#" class="category ${main_cat} list-group-item list-group-item-action">
                     <div class="d-flex w-100">
                             <div class="code">
                                 <a href="#" class="category-link" code="${category.code}">
                                     ${category.code}
                                 </a>
                             </div>
-                            <div>
+                            <div class="category-text">
                                 <div class="preferred">
                                     ${category.preferred}
                                 </div>
+                                ${preferred_long}
                                 <div class="lusions">${lusion}</div>
                             </div>
                     </div>
@@ -114,6 +132,8 @@ function load_selected_block(on_done) {
         $("a").click(function (event) {
             event.preventDefault();
             //This works, but at the expense of useability.
+            //Need to click the link on the code to select a category
+            //Not very intitutive
             //Need to fix
             var query = $(this).attr('href');
             var query_data = querystring.decode(query)
@@ -198,15 +218,34 @@ $("#search-query").keyup(function () {
         return;
     }
 
-    var and_query = [];
+    var preferred_and_query = [];
     query.split(" ").forEach((word) => {
-        and_query.push(`preferred_plain LIKE "%${word}%"`);
+        preferred_and_query.push(`preferred_plain LIKE "%${word}%"`);
     })
 
-    var sql = `SELECT * FROM icd10class WHERE kind == "category" AND ${and_query.join(" AND ")}
-               UNION
-               SELECT * FROM icd10class WHERE kind == "category" AND code LIKE "%${query}%"
-               LIMIT 20`
+    var preferred_long_and_query = [];
+    query.split(" ").forEach((word) => {
+        preferred_long_and_query.push(`preferred_long LIKE "%${word}%"`);
+    })
+
+    var sql =   `
+        SELECT code, preferred_plain 
+        FROM icd10class
+        WHERE kind == "category" AND ${preferred_and_query.join(" AND ")}
+
+        UNION
+
+        SELECT code, preferred_plain
+        FROM icd10class
+        WHERE kind == "category" AND ${preferred_long_and_query.join(" AND ")}
+        
+        UNION
+        
+        SELECT code, preferred_plain
+        FROM icd10class
+        WHERE kind == "category" AND code LIKE "%${query}%"
+        
+        LIMIT 20`
 
     db.all(sql, [], (err, rows) => {
         if (err) {
