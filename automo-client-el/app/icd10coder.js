@@ -106,10 +106,11 @@ function load_selected_block(on_done) {
             result += `
                 <li id="${gen_id(category.code)}" href="#" class="category ${main_cat} list-group-item list-group-item-action">
                     <div class="d-flex w-100">
-                            <div class="code">
-                                <a href="#" class="category-link" code="${category.code}">
+                            <div class="code d-flex" code="${category.code}">
+                                <input id="${gen_id(category.code)}RADIO" type="radio" />
+                                <div>
                                     ${category.code}
-                                </a>
+                                </div>
                             </div>
                             <div class="category-text">
                                 <div class="preferred">
@@ -124,7 +125,7 @@ function load_selected_block(on_done) {
 
         $('#category-list').html(result);
 
-        $(".category-link").click(function () {
+        $(".code").click(function () {
             event.preventDefault();
             set_selected_category($(this).attr("code"), () => { }, false);
         })
@@ -141,7 +142,7 @@ function load_selected_block(on_done) {
             code = query_data['category?code']
             console.log(code);
             if (code != null) {
-                set_selected_category(code, () => {});
+                set_selected_category(code, () => { });
             }
         });
 
@@ -152,7 +153,7 @@ function load_selected_block(on_done) {
 
 function set_selection_to_selected_category(scroll = true, clear = true) {
     if (clear) {
-        $(".category").removeClass("active");
+        $(".category input").prop('checked', false);
     }
 
     selected_id = `#${gen_id(selected_category.code)}`
@@ -161,14 +162,84 @@ function set_selection_to_selected_category(scroll = true, clear = true) {
 
     selected = $(selected_id)
 
+    //Set Selection
+    $(`${selected_id} input`).prop('checked', true);
+
     //Scroll to the category
     if (scroll) {
         $('#block-list').scrollTop(0);
         $('#block-list').scrollTop(selected.offset().top);
     }
 
-    //Set Selection
-    selected.addClass("active");
+    //Update the form
+    $("#selected-category .code").text(selected_category.code);
+    $("#selected-category .preferred").html(selected_category.preferred);
+    $("#selected-category").removeClass("is-invalid");
+
+    $("#selected-category .preferred-long").html(
+        selected_category.preferred_long != null ?
+            `(${selected_category.preferred_long})` : ""
+    );
+
+    load_modifier(
+        selected_category.modifier_code,
+        $('#modifier-group'),
+        $('#selected-modifier'),
+        $('#modifier-group label')
+    );
+
+    load_modifier(
+        selected_category.modifier_extra_code,
+        $('#modifier-extra-group'),
+        $('#selected-modifier-extra'),
+        $('#modifier-extra-group label')
+    );
+}
+
+function load_modifier(modifier_code, group, select, label) {
+    if (modifier_code == null) {
+        select.html("");
+        group.hide();
+        return;
+    }
+    select.html("");
+    group.show();
+
+    var sql = `
+        SELECT code, code_short, preferred
+        FROM icd10modifierclass
+        WHERE modifier_code == "${modifier_code}"`;
+
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+            select.html("");
+            group.hide();
+            throw err;
+        }
+
+        select.append(new Option("<None>", ""));
+
+        rows.forEach((row) => {
+            select.append(new Option(
+                `${row.code_short} - ${row.preferred}`,
+                row.code
+            ));
+        });
+    });
+
+    var sql = `
+        SELECT name
+        FROM icd10modifier
+        WHERE code == "${modifier_code}"`;
+
+    db.get(sql, [], (err, row) => {
+        if (err) {
+            select.html("");
+            group.hide();
+            throw err;
+        }
+        label.text(row.name);
+    });
 }
 
 
@@ -179,7 +250,6 @@ function set_selected_category(code, on_done, scroll = true) {
             return;
         }
         selected_category = category;
-        console.log(selected_category);
 
         if (selected_block != null) {
             if (selected_block.code == selected_category.parent_block_code) {
@@ -228,7 +298,7 @@ $("#search-query").keyup(function () {
         preferred_long_and_query.push(`preferred_long LIKE "%${word}%"`);
     })
 
-    var sql =   `
+    var sql = `
         SELECT code, preferred_plain 
         FROM icd10class
         WHERE kind == "category" AND ${preferred_and_query.join(" AND ")}
@@ -273,4 +343,32 @@ $("#search-query").keyup(function () {
             set_selected_category($(this).attr("code"), () => { });
         })
     })
+});
+
+
+$("#save").click(function () {
+    event.preventDefault();
+    
+    if (selected_category == null) {
+        $("#selected-category").addClass("is-invalid");
+        return;
+    }
+
+    result = {
+        'icd10class': selected_category,
+        'icd10modifier_class_code': 
+            selected_category.modifier_code != null ? 
+            $('#selected-modifier').val() == "" ? null : $('#selected-modifier').val() : null ,
+        'icd10modifier_extra_class':
+            selected_category.modifier_extra_code != null ? 
+            $('#selected-modifier-extra').val() == "" ? null : $('#selected-modifier-extra').val() : null ,
+        'comment': $("#comment").val()
+    }
+
+    console.log(result);
+});
+
+$("#cancel").click(function () {
+    event.preventDefault();
+
 });

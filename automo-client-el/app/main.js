@@ -7,10 +7,11 @@ app.on('ready', () => {
     icd10CoderWindow = new BrowserWindow({
         webPreferences: { nodeIntegration: true },
         show: true,
-        width: 1200, height:768
+        width: 900, height:500
     });
+    icd10CoderWindow.setMenuBarVisibility(false);
     icd10CoderWindow.webContents.loadURL(`file://${__dirname}/icd10coder.html`); // #A
-    icd10CoderWindow.webContents.openDevTools();
+    //icd10CoderWindow.webContents.openDevTools();
     /*
     mainWindow = new BrowserWindow({
         webPreferences: { nodeIntegration: true },
