@@ -10,8 +10,6 @@ mainWindow = new MainWindow(connection);
 loginDlg = new LoginDialog();
 statusDlg = new StatusDialog()
 
-//mainWindow.render($('#main-window'));
-
 
 function tryLogin() {
     loginDlg.show((data) => {

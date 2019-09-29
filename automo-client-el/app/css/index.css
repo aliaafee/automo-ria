@@ -5,6 +5,7 @@
 
 body {
     overflow: hidden;
+    user-select: none;
 }
 
 /*
@@ -126,4 +127,92 @@ body {
 .footer .feather {
     width: 10px;
     height: 10px;
+}
+
+
+/*
+ * ICD10 Coder
+ */
+
+#icd10-dialog {
+
+}
+
+#icd10-dialog textarea {
+    resize: none;
+}
+
+#icd10-dialog #block-list {
+    position: relative;
+    top: 0;
+    height: 400px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-right: 1px solid #ced4da;
+}
+
+#icd10-dialog .category {
+    border: none;
+}
+
+#icd10-dialog .category h6 {
+    font-style: italic;
+    font-weight: bold;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    margin-top: 8px;
+}
+
+#icd10-dialog .category .code {
+    font-weight: bold;
+    flex: 0 0 70px;
+}
+
+#icd10-dialog .category .code input {
+    margin-right: 10px;
+}
+
+#icd10-dialog .main-category {
+    /*border-top: solid 1px black;*/
+    box-shadow: inset 0 2px 0 rgba(0, 0, 0, 1);
+}
+
+#icd10-dialog .lusion .label {
+    flex: 0 0 40px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+#icd10-dialog .lusion {
+    margin-top: 5px;
+}
+
+#icd10-dialog .category .preferred {
+    font-weight: bold;
+}
+
+#icd10-dialog .category .preferred-long {
+    padding-left: 10px;
+}
+
+#icd10-dialog .category table {
+    margin-top: 10px;
+}
+
+#icd10-dialog .category td {
+    padding: 2px;
+    vertical-align: top;
+}
+
+#icd10-dialog .active a {
+    color: white;
+}
+
+#icd10-dialog #selected-category {
+    height: auto;
+}
+
+#icd10-dialog #selected-category .code {
+    height: auto;
+    flex: 0 0 45px;
 }

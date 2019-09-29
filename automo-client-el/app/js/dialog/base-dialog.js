@@ -37,7 +37,7 @@ class Dialog {
             return "";
         }
         return `
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button tabindex="-1" type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>`
 
@@ -65,6 +65,10 @@ class Dialog {
             </div>`
     }
 
+    setupEvents() {
+        return
+    }
+
     render(target) {
         target.html(`
         <div id="${this.name}" class="modal ${this.fade ? 'fade' : ''}" tabindex="-1" role="dialog">
@@ -76,6 +80,8 @@ class Dialog {
                 </div>
             </div>
         </div>`)
+
+        this.setupEvents();
     }
 }
 

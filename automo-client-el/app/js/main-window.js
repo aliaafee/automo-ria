@@ -73,7 +73,9 @@ class MainWindow {
 
         $('#btn-icd10').click(() => {
             this.icd10Dialog.render($("#dialog"));
-            this.icd10Dialog.show();
+            this.icd10Dialog.show((problem) => {
+                console.log(problem);
+            });
         });
     }
 
