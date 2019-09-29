@@ -25,6 +25,13 @@ class User {
         return true;
     }
 
+    getName() {
+        if (this.fullname == null) {
+            return this.username;
+        }
+        return this.fullname;
+    }
+
 
     getToken(on_success, on_failed) {
         let headers = new Headers();

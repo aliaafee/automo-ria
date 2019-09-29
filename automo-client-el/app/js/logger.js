@@ -2,17 +2,29 @@ const feather = require('feather-icons');
 
 
 class Logger {
-    constructor (status_bar) {
-        this.status_bar = status_bar;
+    constructor () {
+        this.status_bar = null;
+    }
+
+    setTarget(target) {
+        this.status_bar = target;
     }
 
     log(message) {
+        if (this.status_bar == null) {
+            console.log(message);
+            return;
+        }
         this.status_bar.html(
-            `<span>${message}</span>`
+            `<span class="text-secondary">${message}</span>`
         );
     }
 
     log_spinner(message) {
+        if (this.status_bar == null) {
+            console.log(message);
+            return;
+        }
         this.status_bar.html(
             `<span class="spinner-border spinner-border-sm"></span>
              <span> ${message}</span>`
@@ -20,8 +32,12 @@ class Logger {
     }
 
     log_success(message) {
+        if (this.status_bar == null) {
+            console.log(message);
+            return;
+        }
         this.status_bar.html(
-            '<span class="text-success">' +
+            '<span class="text-secondary">' +
             feather.icons['check-circle'].toSvg() + " " +
             message +
             '</span>'
@@ -29,6 +45,10 @@ class Logger {
     }
 
     log_error(message) {
+        if (this.status_bar == null) {
+            console.log(message);
+            return;
+        }
         this.status_bar.html(
             '<span class="text-danger">' +
             feather.icons['alert-triangle'].toSvg() + " " +

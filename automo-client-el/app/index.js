@@ -1,83 +1,50 @@
-const { ipcRenderer } = require('electron');
 const Connection = require("./js/connection");
-const Logger = require("./js/logger")
+const MainWindow = require("./js/main-window");
+const LoginDialog = require("./js/dialog/login-dialog")
+const Logger = require("./js/logger");
+const StatusDialog = require("./js/dialog/status-dialog")
 
-const btn_username = document.querySelector('#btn-username');
-const lbl_username = document.querySelector('#lbl-username');
-const btn_logout = document.querySelector('#btn-logout');
-const lbl_server_add = $('#lbl-server-add');
+logger = new Logger();
+connection = new Connection(logger);
+mainWindow = new MainWindow(connection);
+loginDlg = new LoginDialog();
+statusDlg = new StatusDialog()
 
-
-var logger = new Logger($('#lbl-status'));
-var conn = new Connection(logger);
-
-ipcRenderer.on('login-try', (event, arg) => {
-    logger.log_spinner("Attempting to Login...");
-    conn.login(
-        arg['index_url'],
-        arg['username'],
-        arg['password'],
-        () => {
-            ipcRenderer.send('login-success');
-            $('#lbl-username').html(conn.user.username);
-            $('#lbl-server-add').html(conn.index_url);
-            logger.log_success("Login Succesful.");
-        },
-        (error) => {
-            ipcRenderer.send('login-failed', error.message);
-            $('#lbl-username').html("");
-            $('#lbl-server-add').html("");
-            logger.log_error("Login Failed.");
-        }
-    )
-})
+//mainWindow.render($('#main-window'));
 
 
-btn_logout.addEventListener('click', () => {
-    conn.logout(
-        () => {
-            ipcRenderer.send('logout');
-            $('#lbl-username').html("");
-        }
-    )
-})
-
-
-function displayPatientList(data) {
-    var result = "";
-
-    data['patients'].forEach(element => {
-        result += `<tr><td>${element['id']}</td><td>${element['name']}</td><td>${element['url']}</td></tr>`
-    });
-
-    $('#results-section').html(
-        `<table class="table table-striped table-sm">
-            <thead>
-                <tr><td>Id</td><td>Name</td><td>URL</td></tr>
-            </head>
-            <tbody>
-                ${result}
-            </tbody>
-        </table>`
-    );
+function tryLogin() {
+    loginDlg.show((data) => {
+        statusDlg.show();
+        statusDlg.setLogger(logger);
+        connection.login(
+            data.index_url, data.username, data.password,
+            () => {
+                statusDlg.close(showMainWindow)
+            },
+            () => {
+                statusDlg.close(tryLogin)
+            }
+        )
+    })
 }
 
-$('#btn-patient-list').click(() => {
-    conn.get(
-        conn.index_url,
-        data => {
-            conn.get(
-                data['patients'],
-                data => {
-                    displayPatientList(data);
-                },
-                error => {
-                    $('#results-section').html("");
-                }
-            )
-        },
-        error => {
-            $('#results-section').html("");
-        }
-    );
-});
+
+function showMainWindow() {
+    mainWindow.render($('#main-window'));
+    mainWindow.initialize();
+    mainWindow.setLogger(logger);
+
+    mainWindow.navbar.setLogoutFunction(() => {
+        $('#main-window').html("");
+        connection.logout(
+            tryLogin,
+            () => {
+                console.log("Failed to Logout.");
+                tryLogin();
+            }
+        )
+    });
+}
+
+tryLogin();
