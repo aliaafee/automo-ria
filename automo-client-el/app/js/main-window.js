@@ -1,5 +1,5 @@
 const NavBar = require("./navbar");
-const ICD10Dialog = require("./dialog/icd10coder-dialog");
+const ICD10Dialog = require("./dialogs/icd10coder-dialog");
 
 
 class MainWindow {

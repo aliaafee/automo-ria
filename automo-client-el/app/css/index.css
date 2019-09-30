@@ -131,12 +131,30 @@ body {
 
 
 /*
- * ICD10 Coder
+ * Popup
  */
 
-#icd10-dialog {
-
+.popup {
+    z-index: 100;
+    border: 1px solid #ced4da;
+    margin-top: -2px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: white;
 }
+
+.popup .list-group-item {
+    background-color: none;
+}
+
+#search-box:focus {
+    box-shadow: none;
+}
+
+
+/*
+ * ICD10 Coder
+ */
 
 #icd10-dialog textarea {
     resize: none;
@@ -145,7 +163,7 @@ body {
 #icd10-dialog #block-list {
     position: relative;
     top: 0;
-    height: 400px;
+    height: 500px;
     overflow-x: hidden;
     overflow-y: auto;
     border-right: 1px solid #ced4da;

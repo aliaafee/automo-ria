@@ -1,8 +1,8 @@
 const Connection = require("./js/connection");
 const MainWindow = require("./js/main-window");
-const LoginDialog = require("./js/dialog/login-dialog")
+const LoginDialog = require("./js/dialogs/login-dialog")
 const Logger = require("./js/logger");
-const StatusDialog = require("./js/dialog/status-dialog")
+const StatusDialog = require("./js/dialogs/status-dialog")
 
 logger = new Logger();
 connection = new Connection(logger);
@@ -46,3 +46,12 @@ function showMainWindow() {
 }
 
 tryLogin();
+
+/*
+const Icd10Dialog = require("./js/dialogs/icd10coder-dialog")
+
+var icd = new Icd10Dialog()
+
+icd.show((result) => {
+    console.log(result);
+})*/

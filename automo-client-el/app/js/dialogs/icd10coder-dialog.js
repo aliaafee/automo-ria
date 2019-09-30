@@ -3,6 +3,7 @@ const querystring = require('querystring');
 const feather = require('feather-icons');
 
 const Dialog = require("./base-dialog");
+const SearchBox = require("../controls/search-box");
 
 
 class ICD10Dialog extends Dialog {
@@ -22,6 +23,17 @@ class ICD10Dialog extends Dialog {
             }
             console.log('Connected to ICD10 Data.')
         });
+
+        this.searchBox = new SearchBox(
+            "search-box",
+            (query, on_done) => {
+                this.search(query, on_done) 
+            },
+            (code) => {
+                this.set_selected_category(code, () => {});
+            },
+            "Search ICD10 Code"
+        );
     }
 
 
@@ -30,7 +42,7 @@ class ICD10Dialog extends Dialog {
         this.selected_category = null;
         this.selected_chapter = null;
         this.selected_block = null;
-        
+
         super.show();
     }
 
@@ -288,6 +300,45 @@ class ICD10Dialog extends Dialog {
     }
 
 
+    search(query, on_done) {
+        var preferred_and_query = [];
+        query.split(" ").forEach((word) => {
+            preferred_and_query.push(`preferred_plain LIKE "%${word}%"`);
+        })
+
+        var preferred_long_and_query = [];
+        query.split(" ").forEach((word) => {
+            preferred_long_and_query.push(`preferred_long LIKE "%${word}%"`);
+        })
+
+        var sql = `
+            SELECT code, preferred_plain 
+            FROM icd10class
+            WHERE kind == "category" AND ${preferred_and_query.join(" AND ")}
+    
+            UNION
+    
+            SELECT code, preferred_plain
+            FROM icd10class
+            WHERE kind == "category" AND ${preferred_long_and_query.join(" AND ")}
+            
+            UNION
+            
+            SELECT code, preferred_plain
+            FROM icd10class
+            WHERE kind == "category" AND code LIKE "%${query}%"
+            
+            LIMIT 20`
+
+        this.db.all(sql, [], (err, rows) => {
+            if (err) {
+                throw err;
+            }
+            on_done(rows);
+        })
+    }
+
+
     searchCategories(query) {
         if (query == "") {
             $("#icd10-dialog #search-results").html(`
@@ -400,14 +451,7 @@ class ICD10Dialog extends Dialog {
     getHeader() {
         return `
             <div class="modal-header">
-                <div class="input-group mb-2">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">
-                            ${feather.icons['search'].toSvg()}
-                        </div>
-                    </div>
-                    <input type="text" class="form-control" id="search-query" placeholder="Search ICD10 Codes">
-                </div>
+                <input id="search-box" />
                 ${this._getCloseButton()}
             </div>`
     }
@@ -465,6 +509,10 @@ class ICD10Dialog extends Dialog {
             </div>`
     }
 
+    render(target) {
+        super.render(target);
+        this.searchBox.render()
+    }
 
 
 
