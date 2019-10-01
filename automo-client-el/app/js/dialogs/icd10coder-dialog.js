@@ -29,6 +29,12 @@ class ICD10Dialog extends Dialog {
             (query, on_done) => {
                 this.search(query, on_done) 
             },
+            (result) => {
+                return result.code;
+            },
+            (result) => {
+                return `${result.code} ${result.preferred_plain}`
+            },
             (code) => {
                 this.set_selected_category(code, () => {});
             },
@@ -81,11 +87,10 @@ class ICD10Dialog extends Dialog {
         if (this.selected_block == null) {
             return;
         }
-        $("#icd10-dialog #chapter-title").html(
-            `Chapter ${this.selected_chapter.code} ${this.selected_chapter.preferred_plain}`
-        );
+
         $("#icd10-dialog #block-title").html(
-            `<span>${this.selected_block.code}</span> <span>${this.selected_block.preferred_plain}</span>`
+            `<div>Chapter ${this.selected_chapter.code} ${this.selected_chapter.preferred_plain}</div>
+            <div>${this.selected_block.code} ${this.selected_block.preferred_plain}</div>`
         );
 
         this.get_block_categories(this.selected_block.code, (categories) => {
@@ -339,79 +344,6 @@ class ICD10Dialog extends Dialog {
     }
 
 
-    searchCategories(query) {
-        if (query == "") {
-            $("#icd10-dialog #search-results").html(`
-                <a class="list-group-item list-group-item-action disabled">
-                    &nbsp;
-                </a>
-            `);
-            return;
-        }
-
-        $("#icd10-dialog #search-query").dropdown("show");
-
-        /*
-
-        var preferred_and_query = [];
-        query.split(" ").forEach((word) => {
-            preferred_and_query.push(`preferred_plain LIKE "%${word}%"`);
-        })
-
-        var preferred_long_and_query = [];
-        query.split(" ").forEach((word) => {
-            preferred_long_and_query.push(`preferred_long LIKE "%${word}%"`);
-        })
-
-        var sql = `
-            SELECT code, preferred_plain 
-            FROM icd10class
-            WHERE kind == "category" AND ${preferred_and_query.join(" AND ")}
-    
-            UNION
-    
-            SELECT code, preferred_plain
-            FROM icd10class
-            WHERE kind == "category" AND ${preferred_long_and_query.join(" AND ")}
-            
-            UNION
-            
-            SELECT code, preferred_plain
-            FROM icd10class
-            WHERE kind == "category" AND code LIKE "%${query}%"
-            
-            LIMIT 20`
-
-        db.all(sql, [], (err, rows) => {
-            if (err) {
-                throw err;
-            }
-            var result = ""
-
-            rows.forEach((row) => {
-                result += `
-                    <li code="${row.code}" href="#" class="search-result list-group-item list-group-item-action">
-                        <span>${row.code}</span>
-                        <span>${row.preferred_plain}</span>
-                    </li>`
-            });
-
-            if (result == "") {
-                result = `<li class="list-group-item list-group-item-action disabled">No Search Results.</li>`
-            }
-
-            $("#search-results").html(`${result}`);
-
-            $(".search-result").click(function () {
-                $(".search-result").removeClass("active");
-                $(this).addClass("active");
-                set_selected_category($(this).attr("code"), () => { });
-            })
-        })
-        */
-    }
-
-
     _on_save() {
         if (this.selected_category == null) {
             $("#icd10-dialog #selected-category").addClass("is-invalid");
@@ -460,7 +392,10 @@ class ICD10Dialog extends Dialog {
         return `
             <div id="dialog-body" class="modal-body p-0">
                 <div class="d-flex">
-                    <div class="col-7 p-0">
+                    <div id="block" class="col-7 p-0">
+                        <div id="block-title">
+                            &nbsp;
+                        </div>
                         <div id="block-list">
                         <ul id="category-list" class="list-group list-group-flush">
                             

@@ -160,13 +160,22 @@ body {
     resize: none;
 }
 
+#icd10-dialog #block {
+    border-right: 1px solid #ced4da;
+}
+
+#icd10-dialog #block-title {
+    padding: 0.375rem 0.75rem;
+    border-bottom: 1px solid #ced4da;
+    font-weight: bold;
+}
+
 #icd10-dialog #block-list {
     position: relative;
     top: 0;
     height: 500px;
     overflow-x: hidden;
     overflow-y: auto;
-    border-right: 1px solid #ced4da;
 }
 
 #icd10-dialog .category {

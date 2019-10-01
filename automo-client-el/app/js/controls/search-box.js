@@ -4,10 +4,12 @@ const Popper = require('popper.js');
 
 
 class SearchBox extends Control {
-    constructor(inputId, searchFunction, onResultClicked, placeHolder = "Search") {
+    constructor(inputId, searchFunction, idFunction, labelFunction, onResultClicked, placeHolder = "Search") {
         super(inputId);
         this.placeHolder = placeHolder
         this.searchFunction = searchFunction;
+        this.idFunction = idFunction;
+        this.labelFunction = labelFunction;
         this.onResultClicked = onResultClicked;
 
         this.inputElement = null;
@@ -16,17 +18,16 @@ class SearchBox extends Control {
     }
 
     showResults(results) {
-        var items = ""
-        results.forEach((row) => {
-            items += `
-                <li class="list-group-item list-group-item-action" code="${row.code}">
-                    <span>${row.code}</span>
-                    <span>${row.preferred_plain}</span>
+        var resultHtml = ""
+        results.forEach((result) => {
+            resultHtml += `
+                <li class="list-group-item list-group-item-action" result-id="${this.idFunction(result)}">
+                    ${this.labelFunction(result)}
                 </li>
             `
         })
-        if (items == "") {
-            items = `
+        if (resultHtml == "") {
+            resultHtml = `
                 <li class="list-group-item list-group-item-action disabled">
                     Not Found
                 </li>
@@ -34,13 +35,13 @@ class SearchBox extends Control {
         }
         this.popupElement.html(`
             <ul class="list-group list-group-flush">
-                ${items}
+                ${resultHtml}
             </ul>
         `)
 
         $(`#${this.inputId}-popup .list-group-item`).click((e) => {
             this.onResultClicked(
-                $(e.currentTarget).attr("code")
+                $(e.currentTarget).attr("result-id")
             );
             this.popupElement.hide();
         })
