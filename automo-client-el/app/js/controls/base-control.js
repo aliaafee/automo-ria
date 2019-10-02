@@ -1,34 +1,38 @@
 
 
 class Control {
-    constructor(inputId) {
-        this.inputId = inputId;
+    constructor(elementId) {
+        this.elementId = elementId;
 
-        this._input = null;
+        this._element = null;
     }
 
     getHtml() {
-        return `<input id="${this.inputId}" />`;
+        return `<input id="${this.elementId}" />`;
     }
 
     setupEvents() {
         return;
     }
 
-    input() {
-        if (this._input == null) {
-            this._input = $(`#${this.inputId}`);
+    element() {
+        if (this._element == null) {
+            this._element = $(`#${this.elementId}`);
         }
-        return this._input;
+        return this._element;
     }
 
     val() {
-        return this.input().val();
+        return this.element().val();
+    }
+
+    setupEvents() {
+        return;
     }
 
     render(target) {
         if (target == null) {
-            target = $(`#${this.inputId}`);
+            target = $(`#${this.elementId}`);
         }
         target.replaceWith(this.getHtml());
         this.setupEvents();

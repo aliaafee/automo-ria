@@ -4,17 +4,46 @@ const Popper = require('popper.js');
 
 
 class SearchBox extends Control {
-    constructor(inputId, searchFunction, idFunction, labelFunction, onResultClicked, placeHolder = "Search") {
-        super(inputId);
+    constructor(elementId, searchFunction, idFunction, labelFunction, onResultClicked, placeHolder = "Search") {
+        super(elementId);
         this.placeHolder = placeHolder
         this.searchFunction = searchFunction;
         this.idFunction = idFunction;
         this.labelFunction = labelFunction;
         this.onResultClicked = onResultClicked;
 
-        this.inputElement = null;
         this.popup = null;
         this.popupElement = null
+    }
+
+    showPopup() {
+        this.popup = new Popper(
+            $(`#${this.elementId}`),
+            $(`#${this.elementId}-popup`),
+            {
+                placement: 'bottom',
+                modifiers: {
+                    autoSizing: {
+                        enabled: true,
+                        order: 1,
+                        fn: (data) => {
+                            data.offsets.popper.left = data.offsets.reference.left + 1;
+                            data.styles.width = data.offsets.reference.width;
+                            data.styles.height = '200px';
+                            return data;
+                        },
+                    }
+                }
+
+            }
+        )
+        this.popup.update();
+        this.popup.update();
+        this.popupElement.show();
+    }
+
+    hidePopup() {
+        this.popupElement.hide();
     }
 
     showResults(results) {
@@ -39,15 +68,17 @@ class SearchBox extends Control {
             </ul>
         `)
 
-        $(`#${this.inputId}-popup .list-group-item`).click((e) => {
+        $(`#${this.elementId}-popup .list-group-item`).click((e) => {
             this.onResultClicked(
                 $(e.currentTarget).attr("result-id")
             );
-            this.popupElement.hide();
+            //this.popupElement.hide();
+            this.hidePopup();
         })
 
         this.popupElement.scrollTop(0);
-        this.popupElement.show();
+        //this.popupElement.show();
+        this.showPopup();
     }
 
     clearResults() {
@@ -66,37 +97,44 @@ class SearchBox extends Control {
     }
 
     setupEvents() {
-        this.input()
+        this.element()
             .keyup(() => {
                 this.search();
             })
             .focus(() => {
-                this.popup.update();
+                //this.popup.update();
                 this.search();
             })
             .bind('blur', () => {
-                this.popupElement.hide();
+                //this.popupElement.hide();
+                this.hidePopup()
             })
 
-        $(`#${this.inputId}-popup`)
+        $(`#${this.elementId}-popup`)
             .mouseout(() => {
-                this.input().bind('blur', () => {
-                    this.popupElement.hide();
+                this.element().bind('blur', () => {
+                    //this.popupElement.hide();
+                    this.hidePopup()
                 })
             })
             .mouseover(() => {
-                this.input().unbind('blur');
+                this.element().unbind('blur');
             })
         }
 
+    
+    
+
+
     render(target) {
         super.render(target);
-        this.popupElement = $(`#${this.inputId}-popup`);
-        this.popupElement.hide();
-
+        this.popupElement = $(`#${this.elementId}-popup`);
+        this.showPopup();
+        this.hidePopup();
+        /*
         this.popup = new Popper(
-            $(`#${this.inputId}`),
-            $(`#${this.inputId}-popup`),
+            $(`#${this.elementId}`),
+            $(`#${this.elementId}-popup`),
             {
                 placement: 'bottom',
                 modifiers: {
@@ -113,7 +151,7 @@ class SearchBox extends Control {
                 }
 
             }
-        )
+        )*/
     }
 
     getHtml() {
@@ -124,8 +162,8 @@ class SearchBox extends Control {
                         ${feather.icons['search'].toSvg()}
                     </div>
                 </div>
-                <input type="text" class="form-control" id="${this.inputId}" placeholder="${this.placeHolder}">
-                <div id="${this.inputId}-popup" class="popup"></div>
+                <input type="text" class="form-control" id="${this.elementId}" placeholder="${this.placeHolder}">
+                <div id="${this.elementId}-popup" class="popup"></div>
             </div>
         `
     }
