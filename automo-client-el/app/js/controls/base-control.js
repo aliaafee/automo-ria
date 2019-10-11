@@ -35,6 +35,7 @@ class Control {
             target = $(`#${this.elementId}`);
         }
         target.replaceWith(this.getHtml());
+        this._element = $(`#${this.elementId}`);
         this.setupEvents();
     }
 }

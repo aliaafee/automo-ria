@@ -5,6 +5,7 @@ class TextField extends Control {
     constructor(elementId, name, options={}) {
         /* Supported options, label, placeholder, helpText,
          * invalidFeedback, required, password, default
+         * sideLabel={true|false}
          */
         super(elementId);
         this.name = name;
@@ -62,23 +63,44 @@ class TextField extends Control {
     }
 
     getHtml() {
-        var ctrl_html = "";
-        
+        var ctrl_html = this.getControlHtml();
+
+        var label = ""
         if (this.options.label) {
-            ctrl_html += `<label for="${this.elementId}">${this.options.label}</label>`
+            var labelClass = this.options.sideLabel == true ? "col-sm-1 col-form-label" : ""
+            label = `<label for="${this.elementId}" class="${labelClass}">${this.options.label}</label>`
         }
         
-        ctrl_html += this.getControlHtml();
-        
+        var helpText = ""
         if (this.options.helpText) {
-            ctrl_html += `<small id="${this.elementId}-help-text" class="form-text text-muted">${this.options.helpText}</small>`
+            helpText = `<small id="${this.elementId}-help-text" class="form-text text-muted">${this.options.helpText}</small>`
         }
 
+        var invalidFeedback = ""
         if (this.options.invalidFeedback) {
-            ctrl_html += `<div class="invalid-feedback">${this.options.invalidFeedback}</div>`
+            invalidFeedback = `<div class="invalid-feedback">${this.options.invalidFeedback}</div>`
         }
 
-        return `<div>${ctrl_html}</div>`
+        if (this.options.sideLabel == true) {   
+            return `
+                <div class="form-group row">
+                    ${label}
+                    <div class="col-sm-11">
+                        ${ctrl_html}
+                        ${helpText}
+                        ${invalidFeedback}
+                    </div>
+                </div>`
+        }
+
+        return `
+            <div class="form-group">
+                ${label}
+                ${ctrl_html}
+                ${helpText}
+                ${invalidFeedback}
+            </div>`
+            
     }
 }
 

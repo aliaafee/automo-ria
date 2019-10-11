@@ -10,9 +10,10 @@ class LoginDialog extends Dialog {
         this.on_login = null;
     }
 
-    show(on_login) {
+    show(message, on_login) {
         this.on_login = on_login;
         super.show();
+        $('#message').html(message);
     }
 
     _on_login() {
@@ -46,6 +47,10 @@ class LoginDialog extends Dialog {
                 </div>
                 <div class="form-group">
                     <input value="a" id="password" class="form-control" type="password" placeholder="Password">
+                </div>
+                <div class="row justify-content-center">
+                    <div id="message">
+                    </div>
                 </div>
             </form>`);
 

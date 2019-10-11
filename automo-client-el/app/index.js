@@ -11,8 +11,8 @@ loginDlg = new LoginDialog();
 statusDlg = new StatusDialog()
 
 
-function tryLogin() {
-    loginDlg.show((data) => {
+function tryLogin(message="") {
+    loginDlg.show(message, (data) => {
         statusDlg.show();
         statusDlg.setLogger(logger);
         connection.login(
@@ -20,8 +20,10 @@ function tryLogin() {
             () => {
                 statusDlg.close(showMainWindow)
             },
-            () => {
-                statusDlg.close(tryLogin)
+            (error) => {
+                statusDlg.close(() => {
+                    tryLogin(error.message)
+                })
             }
         )
     })
@@ -65,7 +67,10 @@ const Button = require("./js/controls/button")
 
 var patient = new Form(
     'patient-form',
-    'patient'
+    'patient',
+    {
+        title: "Patient Information"
+    }
 );
 
 var name = new TextField(
@@ -74,10 +79,10 @@ var name = new TextField(
     {
         label: "Name",
         placeholder: "Name",
-        helpText: "Full name of patient",
+        //helpText: "Full name of patient",
         invalidFeedback: "The name is not valid",
         required: true,
-        default: "Ali Aafee"
+        default: "Ali Aafee",
     }
 );
 
@@ -87,7 +92,6 @@ var age = new FloatField(
     {
         label: "Age",
         placeholder: "Age",
-        helpText: "Age of patient in years",
         invalidFeedback: "The age is not valid",
         required: true
     }
@@ -97,28 +101,27 @@ patient.addField(name);
 patient.addField(age);
 
 $('#dialog').html(
-    `<form id="patient-form"></form>
-    <button id="A">A</button>
-    <button id="B">B</button>`
+    `<form id="patient-form"></form>This is after the form`
 );
 
-patient.render()
 
-$('#A').click(() => {
+
+btnLock = new Button('lock', 'lock', 'Lock', (e) => {
+    e.preventDefault();
     patient.lock();
+}, {
+    icon: 'search'
 })
 
-
-$('#B').click(() => {
+btnUnlock = new Button('unlock', 'unlock', 'Unlock', (e) => {
+    e.preventDefault();
     patient.unlock();
 })
 
-$('#dialog').append('<button id="do" />')
+//patient.addButton(btnLock)
+//patient.addButton(btnUnlock)
 
-btn = new Button('do', 'do', 'Do It', () => {
-    patient.lock();
-})
+patient.render()
 
-btn.render();
-
-//console.log(name.validate())*/
+//console.log(name.validate())
+*/

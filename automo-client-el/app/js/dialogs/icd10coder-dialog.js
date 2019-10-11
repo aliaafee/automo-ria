@@ -1,6 +1,5 @@
 const sqlite3 = require('sqlite3').verbose();
 const querystring = require('querystring');
-const feather = require('feather-icons');
 
 const Dialog = require("./base-dialog");
 const SearchBox = require("../controls/search-box");
@@ -21,7 +20,6 @@ class ICD10Dialog extends Dialog {
             if (err) {
                 console.error(err.message);
             }
-            console.log('Connected to ICD10 Data.')
         });
 
         this.searchBox = new SearchBox(
@@ -155,7 +153,6 @@ class ICD10Dialog extends Dialog {
 
             $("#icd10-dialog .code").click((event) => {
                 event.preventDefault();
-                console.log($(event.currentTarget).attr("code"));
                 this.set_selected_category($(event.currentTarget).attr("code"), () => { }, false);
             })
 
@@ -163,9 +160,7 @@ class ICD10Dialog extends Dialog {
                 event.preventDefault();
                 var query = $(event.target).attr('href');
                 var query_data = querystring.decode(query)
-                console.log(query_data);
                 let code = query_data['category?code']
-                console.log(code);
                 if (code != null) {
                     this.set_selected_category(code, () => { });
                 }
