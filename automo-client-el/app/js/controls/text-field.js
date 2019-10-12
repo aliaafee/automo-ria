@@ -81,7 +81,7 @@ class TextField extends Control {
             invalidFeedback = `<div class="invalid-feedback">${this.options.invalidFeedback}</div>`
         }
 
-        if (this.options.sideLabel == true) {   
+        if (this.options.sideLabel == true && this.options.label != null) {   
             return `
                 <div class="form-group row">
                     ${label}

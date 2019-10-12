@@ -7,10 +7,13 @@ class Form extends Control {
          * title="Title of the form"
          */
         super(elementId);
+
         this.name = name;
         this.options = options;
         this._fields = [];
         this._buttons = [];
+
+        this._locked = false;
     }
 
     validate() {
@@ -20,9 +23,16 @@ class Form extends Control {
             if (field.validate() == false) {
                 isValid = false;
             }
-        })
+        });
 
         return isValid;
+    }
+
+
+    clearValidation() {
+        this._fields.forEach((field) => {
+            field.markValid();
+        });
     }
 
 
@@ -35,25 +45,30 @@ class Form extends Control {
         this._buttons.push(button);
     }
 
-
-    getHtml() {
+    getHeaderHtml() {
         var title = ""
         if (this.options.title) {
-            title = `<h5>${this.options.title}</h5>`
+            title = `<h5>${this.options.title}</h5>`;
         }
+        return title;
+    }
+
+    getHtml() {
+        
         return `
             <form id="${this.elementId}" name="${this.name}">
-                ${title}
+                ${this.getHeaderHtml()}
                 <div id="${this.elementId}-fields">
                 </div>
                 
-            </form>`
+            </form>`;
     }
 
     lock() {
         this._fields.forEach((field) => {
             field.lock();
         })
+        this._locked = true;
     }
 
 
@@ -61,6 +76,7 @@ class Form extends Control {
         this._fields.forEach((field) => {
             field.unlock();
         })
+        this._locked = false;
     }
 
 

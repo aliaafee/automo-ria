@@ -84,7 +84,9 @@ class Connection {
         }
         if (!this.user.tokenValid()) {
             this.user.getToken(
-                () => { this._get(url, on_success, on_failed) },
+                () => {
+                    this._get(url, on_success, on_failed)
+                },
                 (error) => {
                     this.logger.log_error(`GET ${url} failed. Failed to renew token.`)
                     on_failed(error)
@@ -93,6 +95,59 @@ class Connection {
             return;
         }
         this._get(url, on_success, on_failed);
+    }
+
+
+    post(url, post_data, on_success, on_failed) {
+        this.logger.log_spinner(`POST ${url}...`)
+        if (this.user == null) {
+            on_failed(new Error("User not logged in"));
+            return;
+        }
+        if (!this.user.tokenValid()) {
+            this.user.getToken(
+                () => {
+                    this._post(url, post_data, on_success, on_failed)
+                },
+                (error) => {
+                    this.logger.log_error(`POST ${url} failed. Failed to renew token.`)
+                    on_failed(error)
+                }
+            );
+            return;
+        }
+        this._post(url, post_data, on_success, on_failed);
+    }
+
+
+    _post(url, post_data, on_success, on_failed, refetchTokenOnFail = true) {
+        let headers = this.user.getAuthorizationHeaders();
+
+        headers.set('Content-Type', 'application/json');
+
+        fetch(url, { method: 'POST', body: JSON.stringify(post_data), headers: headers })
+            .then(status)
+            .then(response => response.json())
+            .then(data => {
+                this.logger.log_success(`POST ${url}`)
+                on_success(data);
+            })
+            .catch(error => {
+                if (refetchTokenOnFail ? (error.status == 401) : false) {
+                    this.user.getToken(
+                        () => {
+                            this._post(url, post_data, on_success, on_failed, false)
+                        },
+                        (getTokenError) => {
+                            this.logger.log_error(`POST ${url} failed. ${getTokenError.message}`);
+                            on_failed(getTokenError);
+                        }
+                    );
+                } else {
+                    this.logger.log_error(`POST ${url} failed. ${error.message}.`)
+                    on_failed(error);
+                }
+            })
     }
 }
 

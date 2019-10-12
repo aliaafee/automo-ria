@@ -22,7 +22,18 @@ class Control {
         return this._element;
     }
 
-    val() {
+    hide() {
+        this.element().hide();
+    }
+
+    show() {
+        this.element().show();
+    }
+
+    val(value) {
+        if (value != null) {
+            this.element().val(value);
+        }
         return this.element().val();
     }
 

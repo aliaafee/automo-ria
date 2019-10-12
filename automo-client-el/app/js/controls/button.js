@@ -17,23 +17,31 @@ class Button extends Control {
     }
 
     setupEvents() {
-        this.element().click(this.onClick)
+        this.element().click((e) => {
+            e.preventDefault();
+            this.onClick(e);
+        });
+    }
+
+    setLabel(label) {
+        this.label = label;
+        $(`${this.elementId}-label`).text(label);
     }
 
     getHtml() {
         var btnClass = 'primary'
         if (this.options.type) {
-            btnClass = this.options.type
+            btnClass = this.options.type;
         }
         var iconSvg = ""
         if (this.options.icon) {
-            iconSvg = feather.icons[this.options.icon].toSvg()
+            iconSvg = feather.icons[this.options.icon].toSvg();
         }
         return `
             <button id="${this.elementId}" name="${this.name}" class="btn btn-${btnClass} type="button">
                 ${iconSvg}
-                ${this.label}
-            </button>`
+                <span id="${this.elementId}-label">${this.label}</span>
+            </button>`;
     }
 }
 

@@ -62,12 +62,16 @@ icd.show((result) => {
 const TextField = require("./js/controls/text-field")
 const FloatField = require("./js/controls/float-field")
 const Form = require("./js/controls/form")
+const ResourceForm = require("./js/controls/resource-form")
 const Button = require("./js/controls/button")
 
 
-var patient = new Form(
+var patient = new ResourceForm(
     'patient-form',
     'patient',
+    connection,
+    'http://get/patient',
+    'http://post/patient',
     {
         title: "Patient Information"
     }
@@ -97,8 +101,8 @@ var age = new FloatField(
     }
 );
 
-patient.addField(name);
-patient.addField(age);
+patient.addField('name', name);
+patient.addField('age', age);
 
 $('#dialog').html(
     `<form id="patient-form"></form>This is after the form`
@@ -107,14 +111,12 @@ $('#dialog').html(
 
 
 btnLock = new Button('lock', 'lock', 'Lock', (e) => {
-    e.preventDefault();
     patient.lock();
 }, {
     icon: 'search'
 })
 
 btnUnlock = new Button('unlock', 'unlock', 'Unlock', (e) => {
-    e.preventDefault();
     patient.unlock();
 })
 
@@ -122,6 +124,8 @@ btnUnlock = new Button('unlock', 'unlock', 'Unlock', (e) => {
 //patient.addButton(btnUnlock)
 
 patient.render()
+
+patient.getData();
 
 //console.log(name.validate())
 */

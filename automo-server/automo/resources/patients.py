@@ -9,6 +9,7 @@ from .. import db
 from . import api
 from .authentication import auth
 from . import errors
+from .success import success_response
 
 
 @api.route("/patients/")
@@ -53,6 +54,20 @@ def get_patient(patient_id):
     data['encounters'] = url_for('api.get_patient_encounters', patient_id=patient.id, _external=True)
 
     return jsonify(data)
+
+
+@api.route("/patients/<int:patient_id>", methods=['POST'])
+def post_patient(patient_id):
+    patient = md.Patient.query.get_or_404(patient_id)
+
+    data = request.get_json()
+
+    for key in data:
+        setattr(patient, key, data[key])
+
+    db.session.commit();
+
+    return success_response("Patient Saved")
 
 """
 @api.route("/patients/<int:patient_id>/versions/")

@@ -1,5 +1,7 @@
 const NavBar = require("./navbar");
 const ICD10Dialog = require("./dialogs/icd10coder-dialog");
+const ResourceForm = require("./controls/resource-form");
+const TextField = require("./controls/text-field");
 
 
 class MainWindow {
@@ -7,6 +9,8 @@ class MainWindow {
         this.connection = connection;
         this.navbar = new NavBar();
         this.icd10Dialog = new ICD10Dialog();
+
+        this.patient_form = null;
     }
 
     initialize() {
@@ -41,6 +45,44 @@ class MainWindow {
         );
     }
 
+    displayPatient(patient) {
+        console.log(patient);
+        $('#main').html(`
+            <div class="container">
+                <form id="patient-form"></form>
+            </div>
+        `);
+        this.patient_form = new ResourceForm(
+            'patient-form',
+            'patient',
+            this.connection,
+            patient.url,
+            patient.url,
+            {
+                title: "Patient Data"
+            }
+        )
+
+        this.patient_form.addField(
+            'name',
+            new TextField(
+                'patient-name',
+                'patient_name',
+                {
+                    label: "Name",
+                    placeholder: "Name",
+                    //helpText: "Full name of patient",
+                    //invalidFeedback: "The name is not valid",
+                    required: true,
+                    //default: "",
+                }
+            )
+        )
+
+        this.patient_form.render();
+        this.patient_form.getData();
+    }
+
     _setupEvents() {
         $('#btn-patient-list').click(() => {
             console.log("Yo");
@@ -71,12 +113,29 @@ class MainWindow {
             )
         });
 
+        $('#btn-patient-one').click(() => {
+            console.log("Patient One");
+            this.connection.get(
+                this.connection.index_url,
+                data => {
+                    this.connection.get(
+                        data['patients'],
+                        data => {
+                            this.displayPatient(data.patients[0]);
+                        }
+                    )
+                }
+            )
+        });
+
         $('#btn-icd10').click(() => {
             this.icd10Dialog.render($("#dialog"));
             this.icd10Dialog.show((problem) => {
                 console.log(problem);
             });
         });
+
+
     }
 
     render(target) {
@@ -100,6 +159,11 @@ class MainWindow {
                                 <li class="nav-item">
                                     <a id="btn-patient-list" class="nav-link" href="#">
                                         List All Patients
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a id="btn-patient-one" class="nav-link" href="#">
+                                        Load Patient One
                                     </a>
                                 </li>
                                 <li class="nav-item">
