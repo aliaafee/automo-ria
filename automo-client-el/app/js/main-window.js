@@ -64,10 +64,9 @@ class MainWindow {
         )
 
         this.patient_form.addField(
-            'name',
             new TextField(
                 'patient-name',
-                'patient_name',
+                'name',
                 {
                     label: "Name",
                     placeholder: "Name",

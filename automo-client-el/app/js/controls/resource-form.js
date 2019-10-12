@@ -13,8 +13,6 @@ class ResourceForm extends Form {
         this.getUrl = getUrl;
         this.postUrl = postUrl;
 
-        this._fieldNames = [];
-
         this.btnEdit = new Button(
             `${this.elementId}-edit`,
             `${this.name}-edit`,
@@ -65,19 +63,12 @@ class ResourceForm extends Form {
         this.addButton(this.btnCancel);
     }
 
-    addField(fieldName, field) {
-        super.addField(field);
-        this._fieldNames.push(fieldName);
-    }
-
     getData() {
         this._showSpinner();
         this.connection.get(
             this.getUrl,
             data => {
-                for (var i = 0; i < this._fields.length; i++) {
-                    this._fields[i].val(data[this._fieldNames[i]]);
-                }
+                this.val(data);
                 this._hideSpinner();
             },
             error => {
@@ -96,13 +87,10 @@ class ResourceForm extends Form {
         }
 
         this._showSpinner();
-        var data = {};
-        for (var i = 0; i < this._fields.length; i++) {
-            data[this._fieldNames[i]] = this._fields[i].val()
-        }
+
         this.connection.post(
             this.postUrl,
-            data,
+            this.val(),
             () => {
                 this._hideSpinner();
                 this.lock();

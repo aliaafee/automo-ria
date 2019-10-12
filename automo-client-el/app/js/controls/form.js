@@ -11,6 +11,7 @@ class Form extends Control {
         this.name = name;
         this.options = options;
         this._fields = [];
+        this._fieldNames = [];
         this._buttons = [];
 
         this._locked = false;
@@ -36,9 +37,28 @@ class Form extends Control {
     }
 
 
+    val(data) {
+        if (data != null) {
+            for (var i = 0; i < this._fields.length; i++) {
+                this._fields[i].val(
+                    data[this._fieldNames[i]]
+                );
+            }
+            return;
+        }
+
+        var result = {};
+        for (var i = 0; i < this._fields.length; i++) {
+            result[this._fieldNames[i]] = this._fields[i].val();
+        }
+        return result;
+    }
+
+
     addField(field) {
         field.options.sideLabel = true;
         this._fields.push(field);
+        this._fieldNames.push(field.name);
     }
 
     addButton(button) {
