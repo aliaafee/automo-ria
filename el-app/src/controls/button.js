@@ -1,0 +1,25 @@
+const Control = require("./control");
+
+class Button extends Control {
+    constructor(label, onClick, options) {
+        super(options);
+        this.label = label;
+        this.onClick = onClick;
+    }
+
+    createElement() {
+        this.element = document.createElement('button');
+        
+        this.element.innerHTML = this.label;
+
+        this.element.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            this.onClick(ev);
+        })
+
+        return this.element
+    }
+
+}
+
+module.exports = Button;

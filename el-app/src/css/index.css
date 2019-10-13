@@ -1,0 +1,137 @@
+:root {
+    --blue: #007bff;
+    --indigo: #6610f2;
+    --purple: #6f42c1;
+    --pink: #e83e8c;
+    --red: #dc3545;
+    --orange: #fd7e14;
+    --yellow: #ffc107;
+    --green: #28a745;
+    --teal: #20c997;
+    --cyan: #17a2b8;
+    --white: #fff;
+    --gray: #6c757d;
+    --gray-dark: #343a40;
+    --primary: #007bff;
+    --secondary: #6c757d;
+    --success: #28a745;
+    --info: #17a2b8;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --light: #f8f9fa;
+    --dark: #343a40;
+    --hover: #e9ecefde;
+    --border: rgba(0, 0, 0, 0.125);
+    --border-radius: 4px;
+}
+
+html {
+    font-family: sans-serif;
+    line-height: 1.15;
+    font-size: 10pt;
+}
+
+body {
+    margin: 0;
+    overflow-x: hidden;
+}
+
+input,
+button {
+    font-family: inherit;
+    font-size: inherit;
+}
+
+input {
+    padding: 5px;
+    border: 1px solid var(--border);
+    /*border-radius: var(--border-radius);*/
+}
+
+input:focus {
+    outline: none;
+    /*
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);*/
+}
+
+button {
+    font-family: inherit;
+    font-size: inherit;
+    padding: 5px 10px 5px 10px;
+    border: 1px solid rgba(0,0,0,0);
+    /*border-radius: var(--border-radius);*/
+    background-color: var(--dark);
+    color: var(--light);
+}
+
+
+button:focus {
+    outline: none;
+    background-color: #343a40d3;
+    /*
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);*/
+}
+
+button:hover {
+    background-color: #343a40d3;
+}
+
+.scrolled {
+    border: 1px solid var(--border);
+    /*border-radius: var(--border-radius);*/
+}
+
+.list-box ul {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: unset;
+    flex-grow: 1;
+}
+
+.list-box li {
+    display: flex;
+    padding: 5px;
+}
+
+.list-box li:hover {
+    background-color: var(--hover);
+}
+
+.list-box li.selected {
+    background-color: var(--primary);
+    color: var(--light);
+}
+
+.field {
+    margin-bottom: 5px;
+}
+
+.field label {
+    padding: 5px 10px 5px 5px;
+}
+
+.field .help-text,
+.field .invalid-feedback {
+    padding: 2px 5px 0 5px;
+    font-size: 8pt;
+}
+
+.field .invalid-feedback {
+    color: var(--red);
+    display: none;
+}
+
+.invalid .invalid-feedback {
+    display: unset;
+}
+
+.invalid input {
+    border-color: var(--red);
+}
+
+
+.popup {
+    background-color: #dc3545;
+}

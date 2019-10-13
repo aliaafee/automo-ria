@@ -1,0 +1,16 @@
+{
+  "name": "el-app",
+  "version": "1.0.0",
+  "description": "Base electron app",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ali Aafee",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^6.0.11"
+  },
+  "devDependencies": {}
+}

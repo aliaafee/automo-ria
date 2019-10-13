@@ -1,0 +1,110 @@
+
+const Control = require("../control");
+
+class Field extends Control {
+    constructor(name, label, options) {
+        /*Options
+         *  labelSize=(1-100) %
+         *  required=true|false
+         *  invalidFeedback=""
+         *  helpText=""
+         *  placeholder=""
+         */
+        super(options);
+        this.name = name;
+        this.label = label;
+
+        this._labelElement = null;
+        this._placeholderElement = null;
+        this._helpElement = null;
+        this._invalidElement = null;
+    }
+
+    value() {
+        return;
+    }
+
+    setValue(value) {
+        return;
+    }
+
+    setData(data) {
+        //Expects a dictionary with key equal to name
+        this.setValue(
+            data[this.name]
+        );
+    }
+
+    isValid() {
+        if (this.options.required == true) {
+            if (this.value() == '') {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    validate() {
+        this.markValid();
+
+        var isValid = this.isValid();
+        if (!isValid) {
+            this.markInvalid();
+        }
+
+        return isValid;
+    }
+
+    markInvalid() {
+        this.element.classList.add('invalid');
+    }
+
+    markValid() {
+        this.element.classList.remove('invalid');
+    }
+
+    createElement() {
+        super.createElement()
+
+        this.element.classList.add('field');
+
+        this._labelElement = document.createElement('label');
+        this._labelElement.innerHTML = this.label;
+        this.element.appendChild(this._labelElement);
+
+        var content = document.createElement('div');
+        content.style.display = 'flex';
+        content.style.flexDirection = 'column';
+        this.element.appendChild(content);
+
+        if (this.options.labelSize != null) {
+            this._labelElement.style.flexGrow = this.options.labelSize;
+            content.style.flexGrow = 100 - this.options.labelSize;
+        } else {
+            content.style.flexGrow = 1;
+        }
+
+        this._placeholderElement = document.createElement('div');
+        this._placeholderElement.style.display = 'flex';
+        this._placeholderElement.style.flexGrow = 1;
+        content.appendChild(this._placeholderElement);
+
+        if (this.options.helpText != null) {
+            this._helpElement = document.createElement('div');
+            this._helpElement.className = 'help-text';
+            this._helpElement.innerHTML = this.options.helpText;
+            content.appendChild(this._helpElement);
+        }
+
+        if (this.options.invalidFeedback != null) {
+            this._invalidElement = document.createElement('div');
+            this._invalidElement.className = 'invalid-feedback';
+            this._invalidElement.innerHTML = this.options.invalidFeedback;
+            content.appendChild(this._invalidElement);
+        }
+        
+        return this.element
+    }
+}
+
+module.exports = Field;
