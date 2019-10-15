@@ -7,13 +7,10 @@ class Popup extends Control {
         this.referenceControl = referenceControl
     }
 
-    update() {
-        
-    }
-
-    setPosition(top, left) {
-        this.element.style.top = top;
-        this.element.style.left = left;
+    popup() {
+        this.element.style.marginTop = (this.referenceControl.element.clientHeight) + 'px';
+        this.element.style.width = (this.referenceControl.element.offsetWidth) + 'px';
+        this.show();
     }
 
     createElement() {
@@ -21,9 +18,10 @@ class Popup extends Control {
 
         this.element.className = 'popup';
         this.element.style.position = 'absolute';
-        this.element.innerHTML = "Yo man";
         this.element.style.width = this.options.width;
         this.element.style.height = this.options.height;
+
+        this.hide();
 
         return this.element;
     }

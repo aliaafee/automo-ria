@@ -20,6 +20,10 @@ class TextBox extends Control {
                 this.options.onKeyUp(ev);
             })
         }
+
+        if (this.options.placeholder != null) {
+            this.element.setAttribute('placeholder', this.options.placeholder);
+        }
         
         return this.element
     }

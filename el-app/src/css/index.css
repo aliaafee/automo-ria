@@ -22,7 +22,7 @@
     --dark: #343a40;
     --hover: #e9ecefde;
     --border: rgba(0, 0, 0, 0.125);
-    --border-radius: 4px;
+    --border-radius: 0px;
 }
 
 html {
@@ -45,7 +45,7 @@ button {
 input {
     padding: 5px;
     border: 1px solid var(--border);
-    /*border-radius: var(--border-radius);*/
+    border-radius: var(--border-radius);
 }
 
 input:focus {
@@ -60,7 +60,7 @@ button {
     font-size: inherit;
     padding: 5px 10px 5px 10px;
     border: 1px solid rgba(0,0,0,0);
-    /*border-radius: var(--border-radius);*/
+    border-radius: var(--border-radius);
     background-color: var(--dark);
     color: var(--light);
 }
@@ -79,7 +79,11 @@ button:hover {
 
 .scrolled {
     border: 1px solid var(--border);
-    /*border-radius: var(--border-radius);*/
+    border-radius: var(--border-radius);
+}
+
+.list-box {
+    background-color: white;
 }
 
 .list-box ul {
@@ -132,6 +136,12 @@ button:hover {
 }
 
 
-.popup {
-    background-color: #dc3545;
+.flat-top {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.flat-bottom {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }

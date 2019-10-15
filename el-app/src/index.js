@@ -8,9 +8,8 @@ var ctrl = new ListBox(
     (item) => {
         return item.label;
     },
-    (id) => {
-        console.log(id);
-        ctrl.show();
+    (item) => {
+        console.log(item);
     },
     {
         height: '300px'
@@ -23,7 +22,7 @@ document.body.appendChild(elem);
 
 var data = []
 
-for (var i = 0; i < 100; i++) {
+for (var i = 0; i < 1000; i++) {
     data.push({
         id: i,
         label: i
@@ -69,6 +68,35 @@ fld = new TextField(
 
 document.body.appendChild(fld.createElement());
 
+const SearchBox = require("./controls/search-box");
+
+
+src = new SearchBox(
+    (query) => {
+        result = []
+        data.forEach((item) => {
+            if (String(item.id).includes(query)) {
+                result.push(item);
+            }
+        })
+        return result;
+    },
+    (item) => {
+        return item.id;
+    },
+    (item) => {
+        return item.label;
+    },
+    (item) => {
+        console.log(item);
+    },
+    {
+        popupHeight: '100px'
+    }
+)
+
+document.body.appendChild(src.createElement());
+
 
 fld = new TextField(
     'name',
@@ -111,5 +139,8 @@ btn = new Button(
 )
 
 document.body.appendChild(btn.createElement());
+
+
+
 
 

@@ -1,19 +1,27 @@
 const Scrolled = require("./scrolled");
 
 class ListBox extends Scrolled {
-    constructor(idFunction, labelFunction, onSelectItem, height) {
-        super(height);
+    constructor(idFunction, labelFunction, onSelectItem, options) {
+        /* idFunction(result) { return result.unique_id }
+         * labelFunction(result) { return result.label }
+         * onResultClicked(result) { do something using result }
+         * 
+         * Options:
+         *  height
+         */
+        super(options);
 
         this.idFunction = idFunction;
         this.labelFunction = labelFunction;
         this.onSelectItem = onSelectItem;
+
         this.data = [];
+        this._itemIds = [];
 
         this._listElement = null;
 
+        this._selectedItem = null;
         this._selectedElement = null;
-
-        this._listItems = [];
     }
 
     _createListItem(itemid, label) {
@@ -30,7 +38,15 @@ class ListBox extends Scrolled {
     }
 
     _onSelectItem(event) {
-        this.onSelectItem(event.target.getAttribute('item-id'));
+        this._selectedItem = null;
+        var selectedId = event.target.getAttribute('item-id');
+        for (var i = 0; i < this._itemIds.length; i++) {
+            if (this._itemIds[i] == selectedId) {
+                this._selectedItem = this.data[i];
+                this.onSelectItem(this._selectedItem);
+                return
+            }
+        }
     }
 
     setData(data) {
@@ -41,9 +57,14 @@ class ListBox extends Scrolled {
     displayData() {
         this._clear();
         
+        this._itemIds = []
         this.data.forEach((item) => {
+            var item_id = this.idFunction(item);
+
+            this._itemIds.push(item_id);
+
             var elem = this._createListItem(
-                this.idFunction(item),
+                item_id,
                 this.labelFunction(item)
             );
 
@@ -58,6 +79,8 @@ class ListBox extends Scrolled {
                 this._onSelectItem(event);
             })
         })
+
+        this.element.scrollTop = 0;
     }
 
     createElement() {

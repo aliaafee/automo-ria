@@ -3,10 +3,12 @@ const Field = require("./field");
 
 
 class TextField extends Field {
-    constructor(name, label, options) {
+    constructor(name, label, options = {}) {
         super(name, label, options);
 
-        this._textBox = new TextBox ();
+        this._textBox = new TextBox({
+            placeholder: options.placeholder
+        });
     }
 
     value() {
@@ -25,10 +27,6 @@ class TextField extends Field {
         );
 
         this._textBox.element.style.flexGrow = 1;
-
-        if (this.options.placeholder != null) {
-            this._textBox.element.setAttribute('placeholder', this.options.placeholder);
-        }
 
         return this.element;
     }
