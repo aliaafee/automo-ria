@@ -11,12 +11,24 @@ class TextField extends Field {
         });
     }
 
+    isBlank() {
+        return this._textBox.isBlank();
+    }
+
     value() {
         return this._textBox.value();
     }
 
     setValue(value) {
         this._textBox.setValue(value);
+    }
+
+    lock() {
+        this._textBox.lock();
+    }
+
+    unlock() {
+        this._textBox.unlock();
     }
 
     createElement() {

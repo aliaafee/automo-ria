@@ -13,6 +13,21 @@ class TextBox extends Control {
         this.element.value = value;
     }
 
+    isBlank() {
+        if (this.element.value == '') {
+            return true;
+        }
+        return false;
+    }
+
+    lock() {
+        this.element.setAttribute('readonly', '');
+    }
+
+    unlock() {
+        this.element.removeAttribute('readonly');
+    }
+
     createElement() {
         this.element = document.createElement('input');
         if (this.options.onKeyUp) {

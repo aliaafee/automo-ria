@@ -12,7 +12,7 @@ var ctrl = new ListBox(
         console.log(item);
     },
     {
-        height: '300px'
+        height: '100px'
     }
 );
 
@@ -22,7 +22,7 @@ document.body.appendChild(elem);
 
 var data = []
 
-for (var i = 0; i < 1000; i++) {
+for (var i = 0; i < 100; i++) {
     data.push({
         id: i,
         label: i
@@ -42,11 +42,26 @@ document.body.appendChild(btn.createElement());
 
 const TextBox = require('./controls/text-box');
 
-txt = new TextBox(
-    'Yo man'
-)
+txt = new TextBox({
+    placeholder: 'Yo man'
+});
 
 document.body.appendChild(txt.createElement());
+
+btn = new Button(
+    'Lock',
+    (ev) => {
+        txt.lock();
+    }
+);
+document.body.appendChild(btn.createElement());
+btn = new Button(
+    'UnLock',
+    (ev) => {
+        txt.unlock();
+    }
+);
+document.body.appendChild(btn.createElement());
 
 
 const Field = require('./controls/form/field');
@@ -91,7 +106,8 @@ src = new SearchBox(
         console.log(item);
     },
     {
-        popupHeight: '100px'
+        popupHeight: '100px',
+        placeholder: 'Search numbers'
     }
 )
 
@@ -105,7 +121,8 @@ fld = new TextField(
         labelSize: 20,
         invalidFeedback: "Invalid Input",
         helpText: "Enter your full name here",
-        placeholder: "Fullname"
+        placeholder: "Fullname",
+        required: true
     }
 );
 
@@ -128,18 +145,61 @@ document.body.appendChild(pop.createElement());
 
 console.log("Hello world")
 
-ctrl.setData(data);
+//ctrl.setData(data);
 
 
 btn = new Button(
     'Do It',
     (ev) => {
-        fld.markInvalid();
+        fld.validate();
     }
 )
 
 document.body.appendChild(btn.createElement());
 
+
+//Form **************************************************
+const Form = require('./controls/form/form');
+const FloatField = require('./controls/form/float-field');
+
+frm = new Form({
+    labelSize: '60px'
+});
+frm.addField(new TextField(
+    'fullname',
+    'Fullname',
+    {
+        placeholder: "Fullname of Patient",
+        required: true,
+        invalidFeedback: "This Field cannot be empty.",
+        helpText: "The long and fullname."
+    }
+));
+frm.addField(new FloatField(
+    'age',
+    'Age',
+    {
+        placeholder: "Age in Years"
+    }
+))
+
+document.body.appendChild(frm.createElement());
+
+btn = new Button(
+    'Validate',
+    (ev) => {
+        frm.validate();
+    }
+);
+document.body.appendChild(btn.createElement());
+
+btn = new Button(
+    'Value',
+    (ev) => {
+        console.log(frm.value());
+    }
+);
+document.body.appendChild(btn.createElement());
 
 
 

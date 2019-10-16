@@ -87,7 +87,6 @@ class SearchBox extends Control {
         this._listBox.element.style.flexGrow = 1;
 
         this._textBox.element.addEventListener('keyup', (ev) => {
-            console.log(ev.code);
             if (ev.code == 'ArrowUp') {
                 this._selectUp();
             } else if (ev.code == 'ArrowDown') {

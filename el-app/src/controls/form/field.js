@@ -4,7 +4,7 @@ const Control = require("../control");
 class Field extends Control {
     constructor(name, label, options) {
         /*Options
-         *  labelSize=(1-100) %
+         *  labelSize=in css units
          *  required=true|false
          *  invalidFeedback=""
          *  helpText=""
@@ -35,9 +35,13 @@ class Field extends Control {
         );
     }
 
+    isBlank() {
+        return false;
+    }
+
     isValid() {
         if (this.options.required == true) {
-            if (this.value() == '') {
+            if (this.isBlank()) {
                 return false;
             }
         }
@@ -63,6 +67,14 @@ class Field extends Control {
         this.element.classList.remove('invalid');
     }
 
+    lock() {
+        return;
+    }
+
+    unlock() {
+        return;
+    }
+
     createElement() {
         super.createElement()
 
@@ -77,12 +89,8 @@ class Field extends Control {
         content.style.flexDirection = 'column';
         this.element.appendChild(content);
 
-        if (this.options.labelSize != null) {
-            this._labelElement.style.flexGrow = this.options.labelSize;
-            content.style.flexGrow = 100 - this.options.labelSize;
-        } else {
-            content.style.flexGrow = 1;
-        }
+        this._labelElement.style.width = this.options.labelSize;
+        content.style.flexGrow = 1;
 
         this._placeholderElement = document.createElement('div');
         this._placeholderElement.style.display = 'flex';
