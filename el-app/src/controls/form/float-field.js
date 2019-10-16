@@ -3,6 +3,7 @@ const TextField = require("./text-field");
 
 class FloatField extends TextField {
     constructor(name, label, options) {
+        options.type = 'number';
         super(name, label, options);
     }
 

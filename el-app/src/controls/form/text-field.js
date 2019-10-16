@@ -7,7 +7,8 @@ class TextField extends Field {
         super(name, label, options);
 
         this._textBox = new TextBox({
-            placeholder: options.placeholder
+            placeholder: options.placeholder,
+            type: options.type
         });
     }
 

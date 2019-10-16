@@ -1,7 +1,13 @@
 const Control = require("./control");
 
+const VALID_TYPES = ['text', 'date', 'datetime-local', 'password', 'email', 'tel', 'number', 'time', 'url']
+
 class TextBox extends Control {
     constructor(options) {
+        /* Options
+         *  placeholder=""
+         *  type=VALID_TYPE
+         */
         super(options);
     }
 
@@ -38,6 +44,10 @@ class TextBox extends Control {
 
         if (this.options.placeholder != null) {
             this.element.setAttribute('placeholder', this.options.placeholder);
+        }
+
+        if (VALID_TYPES.includes(this.options.type)) {
+            this.element.setAttribute('type', this.options.type);
         }
         
         return this.element

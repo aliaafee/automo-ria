@@ -1,6 +1,8 @@
 const ListBox = require("./controls/list-box");
 const Button = require("./controls/button");
 
+
+
 var ctrl = new ListBox(
     (item) => {
         return item.id;
@@ -19,6 +21,12 @@ var ctrl = new ListBox(
 elem = ctrl.createElement();
 
 document.body.appendChild(elem);
+
+const SpinnerForeground = require('./controls/spinner-foreground');
+
+spin = new SpinnerForeground();
+
+//document.body.appendChild(spin.createElement());
 
 var data = []
 
@@ -43,7 +51,8 @@ document.body.appendChild(btn.createElement());
 const TextBox = require('./controls/text-box');
 
 txt = new TextBox({
-    placeholder: 'Yo man'
+    placeholder: 'Yo man',
+    type: 'password'
 });
 
 document.body.appendChild(txt.createElement());
@@ -201,6 +210,29 @@ btn = new Button(
 );
 document.body.appendChild(btn.createElement());
 
+btn = new Button(
+    'Lock',
+    (ev) => {
+        frm.lock();
+    }
+);
+document.body.appendChild(btn.createElement());
 
+btn = new Button(
+    'Unlock',
+    (ev) => {
+        frm.unlock();
+    }
+);
+document.body.appendChild(btn.createElement());
+
+
+
+//Spinner ***********************************
+const Spinner = require('./controls/spinner');
+
+spin = new Spinner();
+
+document.body.appendChild(spin.createElement());
 
 
