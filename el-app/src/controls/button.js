@@ -9,6 +9,8 @@ class Button extends Control {
 
     createElement() {
         this.element = document.createElement('button');
+        this.element.style.minWidth = this.options.width;
+        this.element.style.minHeight = this.options.height;
         
         this.element.innerHTML = this.label;
 

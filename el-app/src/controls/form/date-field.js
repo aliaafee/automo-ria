@@ -1,26 +1,26 @@
 const TextField = require("./text-field");
 
 
-class FloatField extends TextField {
+class DateField extends TextField {
     constructor(name, options = {}) {
-        options.type = 'number';
+        options.type = 'date';
         super(name, options);
     }
 
     value() {
-        var value = super.value();
-        return +value;
+        var datetime = new Date(super.value());
+        return datetime;
     }
 
     isValid() {
         if (!super.isValid()) {
             return false;
         }
-        if (isNaN(this.value())) {
+        if (isNaN(this.value())){
             return false;
         }
         return true;
     }
 }
 
-module.exports = FloatField;
+module.exports = DateField;

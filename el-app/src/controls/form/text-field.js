@@ -3,13 +3,17 @@ const Field = require("./field");
 
 
 class TextField extends Field {
-    constructor(name, label, options = {}) {
-        super(name, label, options);
+    constructor(name, options = {}) {
+        super(name, options);
 
         this._textBox = new TextBox({
             placeholder: options.placeholder,
             type: options.type
         });
+    }
+
+    focus() {
+        this._textBox.focus();
     }
 
     isBlank() {

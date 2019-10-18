@@ -2,8 +2,9 @@
 const Control = require("../control");
 
 class Field extends Control {
-    constructor(name, label, options) {
+    constructor(name, options = {}) {
         /*Options
+         *  label=""
          *  labelSize=in css units
          *  required=true|false
          *  invalidFeedback=""
@@ -12,7 +13,7 @@ class Field extends Control {
          */
         super(options);
         this.name = name;
-        this.label = label;
+        //this.label = label;
 
         this._labelElement = null;
         this._placeholderElement = null;
@@ -80,16 +81,17 @@ class Field extends Control {
 
         this.element.classList.add('field');
 
-        this._labelElement = document.createElement('label');
-        this._labelElement.innerHTML = this.label;
-        this.element.appendChild(this._labelElement);
-
+        if (this.options.label != null) {
+            this._labelElement = document.createElement('label');
+            this._labelElement.innerHTML = this.options.label;
+            this._labelElement.style.width = this.options.labelSize;
+            this.element.appendChild(this._labelElement);
+        }
+        
         var content = document.createElement('div');
         content.style.display = 'flex';
         content.style.flexDirection = 'column';
         this.element.appendChild(content);
-
-        this._labelElement.style.width = this.options.labelSize;
         content.style.flexGrow = 1;
 
         this._placeholderElement = document.createElement('div');

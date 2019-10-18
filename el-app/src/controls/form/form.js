@@ -25,7 +25,7 @@ class Form extends Control {
         //Value is dictionary with fieldName: value
         for (var i = 0; i < this._fieldNames.length; i++) {
             this._fields[i].setValue(
-                data[this._fieldNames[i]]
+                value[this._fieldNames[i]]
             );
         }
     }

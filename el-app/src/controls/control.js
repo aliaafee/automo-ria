@@ -1,8 +1,15 @@
 
 class Control {
     constructor(options = {}) {
+        /* Options
+         *  widht, height =  css size
+         */
         this.element = null;
         this.options = options;
+    }
+
+    focus() {
+        this.element.focus();
     }
 
     createElement() {
@@ -12,6 +19,8 @@ class Control {
         //Add styles
         this.element.style.display = "flex";
         this.element.style.userSelect = "none";
+        this.element.style.width = this.options.width;
+        this.element.style.height = this.options.height;
 
         //Attache events
 
@@ -22,8 +31,8 @@ class Control {
         this.element.style.display = "none";
     }
 
-    show() {
-        this.element.style.display = "flex";
+    show(display = 'flex') {
+        this.element.style.display = display;
     }
 }
 

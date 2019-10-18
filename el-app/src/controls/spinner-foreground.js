@@ -7,7 +7,7 @@ class SpinnerForground extends Control {
 
     createElement() {
         this.element = document.createElement('div');
-        this.element.className = 'spinner-foreground';
+        this.element.className = 'foreground';
 
         var spinner = document.createElement('div');
         spinner.className = 'spinner';
