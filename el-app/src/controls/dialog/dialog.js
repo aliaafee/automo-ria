@@ -3,6 +3,9 @@ const Control = require("../control");
 
 class Dialog extends Control {
     constructor(options={}) {
+        /* Options
+         *  centered=false
+         */
         super(options);
 
         this.onCancel = null;
@@ -39,7 +42,12 @@ class Dialog extends Control {
 
     createElement() {
         this.element = document.createElement('div');
-        this.element.className = 'foreground';
+
+        if (this.options.centered == true){
+            this.element.className = 'foreground-centered';
+        } else {
+            this.element.className = 'foreground';
+        }
 
         this._dialogElement = document.createElement('div');
         this._dialogElement.className = 'dialog';

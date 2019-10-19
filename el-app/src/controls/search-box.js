@@ -5,7 +5,7 @@ const Popup = require("./popup");
 
 class SearchBox extends Control {
     constructor(searchFunction, idFunction, labelFunction, onSelectResult, options = {}) {
-        /* searchFunction(search_str) { return list_of_results }
+        /* searchFunction(search_str, on_done) { call on_done(data) when done  }
          * idFunction(result) { return result.unique_id }
          * labelFunction(result) { return result.label }
          * onSelectResult(result) { do something using code }
@@ -44,9 +44,13 @@ class SearchBox extends Control {
             this._hidePopup();
             return;
         }
-        var data = this.searchFunction(query);
-        this._listBox.setData(data);
-        this._showPopup();
+        this.searchFunction(
+            query,
+            (data) => {
+                this._listBox.setData(data);
+                this._showPopup();
+            }
+        );
     }
 
 
@@ -72,9 +76,12 @@ class SearchBox extends Control {
     createElement() {
         super.createElement();
 
+        this.element.className = 'search-box';
+
         this.element.appendChild(
             this._textBox.createElement()
         );
+        this._textBox.element.style.flexGrow = 1;
 
         this.element.appendChild(
             this._popup.createElement()

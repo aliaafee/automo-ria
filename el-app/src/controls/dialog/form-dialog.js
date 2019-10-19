@@ -49,8 +49,6 @@ class FormDialog extends Dialog {
 
         this.footerElement.appendChild(this.btnCancel.createElement());
         this.footerElement.appendChild(this.btnOk.createElement());
-        this.footerElement.style.display = 'flex';
-        this.footerElement.style.justifyContent = 'center';
 
         return this.element;
     }

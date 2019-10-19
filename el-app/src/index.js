@@ -53,8 +53,6 @@ showMainWindow = () => {
 }
 
 
-
-
 document.body.appendChild(dlgLogin.createElement());
 
 dlgLogin.form.setValue({
@@ -74,4 +72,19 @@ dlgLogin.tryLogin(
     }
 );
 
+/*
+const Icd10CoderDialog = require('./app/dialog/icd10coder-dialog');
 
+icd10 = new Icd10CoderDialog();
+
+document.body.appendChild(icd10.createElement());
+
+icd10.show(
+    (value) => {
+        console.log(value);
+    },
+    () => {
+        console.log("Cancelled");
+    }
+);
+*/

@@ -5,12 +5,26 @@ class Popup extends Control {
         super(options);
 
         this.referenceControl = referenceControl
+
+        this._resizeFunction = (ev) => {
+            this._updateSize();
+        }
+    }
+
+    _updateSize() {
+        this.element.style.marginTop = (this.referenceControl.element.clientHeight) + 'px';
+        this.element.style.width = (this.referenceControl.element.offsetWidth-0.5) + 'px';
     }
 
     popup() {
-        this.element.style.marginTop = (this.referenceControl.element.clientHeight) + 'px';
-        this.element.style.width = (this.referenceControl.element.offsetWidth) + 'px';
+        this._updateSize()
         this.show();
+        window.addEventListener('resize', this._resizeFunction);
+    }
+
+    hide() {
+        super.hide();
+        window.removeEventListener('resize', this._resizeFunction);
     }
 
     createElement() {

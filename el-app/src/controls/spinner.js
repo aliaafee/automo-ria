@@ -12,6 +12,12 @@ class Spinner extends Control {
         this._labelElement.innerHtml = label;
     }
 
+    
+
+    show() {
+        super.show();
+    }
+
     createElement() {
         super.createElement();
 

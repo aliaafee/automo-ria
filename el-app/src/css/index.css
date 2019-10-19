@@ -154,7 +154,7 @@ button:hover {
 }
 
 
-.foreground {
+.foreground, .foreground-centered {
     position: absolute;
     top: 0;
     left: 0;
@@ -163,9 +163,24 @@ button:hover {
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     z-index: 1000;
 }
+
+.foreground .dialog {
+    margin-top: 80px;
+}
+
+.foreground-centered {
+    justify-content: center;
+    align-items: center;
+}
+
+.foreground-centered .dialog {
+    margin-top: 0;
+}
+
+
 
 
 .spinner {
@@ -191,6 +206,11 @@ button:hover {
 
 .dialog-header {
     border-bottom: solid 1px rgba(0, 0, 0, 0.2);
+    align-content: center;
+}
+
+.dialog-header .search-box {
+    padding: 15px;
 }
 
 .dialog-header h1 {
@@ -205,6 +225,7 @@ button:hover {
     padding-bottom: 15px;
     padding-right: 5px;
     padding-left: 5px;
+    align-items: center;
 }
 
 .dialog-close {
@@ -218,6 +239,8 @@ button:hover {
     padding-right: 15px;
     padding-left: 15px;
     border-top: solid 1px rgba(0, 0, 0, 0.2);
+    justify-content: center;
+    display: flex;
 }
 
 .dialog-body-padded {

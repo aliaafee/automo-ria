@@ -38,7 +38,8 @@ class LoginDialog extends FormDialog {
             {
                 title: 'Login',
                 okLabel: 'Login',
-                width: '400px'
+                width: '400px',
+                centered: true
             }
         );
 
@@ -71,7 +72,7 @@ class LoginDialog extends FormDialog {
                         this.form._fields[1].focus();
                     },
                     () => {
-                        this.spinner.hide();
+                        this.spinner.hideSoft();
                     }
                 )
             },
@@ -86,7 +87,7 @@ class LoginDialog extends FormDialog {
         super.createElement();
 
         this.headerElement.appendChild(this.spinner.createElement());
-        this.spinner.hide();
+        this.spinner.hideSoft();
 
         this.statusElement = document.createElement('div');
         this.statusElement.className = 'dialog-status';

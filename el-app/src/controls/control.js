@@ -27,12 +27,17 @@ class Control {
         return this.element;
     }
 
+    hideSoft() {
+        this.element.style.visibility = 'hidden';
+    }
+
     hide() {
         this.element.style.display = "none";
     }
 
     show(display = 'flex') {
         this.element.style.display = display;
+        this.element.style.visibility = '';
     }
 }
 
