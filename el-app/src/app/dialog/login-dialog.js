@@ -64,13 +64,14 @@ class LoginDialog extends FormDialog {
                     data.index_url, data.username, data.password,
                     () => {
                         this.hide();
-                        this.spinner.hide();
                         onSuccess();
                     },
                     (error) => {
-                        this.statusElement.innerHTML = error.message;
+                        this.statusElement.innerText = error.message;
+                        this.form._fields[1].focus();
+                    },
+                    () => {
                         this.spinner.hide();
-                        this.form._fields[0].focus();
                     }
                 )
             },

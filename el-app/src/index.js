@@ -6,6 +6,55 @@ logger = new Logger();
 connection = new Connection(logger);
 
 dlgLogin = new LoginDialog();
+
+displayPatients = (data) => {
+    var result = "";
+    
+    data['patients'].forEach(element => {
+        result += `<tr><td>${element['id']}</td><td>${element['name']}</td><td>${element['url']}</td></tr>`
+    });
+
+    document.body.innerHTML = (
+        `<table class="table table-striped table-sm">
+            <thead>
+                <tr><td>Id</td><td>Name</td><td>URL</td></tr>
+            </head>
+            <tbody>
+                ${result}
+            </tbody>
+        </table>`
+    );
+}
+
+showMainWindow = () => {
+    connection.get(
+        connection.index_url,
+        data => {
+            connection.get(
+                data['patients'],
+                data => {
+                    displayPatients(data);
+                },
+                (error) => {
+                    console.log(error);
+                },
+                () => {
+                    console.log('clean up');
+                }
+            )
+        },
+        (error) => {
+            console.log(error);
+        },
+        () => {
+            console.log('clean up');
+        }
+    )
+}
+
+
+
+
 document.body.appendChild(dlgLogin.createElement());
 
 dlgLogin.form.setValue({
@@ -18,7 +67,7 @@ dlgLogin.tryLogin(
     connection,
     () => {
         console.log("Success");
-        document.body.innerHTML = 'Welcome';
+        showMainWindow();
     },
     () => {
         console.log("Exit")
