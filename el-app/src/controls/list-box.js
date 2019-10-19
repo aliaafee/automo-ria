@@ -17,17 +17,30 @@ class ListBox extends Scrolled {
 
         this.data = [];
         this._itemIds = [];
+        this._itemElements = [];
 
         this._listElement = null;
 
         this._selectedItem = null;
         this._selectedElement = null;
+
+        this._onItemClicked = (event) => {
+            this.clearSelection();
+
+            this._selectedElement = event.target;
+            
+            this._highlightSelection();
+            this._onSelectItem(event);
+        }
     }
 
     _createListItem(itemid, label) {
         var item = document.createElement('li');
         item.setAttribute('item-id', itemid);
         item.innerHTML = label;
+
+        item.addEventListener('click', this._onItemClicked);
+
         return item;
     }
 
@@ -35,6 +48,10 @@ class ListBox extends Scrolled {
         while (this._listElement.firstChild) {
             this._listElement.firstChild.remove();
         }
+    }
+
+    _highlightSelection() {
+        this._selectedElement.className = 'selected';
     }
 
     _onSelectItem(event) {
@@ -47,6 +64,37 @@ class ListBox extends Scrolled {
                 return
             }
         }
+    }
+
+    value() {
+        return this._selectedItem;
+    }
+
+    setSelection(itemId) {
+        if (itemId == null || itemId == '') {
+            this.clearSelection();
+            return;
+        }
+        for (var i = 0; i < this._itemIds.length; i++) {
+            if (this._itemIds[i] == itemId) {
+                this.clearSelection();
+
+                this._selectedElement = this._itemElements[i];
+                this._selectedItem = this.data[i];
+                
+                this._highlightSelection();
+                this._selectedElement.scrollIntoView();
+            }
+        }
+    }
+
+    clearSelection() {
+        if (this._selectedElement != null) {
+            this._selectedElement.className = null;
+        }
+        this._selectedElement = null;
+
+        this._selectedItem = null;
     }
 
     setData(data) {
@@ -69,15 +117,7 @@ class ListBox extends Scrolled {
             );
 
             this._listElement.appendChild(elem);
-
-            elem.addEventListener('click', (event) => {
-                if (this._selectedElement != null) {
-                    this._selectedElement.className = null;
-                }
-                this._selectedElement = event.target;
-                this._selectedElement.className = 'selected';
-                this._onSelectItem(event);
-            })
+            this._itemElements.push(elem);
         })
 
         this.element.scrollTop = 0;

@@ -60,7 +60,7 @@ dlgLogin.form.setValue({
     username: 'admin',
     password: 'a'
 })
-
+/*
 dlgLogin.tryLogin(
     connection,
     () => {
@@ -71,8 +71,8 @@ dlgLogin.tryLogin(
         console.log("Exit")
     }
 );
+*/
 
-/*
 const Icd10CoderDialog = require('./app/dialog/icd10coder-dialog');
 
 icd10 = new Icd10CoderDialog();
@@ -87,4 +87,74 @@ icd10.show(
         console.log("Cancelled");
     }
 );
-*/
+
+
+const ListBox =  require('./controls/list-box');
+const TextBox = require('./controls/text-box');
+
+var lst = new ListBox(
+    (item) => {
+        return item.id;
+    },
+    (item) => {
+        return item.label;
+    },
+    (item) => {
+        console.log(item);
+    },
+    {
+        height: '100px'
+    }
+);
+
+document.body.appendChild(lst.createElement());
+var data = []
+for (var i = 0; i < 100; i++) {
+    data.push({
+        id: i,
+        label: i
+    })
+}
+lst.setData(data);
+
+txt = new TextBox();
+document.body.appendChild(txt.createElement());
+txt.element.addEventListener('keyup', (evt) => {
+    lst.setSelection(txt.value());
+    console.log(txt.value());
+})
+
+
+const RadioListBox = require('./controls/radio-list-box');
+
+var radlst = new RadioListBox(
+    (item) => {
+        return item.id;
+    },
+    (item) => {
+        return item.label;
+    },
+    (item) => {
+        console.log(item);
+    },
+    {
+        height: '100px'
+    }
+);
+
+document.body.appendChild(radlst.createElement());
+var data = []
+for (var i = 0; i < 100; i++) {
+    data.push({
+        id: i,
+        label: i
+    })
+}
+radlst.setData(data);
+
+radtxt = new TextBox();
+document.body.appendChild(radtxt.createElement());
+radtxt.element.addEventListener('keyup', (evt) => {
+    radlst.setSelection(radtxt.value());
+    console.log(txt.value());
+})

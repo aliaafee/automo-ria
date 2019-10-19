@@ -5,6 +5,10 @@ class Scrolled extends Control {
         super(options);
     }
 
+    scrollTo(position) {
+        this.element.scrollTo(position);
+    }
+
     createElement() {
         super.createElement();
 
