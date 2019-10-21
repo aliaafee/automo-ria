@@ -6,6 +6,7 @@ class Field extends Control {
         /*Options
          *  label=""
          *  labelSize=in css units
+         *  labelTop=false
          *  required=true|false
          *  invalidFeedback=""
          *  helpText=""
@@ -85,14 +86,24 @@ class Field extends Control {
             this._labelElement = document.createElement('label');
             this._labelElement.innerHTML = this.options.label;
             this._labelElement.style.width = this.options.labelSize;
-            this.element.appendChild(this._labelElement);
+            //this.element.appendChild(this._labelElement);
         }
         
         var content = document.createElement('div');
         content.style.display = 'flex';
         content.style.flexDirection = 'column';
-        this.element.appendChild(content);
         content.style.flexGrow = 1;
+        //this.element.appendChild(content);
+
+        if (this.options.label == null) {
+            this.element.appendChild(content);
+        } else if (this.options.labelTop == true) {
+            content.appendChild(this._labelElement);
+            this.element.appendChild(content);
+        } else {
+            this.element.appendChild(this._labelElement);
+            this.element.appendChild(content);
+        }
 
         this._placeholderElement = document.createElement('div');
         this._placeholderElement.style.display = 'flex';

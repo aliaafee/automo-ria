@@ -9,6 +9,7 @@ class RadioListBox extends ListBox {
          * 
          * Options:
          *  height
+         *  onLink
          */
         super(idFunction, labelFunction, onSelectItem, options);
 
@@ -23,11 +24,11 @@ class RadioListBox extends ListBox {
     }
 
     _highlightSelection() {
-        this._selectedElement.className = 'selected';
+        //this._selectedElement.className = 'selected';
         this._selectedElement.firstChild.checked = true;
     }
 
-    setSelection(itemId) {
+    setSelection(itemId, scroll = true) {
         if (itemId == null || itemId == '') {
             this.clearSelection();
             return;
@@ -40,7 +41,10 @@ class RadioListBox extends ListBox {
                 this._selectedItem = this.data[i];
                 
                 this._highlightSelection();
-                this._selectedElement.scrollIntoView();
+
+                if (scroll) {
+                    this._selectedElement.scrollIntoView();
+                }
             }
         }
     }
@@ -70,6 +74,17 @@ class RadioListBox extends ListBox {
         radio.addEventListener('click', this._onItemClicked);
 
         return item;
+    }
+
+    displayData() {
+        super.displayData();
+
+        if (this.options.onLink != null) {
+            var links = this.element.getElementsByTagName('a');
+            for (var i = 0; i < links.length; i++) {
+                links[i].addEventListener('click', this.options.onLink)
+            }
+        }
     }
 }
 

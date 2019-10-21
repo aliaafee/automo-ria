@@ -8,7 +8,9 @@ class TextField extends Field {
 
         this._textBox = new TextBox({
             placeholder: options.placeholder,
-            type: options.type
+            type: options.type,
+            rows: options.rows,
+            resize: options.resiz
         });
     }
 

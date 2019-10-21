@@ -105,7 +105,8 @@ class ListBox extends Scrolled {
     displayData() {
         this._clear();
         
-        this._itemIds = []
+        this._itemIds = [];
+        this._itemElements = [];
         this.data.forEach((item) => {
             var item_id = this.idFunction(item);
 

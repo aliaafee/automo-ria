@@ -6,7 +6,8 @@ class TextBox extends Control {
     constructor(options) {
         /* Options
          *  placeholder=""
-         *  type=VALID_TYPE
+         *  type=VALID_TYPE or textarea
+         *  rows=2
          */
         super(options);
     }
@@ -35,7 +36,23 @@ class TextBox extends Control {
     }
 
     createElement() {
-        this.element = document.createElement('input');
+        if (this.options.type == 'textarea') {
+            this.element = document.createElement('textarea');
+            if (this.options.rows != null) {
+                this.element.setAttribute('rows', this.options.rows);
+            }
+            if (this.options.resize != true) {
+                this.element.style.resize = 'none'
+            }
+        } else {
+            this.element = document.createElement('input');
+            if (VALID_TYPES.includes(this.options.type)) {
+                this.element.setAttribute('type', this.options.type);
+            }
+        }
+
+        this.element.setAttribute('size', 1);
+
         if (this.options.onKeyUp) {
             this.element.addEventListener('keyup', (ev) => {
                 this.options.onKeyUp(ev);
@@ -46,10 +63,6 @@ class TextBox extends Control {
             this.element.setAttribute('placeholder', this.options.placeholder);
         }
 
-        if (VALID_TYPES.includes(this.options.type)) {
-            this.element.setAttribute('type', this.options.type);
-        }
-        
         return this.element
     }
 
