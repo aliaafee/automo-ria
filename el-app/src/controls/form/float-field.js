@@ -1,7 +1,7 @@
 const TextField = require("./text-field");
 
 
-class FloatField extends TextField {
+module.exports = class FloatField extends TextField {
     constructor(name, options = {}) {
         options.type = 'number';
         super(name, options);
@@ -22,5 +22,3 @@ class FloatField extends TextField {
         return true;
     }
 }
-
-module.exports = FloatField;

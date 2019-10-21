@@ -2,7 +2,7 @@ const Dialog = require("./dialog");
 const Button = require("../button");
 
 
-class FormDialog extends Dialog {
+module.exports = class FormDialog extends Dialog {
     constructor(form, options={}) {
         super(options)
 
@@ -54,5 +54,3 @@ class FormDialog extends Dialog {
     }
 
 }
-
-module.exports = FormDialog;

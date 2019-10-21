@@ -1,7 +1,7 @@
 //const feather = require('feather-icons');
 
 
-class Logger {
+module.exports = class Logger {
     constructor () {
         this.statusElement = null;
     }
@@ -42,5 +42,3 @@ class Logger {
         this.statusElement.innerHtml = message;
     }
 }
-
-module.exports = Logger;

@@ -1,7 +1,7 @@
 const ListBox = require('./list-box');
 
 
-class RadioListBox extends ListBox {
+module.exports = class RadioListBox extends ListBox {
     constructor(idFunction, labelFunction, onSelectItem, options) {
         /* idFunction(result) { return result.unique_id }
          * labelFunction(result) { return result.label }
@@ -87,5 +87,3 @@ class RadioListBox extends ListBox {
         }
     }
 }
-
-module.exports = RadioListBox;

@@ -3,7 +3,7 @@ const TextBox = require("./text-box");
 const ListBox = require("./list-box");
 const Popup = require("./popup");
 
-class SearchBox extends Control {
+module.exports = class SearchBox extends Control {
     constructor(searchFunction, idFunction, labelFunction, onSelectResult, options = {}) {
         /* searchFunction(search_str, on_done) { call on_done(data) when done  }
          * idFunction(result) { return result.unique_id }
@@ -124,5 +124,3 @@ class SearchBox extends Control {
         return this.element;
     }
 }
-
-module.exports = SearchBox;

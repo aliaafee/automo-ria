@@ -1,6 +1,6 @@
 const Control = require("./control");
 
-class SpinnerForground extends Control {
+module.exports = class SpinnerForground extends Control {
     constructor(options) {
         super(options);
     }
@@ -17,5 +17,3 @@ class SpinnerForground extends Control {
         return(this.element);
     }
 }
-
-module.exports = SpinnerForground;

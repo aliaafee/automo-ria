@@ -1,7 +1,7 @@
 const Control = require("../control");
 
 
-class Dialog extends Control {
+module.exports = class Dialog extends Control {
     constructor(options={}) {
         /* Options
          *  centered=false
@@ -110,5 +110,3 @@ class Dialog extends Control {
     }
 
 }
-
-module.exports = Dialog;

@@ -1,5 +1,5 @@
 
-class Control {
+module.exports = class Control {
     constructor(options = {}) {
         /* Options
          *  widht, height =  css size
@@ -40,6 +40,3 @@ class Control {
         this.element.style.visibility = '';
     }
 }
-
-
-module.exports = Control;

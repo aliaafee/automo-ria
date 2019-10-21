@@ -1,7 +1,7 @@
 const status = require("./status");
 
 
-class User {
+module.exports = class User {
     constructor() {
         this.username = null;
         this.fullname = null
@@ -120,6 +120,3 @@ class User {
             })
     }
 }
-
-
-module.exports = User;

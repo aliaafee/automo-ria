@@ -1,6 +1,6 @@
 const Control = require("./control");
 
-class Popup extends Control {
+module.exports = class Popup extends Control {
     constructor(referenceControl, options) {
         super(options);
 
@@ -40,5 +40,3 @@ class Popup extends Control {
         return this.element;
     }
 }
-
-module.exports = Popup;

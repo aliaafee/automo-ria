@@ -10,7 +10,7 @@ const Form = require('../../controls/form/form');
 const TextField = require('../../controls/form/text-field');
 
 
-class Icd10CoderDialog extends Dialog {
+module.exports = class Icd10CoderDialog extends Dialog {
     constructor(options = {}) {
         options.width = '80%';
 
@@ -264,6 +264,3 @@ class Icd10CoderDialog extends Dialog {
         return this.element;
     }
 }
-
-
-module.exports = Icd10CoderDialog;

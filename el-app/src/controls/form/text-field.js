@@ -2,7 +2,7 @@ const TextBox = require("../text-box");
 const Field = require("./field");
 
 
-class TextField extends Field {
+module.exports = class TextField extends Field {
     constructor(name, options = {}) {
         super(name, options);
 
@@ -50,5 +50,3 @@ class TextField extends Field {
         return this.element;
     }
 }
-
-module.exports = TextField;

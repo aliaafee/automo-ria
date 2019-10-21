@@ -1,7 +1,7 @@
 const TextField = require("./text-field");
 
 
-class DateTimeField extends TextField {
+module.exports = class DateTimeField extends TextField {
     constructor(name, options = {}) {
         options.type = 'datetime-local';
         super(name, options);
@@ -22,5 +22,3 @@ class DateTimeField extends TextField {
         return true;
     }
 }
-
-module.exports = DateTimeField;

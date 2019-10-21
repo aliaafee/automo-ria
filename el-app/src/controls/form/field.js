@@ -1,7 +1,7 @@
 
 const Control = require("../control");
 
-class Field extends Control {
+module.exports = class Field extends Control {
     constructor(name, options = {}) {
         /*Options
          *  label=""
@@ -127,5 +127,3 @@ class Field extends Control {
         return this.element
     }
 }
-
-module.exports = Field;

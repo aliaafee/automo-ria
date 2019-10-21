@@ -6,11 +6,9 @@ class ResponseError extends Error {
 	}
 }
 
-function status(response) {
+module.exports = function status(response) {
 	if (!response.ok) {
 		return Promise.reject(new ResponseError(response));
 	}
 	return Promise.resolve(response);
 }
-
-module.exports = status;

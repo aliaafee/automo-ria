@@ -1,6 +1,6 @@
 const Control = require("./control");
 
-class Spinner extends Control {
+module.exports = class Spinner extends Control {
     constructor(options) {
         super(options);
 
@@ -34,5 +34,3 @@ class Spinner extends Control {
         return this.element;
     }
 }
-
-module.exports = Spinner;

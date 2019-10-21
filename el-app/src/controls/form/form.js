@@ -1,7 +1,7 @@
 const Control = require("../control");
 
 
-class Form extends Control {
+module.exports = class Form extends Control {
     constructor(options={}) {
         /*Options
          *  labelSize=in css units
@@ -82,5 +82,3 @@ class Form extends Control {
     }
 
 }
-
-module.exports = Form;

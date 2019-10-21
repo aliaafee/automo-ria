@@ -2,7 +2,7 @@ const status = require("./status")
 const User = require("./user")
 
 
-class Connection {
+module.exports = class Connection {
     constructor(logger) {
         this.index_url = null
         this.user = null;
@@ -162,5 +162,3 @@ class Connection {
             })
     }
 }
-
-module.exports = Connection;

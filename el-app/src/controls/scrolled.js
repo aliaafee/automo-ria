@@ -1,6 +1,6 @@
 const Control = require("./control");
 
-class Scrolled extends Control {
+module.exports = class Scrolled extends Control {
     constructor(options) {
         super(options);
     }
@@ -19,5 +19,3 @@ class Scrolled extends Control {
         return this.element;
     }
 }
-
-module.exports = Scrolled;

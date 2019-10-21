@@ -1,6 +1,6 @@
 const Scrolled = require("./scrolled");
 
-class ListBox extends Scrolled {
+module.exports = class ListBox extends Scrolled {
     constructor(idFunction, labelFunction, onSelectItem, options) {
         /* idFunction(result) { return result.unique_id }
          * labelFunction(result) { return result.label }
@@ -135,6 +135,3 @@ class ListBox extends Scrolled {
         return this.element;
     }
 }
-
-
-module.exports = ListBox;

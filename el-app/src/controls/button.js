@@ -1,6 +1,6 @@
 const Control = require("./control");
 
-class Button extends Control {
+module.exports = class Button extends Control {
     constructor(label, onClick, options) {
         super(options);
         this.label = label;
@@ -23,5 +23,3 @@ class Button extends Control {
     }
 
 }
-
-module.exports = Button;

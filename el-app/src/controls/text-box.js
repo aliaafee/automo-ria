@@ -2,7 +2,7 @@ const Control = require("./control");
 
 const VALID_TYPES = ['text', 'date', 'datetime-local', 'password', 'email', 'tel', 'number', 'time', 'url']
 
-class TextBox extends Control {
+module.exports = class TextBox extends Control {
     constructor(options) {
         /* Options
          *  placeholder=""
@@ -67,5 +67,3 @@ class TextBox extends Control {
     }
 
 }
-
-module.exports = TextBox;

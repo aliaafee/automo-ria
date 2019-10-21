@@ -4,7 +4,7 @@ const FormDialog = require('../../controls/dialog/form-dialog');
 const Spinner = require('../../controls/spinner');
 
 
-class LoginDialog extends FormDialog {
+module.exports = class LoginDialog extends FormDialog {
     constructor(options={}) {
         var form = new Form();
 
@@ -99,5 +99,3 @@ class LoginDialog extends FormDialog {
         return this.element;
     }
 }
-
-module.exports = LoginDialog;
