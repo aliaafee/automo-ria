@@ -38,13 +38,15 @@ body {
 
 input,
 button,
-textarea {
+textarea,
+select {
     font-family: inherit;
     font-size: inherit;
 }
 
 input,
-textarea {
+textarea,
+select {
     padding: 5px;
     border: 1px solid var(--border);
     border-radius: var(--border-radius);
@@ -54,16 +56,29 @@ input {
     height: 14px;
 }
 
+select {
+    height: 25.99px;
+    background-color: white;
+}
+
 input:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
     outline: none;
     /*
     border-color: #80bdff;
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);*/
 }
 
-input:read-only {
+input:read-only,
+textarea:read-only {
     border-color: rgba(0, 0, 0, 0);
+}
+
+select:disabled {
+    border-color: rgba(0, 0, 0, 0);
+    color: black;
+    -webkit-appearance: none;
 }
 
 button {

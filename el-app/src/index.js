@@ -147,7 +147,7 @@ var data = []
 for (var i = 0; i < 100; i++) {
     data.push({
         id: i,
-        label: i
+        label: 'LBL' + i
     })
 }
 radlst.setData(data);
@@ -158,3 +158,99 @@ radtxt.element.addEventListener('keyup', (evt) => {
     radlst.setSelection(radtxt.value());
     console.log(txt.value());
 })
+
+
+//Select *********************************
+const Select = require('./controls/select');
+
+sel = new Select(
+    (item) => {
+        return item.id;
+    },
+    (item) => {
+        return item.label;
+    },
+    {
+        placeholder: 'Modifier'
+    }
+);
+
+document.body.appendChild(sel.createElement());
+
+sel.setData(data);
+
+
+const Button = require('./controls/button');
+
+btn = new Button(
+    'Select Value',
+    (ev) => {
+        console.log(sel.value());
+    }
+)
+
+document.body.appendChild(btn.createElement());
+
+
+btn = new Button(
+    'Set',
+    (ev) => {
+        sel.setSelection(20);
+    }
+)
+document.body.appendChild(btn.createElement());
+
+
+//Select Field ************************************
+
+const SelectField = require('./controls/form/select-field');
+
+selF = new SelectField(
+    'number',
+    (item) => {
+        return item.id;
+    },
+    (item) => {
+        return item.label;
+    },
+    {
+        placeholder: 'Modifier',
+        label: 'Modifier'
+    }
+)
+
+document.body.appendChild(selF.createElement());
+
+selF.setData(data);
+
+btn = new Button(
+    'Lock',
+    (ev) => {
+        selF.lock();
+    }
+)
+document.body.appendChild(btn.createElement());
+
+btn = new Button(
+    'unlock',
+    (ev) => {
+        selF.unlock();
+    }
+)
+document.body.appendChild(btn.createElement());
+
+btn = new Button(
+    'Set',
+    (ev) => {
+        selF.setValue(data[10]);
+    }
+)
+document.body.appendChild(btn.createElement());
+
+btn = new Button(
+    'Get',
+    (ev) => {
+        console.log(selF.value());
+    }
+)
+document.body.appendChild(btn.createElement());

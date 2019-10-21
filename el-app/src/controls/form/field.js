@@ -30,6 +30,12 @@ module.exports = class Field extends Control {
         return;
     }
 
+    setLabel(text) {
+        if (this._labelElement != null) {
+            this._labelElement.innerText = text;
+        }
+    }
+
     setData(data) {
         //Expects a dictionary with key equal to name
         this.setValue(
