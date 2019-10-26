@@ -25,6 +25,10 @@
     --border-radius: 5px;
 }
 
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 html {
     font-family: sans-serif;
     line-height: 1.15;
@@ -52,13 +56,14 @@ select {
     border-radius: var(--border-radius);
 }
 
-input {
-    height: 14px;
+input,
+select {
+    height: 27px;
 }
 
 select {
-    height: 25.99px;
     background-color: white;
+    word-wrap: normal;
 }
 
 input:focus,
@@ -139,10 +144,17 @@ button:hover {
 .list-box input[type='radio'] {
     padding: 0;
     margin: 0 10px 0 0;
+    min-width: 13px;
+    min-height: 15px;
+    height: 15px;;
 }
 
 .field {
     margin-bottom: 5px;
+}
+
+.field select {
+    width: 100px;
 }
 
 .field label {

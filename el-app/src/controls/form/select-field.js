@@ -35,6 +35,10 @@ module.exports = class SelectField extends Field {
         this._select.setData(data);
     }
 
+    clear() {
+        this._select.clear();
+    }
+
     lock() {
         this._select.lock();
     }

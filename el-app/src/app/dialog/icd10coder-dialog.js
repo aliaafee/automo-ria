@@ -8,6 +8,7 @@ const Button = require('../../controls/button');
 const RadioListBox = require('../../controls/radio-list-box');
 const Form = require('../../controls/form/form');
 const TextField = require('../../controls/form/text-field');
+const SelectField = require('../../controls/form/select-field');
 
 
 module.exports = class Icd10CoderDialog extends Dialog {
@@ -81,12 +82,43 @@ module.exports = class Icd10CoderDialog extends Dialog {
             }
         )
 
-        this.form = new Form();
+        this.form = new Form(
+            {
+                labelTop: true
+            }
+        );
+
+        this.form.addField(new SelectField(
+            'icd10modifier_class',
+            (modifierClass) => {
+                return modifierClass.code;
+            },
+            (modifierClass) => {
+                return `${modifierClass.code_short} - ${modifierClass.preferred}`;
+            },
+            {
+                label: 'Modifier'
+            }
+        ));
+
+        this.form.addField(new SelectField(
+            'icd10modifier_extra_class',
+            (modifierClass) => {
+                return modifierClass.code;
+            },
+            (modifierClass) => {
+                return `${modifierClass.code_short} - ${modifierClass.preferred}`;
+            },
+            {
+                label: 'Modifier Extra'
+            }
+        ));
+
+
         this.form.addField(new TextField(
             'comment',
             {
                 label: "Comment",
-                labelTop: true,
                 type: 'textarea',
                 rows: 5
             }
@@ -96,9 +128,9 @@ module.exports = class Icd10CoderDialog extends Dialog {
     }
 
     value() {
-        return {
-            category: this.categoryList.value()
-        }
+        var result = this.form.value();
+        result['icd10class'] = this.selectedCategory;
+        return result;
     }
 
     getCategory(code, onDone) {
@@ -132,6 +164,7 @@ module.exports = class Icd10CoderDialog extends Dialog {
                 return;
             }
             this.selectedCategory = category;
+            this._loadModifiers();
 
             if (this.selectedBlock != null) {
                 if (this.selectedBlock.code == this.selectedCategory.parent_block_code) {
@@ -151,12 +184,60 @@ module.exports = class Icd10CoderDialog extends Dialog {
         })
     }
 
+    _loadModifier(modifier_code, modifierField) {
+        if (modifier_code == null) {
+            modifierField.hide();
+            return;
+        }
+
+        var sql = `
+            SELECT code, code_short, preferred
+            FROM icd10modifierclass
+            WHERE modifier_code == "${modifier_code}"`;
+
+        modifierField.show();
+        this.icd10db.all(sql, [], (err, rows) => {
+            if (err) {
+                modifierField.clear();
+                modifierField.hide();
+                throw err;
+            }
+            modifierField.setData(rows)
+        });
+
+        var sql = `
+            SELECT name
+            FROM icd10modifier
+            WHERE code == "${modifier_code}"`;
+
+        this.icd10db.get(sql, [], (err, row) => {
+            if (err) {
+                select.html("");
+                group.hide();
+                throw err;
+            }
+            modifierField.setLabel(row.name);
+        });
+    }
+
+    _loadModifiers() {
+        this._loadModifier(
+            this.selectedCategory.modifier_code,
+            this.form.getFieldByName('icd10modifier_class')
+        );
+        this._loadModifier(
+            this.selectedCategory.modifier_extra_code,
+            this.form.getFieldByName('icd10modifier_extra_class')
+        );
+    }
+
     _onSelectSearchResult(item) {
         this.setSelectedCategory(item.code, () => { });
     }
 
     _onSelectCategory(category) {
         this.selectedCategory = category;
+        this._loadModifiers();
     }
 
     _search(query, on_done) {
@@ -258,6 +339,9 @@ module.exports = class Icd10CoderDialog extends Dialog {
 
         this.bodyElement.appendChild(this.form.createElement());
         this.form.element.classList.add('form');
+
+        this.form.hideField('icd10modifier_class');
+        this.form.hideField('icd10modifier_extra_class');
 
         this.footerElement.appendChild(this.btnOk.createElement());
 

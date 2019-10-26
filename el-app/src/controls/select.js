@@ -35,6 +35,13 @@ module.exports = class Select extends Control {
         this.displayData();
     }
 
+    clear() {
+        this.data = [];
+        this._itemIds = []
+        this._itemElements = []
+        this._clear();
+    }
+
     setSelection(itemId) {
         this.element.value = itemId;
     }

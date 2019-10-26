@@ -5,6 +5,7 @@ module.exports = class Form extends Control {
     constructor(options={}) {
         /*Options
          *  labelSize=in css units
+         *  labelTop=false
          *  flexDirection='column|row'
          */
         super(options);
@@ -17,6 +18,10 @@ module.exports = class Form extends Control {
         if (this.options.labelSize != null) {
             field.options.labelSize = this.options.labelSize;
         }
+        if (this.options.labelTop != null) {
+            field.options.labelTop = this.options.labelTop;
+        }
+
         this._fields.push(field);
         this._fieldNames.push(field.name);
     }
@@ -37,6 +42,26 @@ module.exports = class Form extends Control {
             result[this._fieldNames[i]] = this._fields[i].value();
         }
         return result;
+    }
+
+    getFieldByName(fieldName) {
+        return this._fields[this._fieldNames.findIndex((value) => { return value == fieldName;})];
+    }
+
+    setFieldLabel(fieldName, label) {
+        this.getFieldByName(fieldName).setLabel(label);
+    }
+
+    setFieldValue(fieldName, value) {
+        this.getFieldByName(fieldName).setValue(value);
+    }
+
+    fieldValue(fieldName) {
+        return this.getFieldByName(fieldName).value();
+    }
+
+    hideField(fieldName) {
+        this.getFieldByName(fieldName).hide();
     }
 
     validate() {
