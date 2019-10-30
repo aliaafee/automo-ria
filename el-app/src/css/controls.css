@@ -37,7 +37,11 @@ html {
 
 body {
     margin: 0;
-    overflow-x: hidden;
+    overflow: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
 }
 
 input,
@@ -111,12 +115,13 @@ button:hover {
 }
 
 .scrolled {
-    border: 1px solid var(--border);
-    border-radius: var(--border-radius);
+    
 }
 
 .list-box {
     background-color: white;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
 }
 
 .list-box ul {

@@ -6,8 +6,6 @@ module.exports = class ListBox extends Scrolled {
          * labelFunction(result) { return result.label }
          * onResultClicked(result) { do something using result }
          * 
-         * Options:
-         *  height
          */
         super(options);
 

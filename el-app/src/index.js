@@ -52,7 +52,7 @@ showMainWindow = () => {
     )
 }
 
-
+/*
 document.body.appendChild(dlgLogin.createElement());
 
 dlgLogin.form.setValue({
@@ -60,7 +60,7 @@ dlgLogin.form.setValue({
     username: 'admin',
     password: 'a'
 })
-/*
+
 dlgLogin.tryLogin(
     connection,
     () => {
@@ -71,7 +71,7 @@ dlgLogin.tryLogin(
         console.log("Exit")
     }
 );
-*/
+
 
 const Icd10CoderDialog = require('./app/dialog/icd10coder-dialog');
 
@@ -254,3 +254,45 @@ btn = new Button(
     }
 )
 document.body.appendChild(btn.createElement());
+*/
+
+
+//Splitter Windo
+
+const Control = require('./controls/control');
+const Splitter = require('./controls/splitter');
+const ListBox = require('./controls/list-box');
+
+p1 = new ListBox(
+    (item) => {
+        return item.id;
+    },
+    (item) => {
+        return item.label;
+    },
+    (item) => {
+        console.log(item);
+    },
+);
+p2 = new Control();
+
+spl = new Splitter(p1, p2, {
+    pane1Size: '250px',
+    //direction: 'column'
+});
+
+document.body.appendChild(spl.createElement());
+
+
+var data = []
+for (var i = 0; i < 100; i++) {
+    data.push({
+        id: i,
+        label: 'LBL' + i
+    })
+}
+p1.setData(data);
+p1.element.style.border = 'none';
+p1.element.style.borderRadius = '0';
+
+p2.element.innerHTML = "LoL";
