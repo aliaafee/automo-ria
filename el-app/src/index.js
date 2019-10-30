@@ -263,6 +263,9 @@ const Control = require('./controls/control');
 const Splitter = require('./controls/splitter');
 const ListBox = require('./controls/list-box');
 
+p01 = new ListBox();
+p02 = new ListBox();
+
 p1 = new ListBox(
     (item) => {
         return item.id;
@@ -274,7 +277,9 @@ p1 = new ListBox(
         console.log(item);
     },
 );
-p2 = new Control();
+p2 = new Splitter(p01, p02, {
+    pane2Size: '200px',
+})
 
 spl = new Splitter(p1, p2, {
     pane1Size: '250px',
@@ -295,4 +300,4 @@ p1.setData(data);
 p1.element.style.border = 'none';
 p1.element.style.borderRadius = '0';
 
-p2.element.innerHTML = "LoL";
+//p2.element.innerHTML = "LoL";
