@@ -66,7 +66,6 @@ module.exports = class Spitter extends Control {
 
     _createResizerElement() {
         this.resizerElement = document.createElement('div');
-        //this.resizerElement.style.position = 'absolute';
         this.resizerElement.style.zIndex = '100';
         if (this.options.direction == 'column') {
             this.resizerElement.style.height = (this.resizerSize) + 'px';
