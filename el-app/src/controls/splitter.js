@@ -7,6 +7,7 @@ module.exports = class Spitter extends Control {
          *  direction = 'row'|'column' (default='row')
          *  pane1Size = css size (if pane1Size is given, pane2Size is ignored)
          *  ((pane2Size = css size)) -> This Does not work
+         *  minSize = int
          */
         super(options);
 
@@ -15,6 +16,8 @@ module.exports = class Spitter extends Control {
 
         this.resizerSize = 5;
         this.resizerElement = null;
+
+        this.minSize = this.options.minSize != null ? this.options.minSize : 50;
 
         this.pos1 = null;
         this.pos2 = null;
@@ -25,7 +28,6 @@ module.exports = class Spitter extends Control {
             ev.preventDefault();
             this.pos3 = ev.clientX;
             this.pos4 = ev.clientY;
-            console.log(this.pos3, this.pos4);
             document.addEventListener('mousemove', this._resizeMouseMove);
             document.addEventListener('mouseup', this._resizeMouseUp);
         }
@@ -48,17 +50,35 @@ module.exports = class Spitter extends Control {
 
     _resize() {
         if (this.options.direction == 'column') {
+            var maxSize = this.element.offsetHeight - this.minSize;
             if (this.options.pane1Size != null) {
-                this.pane1.element.style.height = (this.pane1.element.offsetHeight - this.pos2) + "px";
+                var size = (this.pane1.element.offsetHeight - this.pos2);
+                if (size > maxSize) { return }
+                if (size < this.minSize) { return }
+                this.pane1.element.style.height = size + "px";
+                this.pane1.element.style.minHeight = size + "px";
             } else {
-                //This does not work, need to fix
-                this.pane2.element.style.height = (this.pane2.element.offsetHeight + this.pos2) + "px";
+                var size = (this.pane2.element.offsetHeight + this.pos2);
+                if (size > maxSize) { return }
+                if (size < this.minSize) { return }
+                this.pane2.element.style.height = size + "px";
+                this.pane2.element.style.minHeight = size + "px";
             }
         } else {
+            var maxSize = this.element.offsetWidth - this.minSize;
             if (this.options.pane1Size != null) {
-                this.pane1.element.style.width = (this.pane1.element.offsetWidth - this.pos1) + "px";
+                var size = (this.pane1.element.offsetWidth - this.pos1);
+                if (size >= maxSize) { return }
+                if (size < this.minSize) { return }
+                this.pane1.element.style.width = size + "px";
+                this.pane1.element.style.minWidth = size + "px";
             } else {
-                this.pane2.element.style.width = (this.pane2.element.offsetWidth + this.pos1) + "px";
+                var size = (this.pane2.element.offsetWidth + this.pos1);
+                console.log(size, maxSize);
+                if (size > maxSize) { return }
+                if (size < this.minSize) { return }
+                this.pane2.element.style.width = size + "px";
+                this.pane2.element.style.minWidth = size + "px"; 
             }
         }
     }
@@ -67,6 +87,7 @@ module.exports = class Spitter extends Control {
     _createResizerElement() {
         this.resizerElement = document.createElement('div');
         this.resizerElement.style.zIndex = '100';
+        this.resizerElement.className = 'resizer';
         if (this.options.direction == 'column') {
             this.resizerElement.style.height = (this.resizerSize) + 'px';
             this.resizerElement.style.marginTop = '-' + (this.resizerSize / 2) + 'px';
@@ -104,28 +125,27 @@ module.exports = class Spitter extends Control {
         
         this.element.appendChild(this.pane2.createElement());
 
-        this.pane1.element.style.zIndex = 90;
-        this.pane2.element.style.zIndex = 90;
-
         if (this.options.pane1Size != null) {
             this.pane2.element.style.flexGrow = 1;
 
             if (this.options.direction == 'column') {
                 this.pane1.element.style.height = this.options.pane1Size;
+                this.pane1.element.style.minHeight = this.options.pane1Size
             } else {
                 this.pane1.element.style.width = this.options.pane1Size;
+                this.pane1.element.style.minWidth = this.options.pane1Size;
             }
         } else {
             if (this.options.pane2Size != null) {
                 this.pane1.element.style.flexGrow = 1;
                 
                 if (this.options.direction == 'column') {
-                    //Resize does not work in this case for some reason
-                    //So we keep the resizer hidden for now
+                    //This works now
                     this.pane2.element.style.height = this.options.pane2Size;
-                    this.resizerElement.style.display = 'none';
+                    this.pane2.element.style.minHeight = this.options.pane2Size;
                 } else {
                     this.pane2.element.style.width = this.options.pane2Size;
+                    this.pane2.element.style.minWidth = this.options.pane2Size;
                 }
             } else {
                 this.pane1.element.style.flexGrow = 1;

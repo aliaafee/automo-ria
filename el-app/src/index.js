@@ -71,7 +71,7 @@ dlgLogin.tryLogin(
         console.log("Exit")
     }
 );
-
+*/
 
 const Icd10CoderDialog = require('./app/dialog/icd10coder-dialog');
 
@@ -88,7 +88,7 @@ icd10.show(
     }
 );
 
-
+/*
 const ListBox =  require('./controls/list-box');
 const TextBox = require('./controls/text-box');
 
@@ -279,6 +279,7 @@ p1 = new ListBox(
 );
 p2 = new Splitter(p01, p02, {
     pane2Size: '200px',
+    direction: 'column'
 })
 
 spl = new Splitter(p1, p2, {

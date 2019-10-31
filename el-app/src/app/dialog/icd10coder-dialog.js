@@ -9,6 +9,7 @@ const RadioListBox = require('../../controls/radio-list-box');
 const Form = require('../../controls/form/form');
 const TextField = require('../../controls/form/text-field');
 const SelectField = require('../../controls/form/select-field');
+//const Splitter = require('../../controls/splitter');
 
 
 module.exports = class Icd10CoderDialog extends Dialog {
@@ -125,6 +126,14 @@ module.exports = class Icd10CoderDialog extends Dialog {
         ));
 
         //this.spinner = new Spinner();
+        /*
+        this.splitter = new Splitter(
+            this.categoryList,
+            this.form,
+            {
+                pane2Size: '200px'
+            }
+        )*/
     }
 
     value() {
@@ -334,11 +343,15 @@ module.exports = class Icd10CoderDialog extends Dialog {
         //this.headerElement.appendChild(this.spinner.createElement());
         //this.spinner.hideSoft();
 
+        //this.bodyElement.appendChild(this.splitter.createElement());
+
         this.bodyElement.appendChild(this.categoryList.createElement());
         this.categoryList.element.classList.add('category-list');
 
         this.bodyElement.appendChild(this.form.createElement());
         this.form.element.classList.add('form');
+        this.form.element.style.width = '200px';
+        this.form.element.style.minWidth = '200px';
 
         this.form.hideField('icd10modifier_class');
         this.form.hideField('icd10modifier_extra_class');

@@ -159,7 +159,11 @@ button:hover {
 }
 
 .field select {
-    width: 100px;
+    width: 1px;
+}
+
+.field textarea {
+    width: 1px;
 }
 
 .field label {
@@ -292,4 +296,8 @@ button:hover {
 
 .dialog-status {
     text-align: center;
+}
+
+.resizer:hover {
+    background-color: rgba(0, 0, 0, 0.048);
 }
