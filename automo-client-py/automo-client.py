@@ -30,7 +30,7 @@ class User:
             print("Login: Not Authorized")
             return False
 
-        if r.status_code is not 200:
+        if r.status_code != 200:
             print("Login: Authorization Error")
             return False
 
@@ -54,7 +54,7 @@ class User:
             print("Token: Connection Error")
             return False
 
-        if r.status_code is not 200:
+        if r.status_code != 200:
             print("Token: Failed to get")
             return False
 
@@ -143,7 +143,7 @@ class Connection:
             else:
                 break
 
-        if r.status_code is not 200:
+        if r.status_code != 200:
             print("Get: Response Error {}".format(r.status_code))
             print(r.text)
             return None
@@ -178,7 +178,7 @@ class ClientApp:
             return False
 
         if command[0] == 'help':
-            print("Commands: help, exit, get <url>")
+            print("Commands: help, exit, get_index, get <url>")
             return True
 
         if command[0] == 'get_index':

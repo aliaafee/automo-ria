@@ -7,7 +7,7 @@ class ResponseError extends Error {
 }
 
 function status(response) {
-	if (!response.ok) {
+	if (!response.ok && response.status != 422) {
 		return Promise.reject(new ResponseError(response));
 	}
 	return Promise.resolve(response);

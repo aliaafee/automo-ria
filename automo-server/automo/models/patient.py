@@ -5,11 +5,11 @@ import dateutil.relativedelta
 
 from .. import db
 from .encounters import Encounter, Admission, Measurements
-from .mixins import SerializerMixin
+from .mixins import SerializerMixin, ValidatorMixin
 from . import dbexception
 
 
-class Patient(SerializerMixin, db.Model):
+class Patient(SerializerMixin, ValidatorMixin, db.Model):
     """Patient demographic data and list of problems and encounters of the patient.
       Each patient also has single prescription of medications that have been adviced for the
       patient."""

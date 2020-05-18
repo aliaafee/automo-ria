@@ -62,10 +62,19 @@ def post_patient(patient_id):
 
     data = request.get_json()
 
+    invalid_fields = []
     for key in data:
-        setattr(patient, key, data[key])
+        if not patient.is_valid_attr(key, data[key]):
+            invalid_fields.append(key)
 
-    db.session.commit();
+    if invalid_fields:
+        #return errors.unprocessable(", ".join(invalid_fields))
+        return errors.invalid_fields(invalid_fields)
+
+    for key in data:
+        patient.setattr(key, data[key])
+
+    db.session.commit()
 
     return success_response("Patient Saved")
 

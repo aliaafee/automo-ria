@@ -72,7 +72,7 @@ dlgLogin.tryLogin(
     }
 );
 */
-
+/*
 const Icd10CoderDialog = require('./app/dialog/icd10coder-dialog');
 
 icd10 = new Icd10CoderDialog();
@@ -87,6 +87,7 @@ icd10.show(
         console.log("Cancelled");
     }
 );
+*/
 
 /*
 const ListBox =  require('./controls/list-box');
@@ -258,7 +259,7 @@ document.body.appendChild(btn.createElement());
 
 
 //Splitter Windo
-
+/*
 const Control = require('./controls/control');
 const Splitter = require('./controls/splitter');
 const ListBox = require('./controls/list-box');
@@ -279,12 +280,16 @@ p1 = new ListBox(
 );
 p2 = new Splitter(p01, p02, {
     pane2Size: '200px',
-    direction: 'column'
+    direction: 'column',
+    resizable: true
 })
 
+//p2 = new Control();
+
 spl = new Splitter(p1, p2, {
-    pane1Size: '250px',
+    pane2Size: '250px',
     //direction: 'column'
+    resizable: true
 });
 
 document.body.appendChild(spl.createElement());
@@ -302,3 +307,13 @@ p1.element.style.border = 'none';
 p1.element.style.borderRadius = '0';
 
 //p2.element.innerHTML = "LoL";
+*/
+
+
+const PatientBrowser = require('./app/panel/patient-browser');
+
+b = new PatientBrowser();
+
+document.body.appendChild(b.createElement());
+
+

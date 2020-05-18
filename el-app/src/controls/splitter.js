@@ -48,6 +48,20 @@ module.exports = class Spitter extends Control {
     }
 
 
+    _setElementHeight(element, height) {
+        element.style.height = height;
+        element.style.minHeight = height;
+        element.style.maxHeight = height;
+    }
+
+
+    _setElementWidth(element, width) {
+        element.style.width = width;
+        element.style.minWidth = width;
+        element.style.maxWidth = width;
+    }
+
+
     _resize() {
         if (this.options.direction == 'column') {
             var maxSize = this.element.offsetHeight - this.minSize;
@@ -55,14 +69,12 @@ module.exports = class Spitter extends Control {
                 var size = (this.pane1.element.offsetHeight - this.pos2);
                 if (size > maxSize) { return }
                 if (size < this.minSize) { return }
-                this.pane1.element.style.height = size + "px";
-                this.pane1.element.style.minHeight = size + "px";
+                this._setElementHeight(this.pane1.element, size + 'px');
             } else {
                 var size = (this.pane2.element.offsetHeight + this.pos2);
                 if (size > maxSize) { return }
                 if (size < this.minSize) { return }
-                this.pane2.element.style.height = size + "px";
-                this.pane2.element.style.minHeight = size + "px";
+                this._setElementHeight(this.pane2.element, size + 'px');
             }
         } else {
             var maxSize = this.element.offsetWidth - this.minSize;
@@ -70,15 +82,12 @@ module.exports = class Spitter extends Control {
                 var size = (this.pane1.element.offsetWidth - this.pos1);
                 if (size >= maxSize) { return }
                 if (size < this.minSize) { return }
-                this.pane1.element.style.width = size + "px";
-                this.pane1.element.style.minWidth = size + "px";
+                this._setElementWidth(this.pane1.element, size +'px');
             } else {
                 var size = (this.pane2.element.offsetWidth + this.pos1);
-                console.log(size, maxSize);
                 if (size > maxSize) { return }
                 if (size < this.minSize) { return }
-                this.pane2.element.style.width = size + "px";
-                this.pane2.element.style.minWidth = size + "px"; 
+                this._setElementWidth(this.pane2.element, size +'px');
             }
         }
     }
@@ -120,7 +129,9 @@ module.exports = class Spitter extends Control {
         this.element.appendChild(this.pane1.createElement());
 
         if (this.options.pane1Size != null || this.options.pane2Size != null) {
-            this.element.appendChild(this._createResizerElement());
+            if (this.options.resizable == true) {
+                this.element.appendChild(this._createResizerElement());
+            }
         }
         
         this.element.appendChild(this.pane2.createElement());
@@ -129,11 +140,9 @@ module.exports = class Spitter extends Control {
             this.pane2.element.style.flexGrow = 1;
 
             if (this.options.direction == 'column') {
-                this.pane1.element.style.height = this.options.pane1Size;
-                this.pane1.element.style.minHeight = this.options.pane1Size
+                this._setElementHeight(this.pane1.element, this.options.pane1Size);
             } else {
-                this.pane1.element.style.width = this.options.pane1Size;
-                this.pane1.element.style.minWidth = this.options.pane1Size;
+                this._setElementWidth(this.pane1.element, this.options.pane1Size);
             }
         } else {
             if (this.options.pane2Size != null) {
@@ -141,11 +150,9 @@ module.exports = class Spitter extends Control {
                 
                 if (this.options.direction == 'column') {
                     //This works now
-                    this.pane2.element.style.height = this.options.pane2Size;
-                    this.pane2.element.style.minHeight = this.options.pane2Size;
+                    this._setElementHeight(this.pane2.element, this.options.pane2Size);
                 } else {
-                    this.pane2.element.style.width = this.options.pane2Size;
-                    this.pane2.element.style.minWidth = this.options.pane2Size;
+                    this._setElementWidth(this.pane2.element, this.options.pane2Size);
                 }
             } else {
                 this.pane1.element.style.flexGrow = 1;

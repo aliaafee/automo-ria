@@ -36,6 +36,15 @@ class Form extends Control {
         });
     }
 
+    markInvalid(invalidFields) {
+        this._fields.forEach((field) => {
+            field.markValid();
+            if (invalidFields.includes(field.name)) {
+                field.markInvalid();
+            }
+        });
+    }
+
 
     val(data) {
         if (data != null) {
@@ -56,7 +65,7 @@ class Form extends Control {
 
 
     addField(field) {
-        field.options.sideLabel = true;
+        //field.options.sideLabel = true;
         this._fields.push(field);
         this._fieldNames.push(field.name);
     }

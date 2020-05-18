@@ -2,6 +2,8 @@ const NavBar = require("./navbar");
 const ICD10Dialog = require("./dialogs/icd10coder-dialog");
 const ResourceForm = require("./controls/resource-form");
 const TextField = require("./controls/text-field");
+const Frame = require("./frames/base-frame");
+const PatientFrame = require("./frames/patient-frame");
 
 
 class MainWindow {
@@ -48,10 +50,16 @@ class MainWindow {
     displayPatient(patient) {
         console.log(patient);
         $('#main').html(`
-            <div class="container">
-                <form id="patient-form"></form>
+            <div id="patient-frame">
             </div>
         `);
+
+        this.patient_view = new PatientFrame('patient-frame', 'patient-frame', this.connection);
+
+        this.patient_view.render();
+        this.patient_view.setPatient(patient);
+
+        /*
         this.patient_form = new ResourceForm(
             'patient-form',
             'patient',
@@ -61,6 +69,30 @@ class MainWindow {
             {
                 title: "Patient Data"
             }
+        )
+
+        this.patient_form.addField(
+            new TextField(
+                'patient-hospital_no',
+                'hospital_no',
+                {
+                    label: 'Hosp&nbsp;No.',
+                    placeholder: 'Hosp No.',
+                    required: true,
+                }
+            )
+        )
+
+        this.patient_form.addField(
+            new TextField(
+                'patient-national_id_no',
+                'national_id_no',
+                {
+                    label: 'NIC&nbsp;No.',
+                    placeholder: 'NIC No.',
+                    required: true,
+                }
+            )
         )
 
         this.patient_form.addField(
@@ -78,8 +110,11 @@ class MainWindow {
             )
         )
 
+
+
         this.patient_form.render();
         this.patient_form.getData();
+        */
     }
 
     _setupEvents() {

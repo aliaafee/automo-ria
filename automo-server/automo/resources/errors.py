@@ -17,6 +17,16 @@ def forbidden(message=''):
     response.status_code = 403
     return response
 
+def unprocessable(message=''):
+    response = jsonify({'error': 'unprocessable', 'message': message})
+    response.status_code = 422
+    return response
+
+def invalid_fields(invalid_fields=[]):
+    response = jsonify({'error': 'unprocessable', 'invalid_fields': invalid_fields})
+    response.status_code = 422
+    return response
+
 
 @api.app_errorhandler(404)
 def app_page_not_found(e):

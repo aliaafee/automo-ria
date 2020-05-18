@@ -3,15 +3,16 @@ const Button = require('./button');
 
 
 class ResourceForm extends Form {
-    constructor(elementId, name, connection, getUrl, postUrl, options = {}) {
+    constructor(elementId, name, connection, options = {}) {
         /* Supported options ...
+         * getUrl, postUrl
          * title="Title of the form"
          */
         super(elementId, name, options);
 
         this.connection = connection;
-        this.getUrl = getUrl;
-        this.postUrl = postUrl;
+        this.getUrl = this.options.getUrl;
+        this.postUrl = this.options.postUrl;
 
         this.btnEdit = new Button(
             `${this.elementId}-edit`,
@@ -63,6 +64,11 @@ class ResourceForm extends Form {
         this.addButton(this.btnCancel);
     }
 
+    setUrls(getUrl, postUrl) {
+        this.getUrl = getUrl;
+        this.postUrl = postUrl;
+    }
+
     getData() {
         this._showSpinner();
         this.connection.get(
@@ -91,12 +97,17 @@ class ResourceForm extends Form {
         this.connection.post(
             this.postUrl,
             this.val(),
-            () => {
+            (data) => {
                 this._hideSpinner();
-                this.lock();
-                this.btnCancel.hide();
-                this.btnSave.hide();
-                this.getData();
+                if (data.invalid_fields != null) {
+                    console.log(data.invalid_fields);
+                    this.markInvalid(data.invalid_fields);
+                } else {
+                    this.lock();
+                    this.btnCancel.hide();
+                    this.btnSave.hide();
+                    this.getData();
+                }
             },
             (error) => {
                 console.log(error);
