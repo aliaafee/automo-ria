@@ -1,4 +1,6 @@
 """Problem"""
+from flask import url_for
+
 from .. import db
 from . import dbexception
 from .problem_encounter import problem_encounter_association_table
@@ -20,10 +22,17 @@ class Problem(SerializerMixin, db.Model):
         'id',
         'start_time',
         'end_time',
+        'icd10class_code',
         'icd10class',
+        'icd10modifier_class_code',
         'icd10modifier_class',
+        'icd10modifier_extra_class_code',
         'icd10modifier_extra_class'
     ]
+
+    def url(self):
+        return url_for('api.get_patient_problem',patient_id=self.patient_id, problem_id=self.id, _external=True)
+
 
     id = db.Column(db.Integer, primary_key=True)
 

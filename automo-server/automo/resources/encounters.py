@@ -1,9 +1,11 @@
 from flask import url_for, jsonify, request
 
 from .. import models as md
+from .. import db
 
 from . import api
 from . import errors
+from .success import success_response
 
 
 @api.route("/patients/<int:patient_id>/encounters/")
@@ -48,4 +50,25 @@ def get_patient_encounter(patient_id, encounter_id):
     if encounter is None:
         return errors.resource_not_found("Encounter not found.")
 
-    return jsonify(encounter.get_serialized())
+    data = encounter.get_serialized()
+
+    return jsonify(data)
+
+
+@api.route("/patients/<int:patient_id>/encounters/<int:encounter_id>", methods=['POST'])
+def post_patient_encounter(patient_id, encounter_id):
+    encounter = md.Encounter.query.filter_by(id=encounter_id, patient_id=patient_id).first()
+
+    if encounter is None:
+        return errors.resource_not_found("Encounter not found.")
+
+    data = request.get_json()
+
+    try:
+        encounter.validate_and_setdata(data)
+    except md.dbexception.FieldValueError as e:
+        return errors.invalid_fields(e.invalid_fields)
+
+    db.session.commit()
+
+    return success_response("Encounter Saved")

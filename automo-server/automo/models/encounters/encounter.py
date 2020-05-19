@@ -1,14 +1,15 @@
 """Encounters"""
 import datetime
 from dateutil.relativedelta import relativedelta
+from flask import url_for
 
 from ... import db
 from .. import dbexception
 from ..problem_encounter import problem_encounter_association_table
-from ..mixins import SerializerMixin
+from ..mixins import SerializerMixin, ValidatorMixin
 
 
-class Encounter(SerializerMixin, db.Model):
+class Encounter(SerializerMixin, ValidatorMixin, db.Model):
     """The encounter that the patient had with health facility, each encounter
       can be for single or multiple problems. the encounter object can be polymorphic,
       eg: HospitalStay and ClinicVisit are child classes. Possiblity of expanding
@@ -30,6 +31,10 @@ class Encounter(SerializerMixin, db.Model):
         'personnel_id',
         'problems'
     ]
+
+    def url(self):
+        return url_for('api.get_patient_encounter', patient_id=self.patient_id, encounter_id=self.id, _external=True)
+
 
     id = db.Column(db.Integer, primary_key=True)
 

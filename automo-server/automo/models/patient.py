@@ -2,6 +2,7 @@
 import string
 import datetime
 import dateutil.relativedelta
+from flask import url_for
 
 from .. import db
 from .encounters import Encounter, Admission, Measurements
@@ -31,6 +32,10 @@ class Patient(SerializerMixin, ValidatorMixin, db.Model):
         #'encounters',
         'active'
     ]
+
+    def url(self):
+        return url_for('api.get_patient', patient_id=self.id, _external=True)
+
     
     id = db.Column(db.Integer, primary_key=True)
 

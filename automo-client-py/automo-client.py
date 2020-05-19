@@ -157,8 +157,40 @@ class Connection:
         return data
 
 
-    def post(self, url, data):
-        pass
+    def post_json(self, url, data, params=None):
+        if not self.is_loggedin():
+            return None
+
+        auth_retry = 3
+        while auth_retry > 0:
+            try:
+                #r = requests.get(url, params=params, auth=self.user.get_auth_params())
+                r = requests.post(url, json=data, params=params, auth=self.user.get_auth_params())
+            except requests.ConnectionError:
+                print("Post: Connection Error")
+                return False
+
+            if r.status_code == 401:
+                print("Post: Not Authorized")
+                auth_retry -= 1
+                if not self.user.get_token():
+                    break
+            else:
+                break
+
+        if r.status_code != 200:
+            print("Post: Response Error {}".format(r.status_code))
+            print(r.text)
+            return None
+
+        try:
+            data = json.loads(r.text)
+        except json.JSONDecodeError:
+            print("Post: JSON decode error")
+            print(r.text)
+            return None
+        
+        return data
         
 
 
@@ -193,8 +225,30 @@ class ClientApp:
             pprint(data)
             return True
 
+        if command[0] == 'posttest':
+            self.last_command = command_str
+            self.post_test(command[1])
+            return True
+
+
         print("Unknown Command")
         return True
+
+
+    def post_test(self, data_str=""):
+        post_data = {
+            'pulse_rate': data_str
+        }
+
+        print("Sending `{}`".format(post_data))
+
+        response_data = self.conn.post_json(
+            #"http://127.0.0.1:5000/api/patients/1",
+            "http://127.0.0.1:5000/api/patients/20/encounters/183",
+            post_data
+        )
+
+        pprint(response_data)
 
 
 

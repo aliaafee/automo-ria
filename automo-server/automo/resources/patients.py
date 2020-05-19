@@ -34,7 +34,7 @@ def get_patients():
             'name': patient.name,
             'sex': patient.sex,
             'time_of_birth': patient.time_of_birth,
-            'url' : url_for('api.get_patient', patient_id=patient.id, _external=True)
+            'url' : patient.url() #url_for('api.get_patient', patient_id=patient.id, _external=True)
         })
 
     return jsonify({
@@ -52,6 +52,7 @@ def get_patient(patient_id):
     data = patient.get_serialized()
 
     data['encounters'] = url_for('api.get_patient_encounters', patient_id=patient.id, _external=True)
+    #data['url'] = url_for('api.get_patient', patient_id=patient.id, _external=True)
 
     return jsonify(data)
 
@@ -62,17 +63,10 @@ def post_patient(patient_id):
 
     data = request.get_json()
 
-    invalid_fields = []
-    for key in data:
-        if not patient.is_valid_attr(key, data[key]):
-            invalid_fields.append(key)
-
-    if invalid_fields:
-        #return errors.unprocessable(", ".join(invalid_fields))
-        return errors.invalid_fields(invalid_fields)
-
-    for key in data:
-        patient.setattr(key, data[key])
+    try:
+        patient.validate_and_setdata(data)
+    except md.dbexception.FieldValueError as e:
+        return errors.invalid_fields(e.invalid_fields)
 
     db.session.commit()
 

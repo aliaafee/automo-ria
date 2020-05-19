@@ -24,7 +24,6 @@ class VitalSigns(Encounter):
         'label',
         'type',
         'start_time',
-        'record_time',
         'pulse_rate',
         'respiratory_rate',
         'diastolic_bp',
