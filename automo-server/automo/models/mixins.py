@@ -1,3 +1,4 @@
+import dateutil
 
 import sqlalchemy
 from .dbexception import FieldValueError
@@ -97,8 +98,15 @@ class ValidatorMixin(object):
                 return False
             return True
 
-        print("Invalid")
+        if isinstance(col_type, sqlalchemy.sql.sqltypes.DateTime):
+            #Validate DateTime
+            try:
+                dateutil.parser.isoparse(value)
+            except ValueError:
+                return False
+            return True            
 
+        print("Invalid")
         return False
 
 
@@ -125,6 +133,11 @@ class ValidatorMixin(object):
         if type(col_type) is sqlalchemy.sql.sqltypes.Float:
             #Set Floats
             setattr(self, name, float(value))
+            return
+
+        if isinstance(col_type, sqlalchemy.sql.sqltypes.DateTime):
+            #Set DateTime
+            setattr(self, name, dateutil.parser.isoparse(value))
             return
 
         #Handle other types here

@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
 
 from config import config
+from .json_encoder import CustomJSONEncoder
 
 db = SQLAlchemy()
 #login_manager = LoginManager()
@@ -15,6 +16,9 @@ migrate = Migrate()
 
 def create_app(config_name):
     app = Flask(__name__)
+
+    app.json_encoder = CustomJSONEncoder
+
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
 

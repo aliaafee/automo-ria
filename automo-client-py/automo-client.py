@@ -283,6 +283,21 @@ class ClientApp:
                     'line_1': 'House Number {}'.format(randint(1, 100)),
                     'line_1': 'Banana Republic {}'.format(randint(1, 100))
                 }
+            ),
+            (
+                'http://127.0.0.1:5000/api/patients/1',
+                {
+                    'time_of_birth': datetime.datetime(1980, 10, 25, 12, 50, 20).isoformat(),
+                    'time_of_death': datetime.datetime(2000, 10, 25, 12, 50, 20).isoformat()
+                }
+            )
+            ,
+            (
+                'http://127.0.0.1:5000/api/patients/1',
+                {
+                    'time_of_birth': datetime.datetime.now().isoformat(),
+                    'time_of_death': datetime.datetime.now().isoformat()
+                }
             )
         ]
 
@@ -305,7 +320,7 @@ class ClientApp:
                 match = False
                 if response_data[key] == value:
                     match = True
-                print("[{}] -> {} = {} [{}]".format(key, value, data[key], match))
+                print("[{}] -> {} = {} [{}]".format(key, value, response_data[key], match))
             print(" ")
             print(" ")
             
