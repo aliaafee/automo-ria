@@ -53,5 +53,6 @@ from .complicationgrade import ComplicationGrade
 from .prescription import Prescription
 from .drug import Drug
 from .personnel import Personnel, Doctor, MedicalOfficer, Nurse
+from .phone_number import PhoneNumber
 
 configure_mappers()

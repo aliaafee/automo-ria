@@ -5,6 +5,7 @@ import datetime
 import dateutil.relativedelta
 from getpass import getpass
 from pprint import pprint
+from random import randint, random
 
 
 class User:
@@ -227,7 +228,7 @@ class ClientApp:
 
         if command[0] == 'posttest':
             self.last_command = command_str
-            self.post_test(command[1])
+            self.post_test()
             return True
 
 
@@ -236,19 +237,79 @@ class ClientApp:
 
 
     def post_test(self, data_str=""):
-        post_data = {
-            'permanent_address': data_str
-        }
+        test_cases = [
+            (
+                "http://127.0.0.1:5000/api/patients/1",
+                {
+                    'name': 'Testy Name {}'.format(randint(1, 100))
+                },
+            ),
+            (
+                "http://127.0.0.1:5000/api/patients/1",
+                {
+                    'allergies': 'Bad Medicine {}'.format(randint(1, 100))
+                },
+            ),
+            (
+                "http://127.0.0.1:5000/api/patients/3/encounters/11",
+                {
+                    'pulse_rate': random() * 100
+                },
+            ),
+            (
+                "http://127.0.0.1:5000/api/phone-numbers/1",
+                {
+                    'name': 'Father {}'.format(randint(1, 100)),
+                    'number': '{}'.format(randint(10000000,999999999))
+                }
+            ),
+            (
+                'http://127.0.0.1:5000/api/patients/1/current-address',
+                {
+                    'line_1': 'House Number {}'.format(randint(1, 100)),
+                    'line_1': 'Banana Republic {}'.format(randint(1, 100))
+                }
+            ),
+            (
+                'http://127.0.0.1:5000/api/patients/1/permanent-address',
+                {
+                    'line_1': 'House Number {}'.format(randint(1, 100)),
+                    'line_1': 'Banana Republic {}'.format(randint(1, 100))
+                }
+            ),
+            (
+                'http://127.0.0.1:5000/api/addresses/1',
+                {
+                    'line_1': 'House Number {}'.format(randint(1, 100)),
+                    'line_1': 'Banana Republic {}'.format(randint(1, 100))
+                }
+            )
+        ]
 
-        print("Sending `{}`".format(post_data))
+        for url, data in test_cases:
+            print("### BEGIN TEST CASE ###")
+            #print("Sending Data")
+            print(url)
+            #pprint(data)
 
-        response_data = self.conn.post_json(
-            "http://127.0.0.1:5000/api/patients/1",
-            #"http://127.0.0.1:5000/api/patients/20/encounters/183",
-            post_data
-        )
+            response_data = self.conn.post_json(url, data)
+            
+            #print("Response Data")
+            #pprint(response_data)
 
-        pprint(response_data)
+            #print("Getting url")
+            response_data = self.conn.get(url)
+            #pprint(response_data)
+            print("")
+            for key, value in data.items():
+                match = False
+                if response_data[key] == value:
+                    match = True
+                print("[{}] -> {} = {} [{}]".format(key, value, data[key], match))
+            print(" ")
+            print(" ")
+            
+
 
 
 

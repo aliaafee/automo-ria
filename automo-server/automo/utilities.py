@@ -13,6 +13,9 @@ from . import db
 
 
 class InstallCommand(Command):
+    """
+        Install the database, -i, --ic10 option should point to icd10 xml file
+    """
     def get_options(self):
         options = (
             Option('-i', '--icd10',

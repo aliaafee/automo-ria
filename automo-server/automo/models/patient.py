@@ -26,6 +26,7 @@ class Patient(SerializerMixin, ValidatorMixin, db.Model):
         'sex',
         'allergies',
         'phone_no',
+        'phone_numbers',
         'permanent_address',
         'current_address',
         'problems',
@@ -49,6 +50,9 @@ class Patient(SerializerMixin, ValidatorMixin, db.Model):
     allergies = db.Column(db.Text)
 
     phone_no = db.Column(db.String(250))
+
+    phone_numbers = db.relationship("PhoneNumber", back_populates="patient",
+                            cascade="all, delete, delete-orphan")
 
     permanent_address_id = db.Column(db.Integer, db.ForeignKey('address.id'))
     permanent_address = db.relationship("Address", foreign_keys=[permanent_address_id],
