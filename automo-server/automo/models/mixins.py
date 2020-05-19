@@ -12,9 +12,10 @@ class SerializerMixin(object):
             return attr.get_serialized()
         return attr
 
-    def get_serialized(self):
+    def get_serialized(self, attrs=None):
+        serialized_attrs = attrs if attrs else self.serialized_attrs
         result = {}
-        for attr_name in self.serialized_attrs:
+        for attr_name in serialized_attrs:
             attr = getattr(self, attr_name)
             if type(attr) is sqlalchemy.orm.collections.InstrumentedList:
                 attr_list = []
