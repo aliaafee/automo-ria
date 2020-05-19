@@ -33,8 +33,8 @@ class ValidatorMixin(object):
     def find_type(self, class_, colname):
         if hasattr(class_, '__table__') and colname in class_.__table__.c:
             return class_.__table__.c[colname].type
-        for base in class_.__bases__:
-            return self.find_type(base, colname)
+        #for base in class_.__bases__:
+        #    return self.find_type(base, colname)
         raise NameError(colname)
 
 
@@ -56,14 +56,18 @@ class ValidatorMixin(object):
             self.setattr(name, value)
 
 
+    def process_validators(self, name, value):
+        """Process any custom validators if they have been set"""
+        if name in self.validators:
+            if not self.validators[name](name, value):
+                return False
+        return True
+
+
     def is_valid_attr(self, name, value):
-        print(name, value)
+        """Check wheter the attr exists and the value is valid datatype"""
         if not hasattr(self, name):
             return False
-
-        if name in self.validators:
-            if not self.validators[name](value):
-                return False
 
         try:
             col_type = self.find_type(self, name)
@@ -72,28 +76,34 @@ class ValidatorMixin(object):
 
         col_python_type_name = col_type.python_type.__name__
 
-        print(col_python_type_name)
+        print(type(col_type))
 
-        if col_python_type_name == 'str':
+        if type(col_type) is sqlalchemy.sql.sqltypes.String:
+            #Validate Strings
             col_length = col_type.length
-            if col_length is None:
-                return True
             if len(value) > col_length:
                 return False
             return True
 
-        if col_python_type_name == 'float':
+        if type(col_type) is sqlalchemy.sql.sqltypes.Text:
+            #Validate Text
+            return True
+
+        if type(col_type) is sqlalchemy.sql.sqltypes.Float:
+            #Validate Floats
             try:
-                value_float = float(value)
+                float(value)
             except ValueError:
                 return False
             return True
+
+        print("Invalid")
 
         return False
 
 
     def setattr(self, name, value):
-        """Only call after validating"""
+        """Only call after validating, setattr after converting."""
         if not hasattr(self, name):
             raise KeyError(name)
 
@@ -102,13 +112,18 @@ class ValidatorMixin(object):
         except NameError:
             raise KeyError(name)
 
-        col_python_type_name = col_type.python_type.__name__
-
-        if col_python_type_name == 'str':
+        if type(col_type) is sqlalchemy.sql.sqltypes.String:
+            #Set Strings
             setattr(self, name, value)
             return
 
-        if col_python_type_name == 'float':
+        if type(col_type) is sqlalchemy.sql.sqltypes.Text:
+            #Set Text
+            setattr(self, name, value)
+            return
+
+        if type(col_type) is sqlalchemy.sql.sqltypes.Float:
+            #Set Floats
             setattr(self, name, float(value))
             return
 

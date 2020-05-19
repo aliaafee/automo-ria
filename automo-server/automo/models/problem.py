@@ -4,9 +4,9 @@ from flask import url_for
 from .. import db
 from . import dbexception
 from .problem_encounter import problem_encounter_association_table
-from .mixins import SerializerMixin
+from .mixins import SerializerMixin, ValidatorMixin
 
-class Problem(SerializerMixin, db.Model):
+class Problem(SerializerMixin, ValidatorMixin, db.Model):
     """The problem that the patient has, each problem has an icd10 code with relevant 
       modifiers, each problem can have multiple encounters. A problem has a start_date.
       Chronic problems eg: Hypertension do not have and end date. But acute problems that

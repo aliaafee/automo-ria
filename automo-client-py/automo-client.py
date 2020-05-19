@@ -237,14 +237,14 @@ class ClientApp:
 
     def post_test(self, data_str=""):
         post_data = {
-            'pulse_rate': data_str
+            'permanent_address': data_str
         }
 
         print("Sending `{}`".format(post_data))
 
         response_data = self.conn.post_json(
-            #"http://127.0.0.1:5000/api/patients/1",
-            "http://127.0.0.1:5000/api/patients/20/encounters/183",
+            "http://127.0.0.1:5000/api/patients/1",
+            #"http://127.0.0.1:5000/api/patients/20/encounters/183",
             post_data
         )
 
