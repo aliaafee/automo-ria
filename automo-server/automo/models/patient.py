@@ -29,7 +29,7 @@ class Patient(SerializerMixin, ValidatorMixin, db.Model):
         'phone_numbers',
         'permanent_address',
         'current_address',
-        'problems',
+        #'problems',
         #'encounters',
         'active'
     ]

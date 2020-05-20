@@ -225,6 +225,11 @@ class ClientApp:
             data = self.conn.get(command[1])
             pprint(data)
             return True
+        
+        if command[0] == 'gettest':
+            self.last_command = command_str
+            self.get_test()
+            return True
 
         if command[0] == 'posttest':
             self.last_command = command_str
@@ -234,6 +239,29 @@ class ClientApp:
 
         print("Unknown Command")
         return True
+
+
+    def get_test(self):
+        test_cases = [
+            'http://127.0.0.1:5000/api/patients/',
+             "http://127.0.0.1:5000/api/patients/1",
+             'http://127.0.0.1:5000/api/patients/1/encounters/',
+             'http://127.0.0.1:5000/api/patients/1/problems/',
+             'http://127.0.0.1:5000/api/patients/11/phone-numbers/',
+             'http://127.0.0.1:5000/api/addresses',
+             'http://127.0.0.1:5000/api/wards/',
+             'http://127.0.0.1:5000/api/beds/',
+             'http://127.0.0.1:5000/api/wards/1/beds/'
+        ]
+
+        failed = 0
+        for url in test_cases:
+            print("> Getting {}".format(url))
+            try:
+                data = self.conn.get(url)
+            except:
+                failed += 1
+        print("Failed {}".format(failed))
 
 
     def post_test(self, data_str=""):
@@ -251,7 +279,7 @@ class ClientApp:
                 },
             ),
             (
-                "http://127.0.0.1:5000/api/patients/1/encounters/11",
+                "http://127.0.0.1:5000/api/patients/1/encounters/3",
                 {
                     'pulse_rate': random() * 100
                 },
@@ -263,7 +291,7 @@ class ClientApp:
                 },
             ),
             (
-                "http://127.0.0.1:5000/api/patients/11/phone-numbers/1",
+                "http://127.0.0.1:5000/api/patients/1/phone-numbers/1",
                 {
                     'name': 'Father {}'.format(randint(1, 100)),
                     'number': '{}'.format(randint(10000000,999999999))
@@ -362,13 +390,17 @@ class ClientApp:
             response_data = self.conn.get(url)
             #pprint(response_data)
             #print("")
-            for key, value in data.items():
-                match = False
-                if response_data[key] == value:
-                    match = True
-                else:
-                    failed += 1
-                print("[{}] -> {} = {} [{}]".format(key, value, response_data[key], match))
+            if response_data:
+                for key, value in data.items():
+                    match = False
+                    if response_data[key] == value:
+                        match = True
+                    else:
+                        failed += 1
+                    print("[{}] -> {} = {} [{}]".format(key, value, response_data[key], match))
+            else:
+                failed += 1
+
             print(" ")
             print(" ")
 

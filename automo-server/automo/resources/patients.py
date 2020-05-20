@@ -17,57 +17,27 @@ from .item_getters import get_items_list, get_item, post_item
 def get_patients():
     return get_items_list(
         md.Patient,
-        'api.get_patients'
+        'api.get_patients',
+        fields=[
+            'id',
+            'hospital_no',
+            'name',
+            'sex',
+            'time_of_birth'
+        ]
     )
-    """
-    page = request.args.get('page', 1, type=int)
-    pagination = md.Patient.query.paginate(
-        page, per_page=20, error_out=False
-    )
-    patients = pagination.items
-    prev = None
-    if pagination.has_prev:
-        prev = url_for('api.get_patients', page=page-1, _external=True)
-    next = None
-    if pagination.has_next:
-        next = url_for('api.get_patients', page=page+1, _external=True)
-
-    patient_list = []
-    for patient in patients:
-        patient_list.append({
-            'id': patient.id,
-            'hospital_no': patient.hospital_no,
-            'name': patient.name,
-            'sex': patient.sex,
-            'time_of_birth': patient.time_of_birth,
-            'url' : patient.url() #url_for('api.get_patient', patient_id=patient.id, _external=True)
-        })
-
-    return jsonify({
-        'patients': patient_list,
-        'prev': prev,
-        'next': next,
-        'count': pagination.total
-    })
-    """
 
 
 @api.route("/patients/<int:patient_id>")
 def get_patient(patient_id):
     return get_item(
         md.Patient,
-        patient_id
+        patient_id,
+        additional_data={
+            'encounters': url_for('api.get_patient_encounters', patient_id=patient_id, _external=True),
+            'problems': url_for('api.get_patient_problems', patient_id=patient_id, _external=True)
+        }
     )
-    """
-    patient = md.Patient.query.get_or_404(patient_id)
-
-    data = patient.get_serialized()
-
-    data['encounters'] = url_for('api.get_patient_encounters', patient_id=patient.id, _external=True)
-    #data['url'] = url_for('api.get_patient', patient_id=patient.id, _external=True)
-
-    return jsonify(data)
-    """
 
 
 @api.route("/patients/<int:patient_id>", methods=['POST'])
@@ -76,20 +46,8 @@ def post_patient(patient_id):
         md.Patient,
         patient_id
     )
-    """
-    patient = md.Patient.query.get_or_404(patient_id)
 
-    data = request.get_json()
 
-    try:
-        patient.validate_and_setdata(data)
-    except md.dbexception.FieldValueError as e:
-        return errors.invalid_fields(e.invalid_fields)
-
-    db.session.commit()
-
-    return success_response("Patient Saved")
-    """
 """
 @api.route("/patients/<int:patient_id>/versions/")
 def patient_versions(patient_id):

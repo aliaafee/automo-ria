@@ -51,7 +51,7 @@ def post_one_query_result(query):
     item = query.first()
 
     if item is None:
-        return errors.resource_not_found("Item with id {} not found.".format(item_id))
+        return errors.resource_not_found("Item with not found.")
 
     data = request.get_json()
 
@@ -74,36 +74,11 @@ def get_item(model, item_id, fields=None, additional_data={}):
         model.query.filter_by(id=item_id),
         fields,
         additional_data)
-    """
-    item = model.query.get(item_id)
 
-    if item is None:
-        return errors.resource_not_found("Item with id {} not found.".format(item_id))
-
-    data = item.get_serialized(fields)
-
-    return jsonify(data)
-    """
 
 
 def post_item(model, item_id):
     return post_one_query_result(
         model.query.filter_by(id=item_id)
     )
-    """
-    item = model.query.get(item_id)
 
-    if item is None:
-        return errors.resource_not_found("Item with id {} not found.".format(item_id))
-
-    data = request.get_json()
-
-    try:
-        item.validate_and_setdata(data)
-    except md.dbexception.FieldValueError as e:
-        return errors.invalid_fields(e.invalid_fields)
-
-    db.session.commit()
-
-    return success_response("Item saved")
-    """
