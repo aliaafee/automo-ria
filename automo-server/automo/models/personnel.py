@@ -4,6 +4,8 @@ from .. import db
 
 class Personnel(db.Model):
     """Health Facility Personnel"""
+    __versioned__ = {}
+    
     id = db.Column(db.Integer, primary_key=True)
 
     type = db.Column(db.String(50))

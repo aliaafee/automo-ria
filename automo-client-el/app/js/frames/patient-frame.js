@@ -55,7 +55,6 @@ class PatientFrame extends Frame {
             )
         )
 
-        /*
         this.patient_form.addField(
             new TextField(
                 'patient-time_of_birth',
@@ -78,7 +77,7 @@ class PatientFrame extends Frame {
                     required: false
                 }
             )
-        )*/This 
+        )
 
         this.patient_form.addField(
             new TextField(

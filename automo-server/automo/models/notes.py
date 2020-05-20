@@ -7,6 +7,8 @@ class Note(db.Model):
       there are multiple child classes, eg: Patient History,
       Progress notes, Examination notes. Can be extended with more
       child classes."""
+    __versioned__ = {}
+    
     id = db.Column(db.Integer, primary_key=True)
 
     type = db.Column(db.String(50))

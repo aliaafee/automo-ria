@@ -3,6 +3,8 @@ from .. import db
 
 class Drug(db.Model):
     """Drugs"""
+    __versioned__ = {}
+    
     id = db.Column(db.Integer, primary_key=True)
 
     name = db.Column(db.String(250))

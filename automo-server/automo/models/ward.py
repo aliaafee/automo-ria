@@ -7,6 +7,7 @@ from .mixins import SerializerMixin, ValidatorMixin
 
 class Ward(SerializerMixin,ValidatorMixin ,db.Model):
     """Ward in the clinic/hospital, each ward has multiple beds"""
+    __versioned__ = {}
 
     serialized_attrs = [
         'id',
@@ -16,7 +17,7 @@ class Ward(SerializerMixin,ValidatorMixin ,db.Model):
     ]
 
     def url(self):
-        return "" #url_for('api.get_ward', ward_id=self.id, _external=True)
+        return url_for('api.get_ward', ward_id=self.id, _external=True)
 
 
     id = db.Column(db.Integer, primary_key=True)

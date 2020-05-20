@@ -16,7 +16,7 @@ class PhoneNumber(SerializerMixin, ValidatorMixin, db.Model):
     ]
 
     def url(self):
-        return url_for('api.get_phone_number', phone_number_id=self.id, _external=True)
+        return url_for('api.get_patient_phone_number', phone_number_id=self.id, patient_id=self.patient_id, _external=True)
 
     id = db.Column(db.Integer, primary_key=True)
     

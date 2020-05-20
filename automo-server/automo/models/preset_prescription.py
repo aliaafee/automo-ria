@@ -4,6 +4,8 @@ from .. import db
 
 class PresetPrescription(db.Model):
     """Preset Drug Regimens"""
+    __versioned__ = {}
+
     id = db.Column(db.Integer, primary_key=True)
 
     name = db.Column(db.String(250))
@@ -12,6 +14,8 @@ class PresetPrescription(db.Model):
 
 
 class PresetMedication(db.Model):
+    __versioned__ = {}
+    
     """Medication order in a drug regimen, duration is in days"""
     id = db.Column(db.Integer, primary_key=True)
 

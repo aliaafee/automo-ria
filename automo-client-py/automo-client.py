@@ -251,13 +251,19 @@ class ClientApp:
                 },
             ),
             (
-                "http://127.0.0.1:5000/api/patients/3/encounters/11",
+                "http://127.0.0.1:5000/api/patients/1/encounters/11",
                 {
                     'pulse_rate': random() * 100
                 },
             ),
             (
-                "http://127.0.0.1:5000/api/phone-numbers/1",
+                "http://127.0.0.1:5000/api/patients/1/problems/1",
+                {
+                    'start_time': datetime.datetime.now().isoformat()
+                },
+            ),
+            (
+                "http://127.0.0.1:5000/api/patients/11/phone-numbers/1",
                 {
                     'name': 'Father {}'.format(randint(1, 100)),
                     'number': '{}'.format(randint(10000000,999999999))
@@ -298,11 +304,51 @@ class ClientApp:
                     'time_of_birth': datetime.datetime.now().isoformat(),
                     'time_of_death': datetime.datetime.now().isoformat()
                 }
+            ),
+            (
+                'http://127.0.0.1:5000/api/patients/1',
+                {
+                    'time_of_birth': '{}-{}-{}T{}:{}:{}'.format(
+                        randint(1900,2020),
+                        randint(10,12),
+                        randint(10,28),
+                        randint(10,23),
+                        randint(10,59),
+                        randint(10,59)
+                    ),
+                    'time_of_death': '{}-{}-{}T{}:{}:{}'.format(
+                        randint(1900,2020),
+                        randint(10,12),
+                        randint(10,28),
+                        randint(10,23),
+                        randint(10,59),
+                        randint(10,59)
+                    ),
+                }
+            ),
+            (
+                'http://127.0.0.1:5000/api/wards/1',
+                {
+                    'name': 'Rando Ward {}'.format(randint(10,99))
+                }
+            ),
+            (
+                'http://127.0.0.1:5000/api/wards/1/beds/1',
+                {
+                    'number': 'AB{}'.format(randint(1,100))
+                }
+            ),
+            (
+                'http://127.0.0.1:5000/api/beds/2',
+                {
+                    'number': 'XB{}'.format(randint(1,100))
+                }
             )
         ]
 
+        failed = 0
         for url, data in test_cases:
-            print("### BEGIN TEST CASE ###")
+            print("> Begin Test")
             #print("Sending Data")
             print(url)
             #pprint(data)
@@ -315,14 +361,18 @@ class ClientApp:
             #print("Getting url")
             response_data = self.conn.get(url)
             #pprint(response_data)
-            print("")
+            #print("")
             for key, value in data.items():
                 match = False
                 if response_data[key] == value:
                     match = True
+                else:
+                    failed += 1
                 print("[{}] -> {} = {} [{}]".format(key, value, response_data[key], match))
             print(" ")
             print(" ")
+
+        print("{} Tests Failed".format(failed))
             
 
 

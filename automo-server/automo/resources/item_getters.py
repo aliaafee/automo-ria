@@ -8,9 +8,9 @@ from . import errors
 from .success import success_response
 
 
-def get_items_list(model, api_route, fields=None):
+def get_query_result(query, api_route, fields=None):
     page = request.args.get('page', 1, type=int)
-    pagination = model.query.paginate(
+    pagination = query.paginate(
         page, per_page=20, error_out=False
     )
     items = pagination.items
@@ -35,7 +35,46 @@ def get_items_list(model, api_route, fields=None):
     })
 
 
-def get_item(model, item_id, fields=None):
+def get_one_query_result(query, fields=None, additional_data={}):
+    item = query.first()
+
+    if item is None:
+        return errors.resource_not_found("Item not found.")
+
+    data = item.get_serialized(fields)
+    data.update(additional_data)
+
+    return jsonify(data)
+
+
+def post_one_query_result(query):
+    item = query.first()
+
+    if item is None:
+        return errors.resource_not_found("Item with id {} not found.".format(item_id))
+
+    data = request.get_json()
+
+    try:
+        item.validate_and_setdata(data)
+    except md.dbexception.FieldValueError as e:
+        return errors.invalid_fields(e.invalid_fields)
+
+    db.session.commit()
+
+    return success_response("Item saved")
+
+
+def get_items_list(model, api_route, fields=None):
+    return get_query_result(model.query, api_route, fields)
+
+
+def get_item(model, item_id, fields=None, additional_data={}):
+    return get_one_query_result(
+        model.query.filter_by(id=item_id),
+        fields,
+        additional_data)
+    """
     item = model.query.get(item_id)
 
     if item is None:
@@ -44,9 +83,14 @@ def get_item(model, item_id, fields=None):
     data = item.get_serialized(fields)
 
     return jsonify(data)
+    """
 
 
 def post_item(model, item_id):
+    return post_one_query_result(
+        model.query.filter_by(id=item_id)
+    )
+    """
     item = model.query.get(item_id)
 
     if item is None:
@@ -62,3 +106,4 @@ def post_item(model, item_id):
     db.session.commit()
 
     return success_response("Item saved")
+    """

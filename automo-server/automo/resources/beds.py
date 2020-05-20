@@ -14,6 +14,6 @@ def get_bed(bed_id):
     return get_item(md.Bed, bed_id)
 
 
-@api.route("/addresses/<int:bed_id>", methods=['POST'])
+@api.route("/beds/<int:bed_id>", methods=['POST'])
 def post_bed(bed_id):
-    return post_item(md.Address, bed_id)
+    return post_item(md.Bed, bed_id)

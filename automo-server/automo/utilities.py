@@ -8,7 +8,7 @@ from datetime import datetime
 from flask_script import Command, Option
 
 from .icd10import import import_icd10
-from .models import User, Role, Patient, Address, Admission, Problem, Ward, Bed, Doctor, VitalSigns, SurgicalProcedure, RenalFunctionTest, ClinicalEncounter
+from .models import User, Role, Patient, Address, Admission, Problem, Ward, Bed, Doctor, VitalSigns, SurgicalProcedure, RenalFunctionTest, ClinicalEncounter, PhoneNumber
 from . import db
 
 
@@ -135,6 +135,12 @@ class FakeData(Command):
                 patient.phone_no = fake.phone_number()
                 patient.sex = random.choice(["F", "M"])
 
+                for i in range(1, random.randint(3, 5)):
+                    ph = PhoneNumber()
+                    ph.name = fake.name()
+                    ph.number = fake.phone_number()
+                    patient.phone_numbers.append(ph)
+
                 db.session.add(patient)
 
                 for i in range(random.randint(1,problems_count)):
@@ -143,6 +149,7 @@ class FakeData(Command):
                     p.start_time = f_datetime()
                     db.session.add(p)
                     patient.problems.append(p)
+
 
                 for i in range(random.randint(1,encounters_count)):
                     ad = patient.admit(
@@ -153,12 +160,12 @@ class FakeData(Command):
                     for i in range(random.randint(0, 5)):
                         ch = random.choice([1,2,3])
                         e = None
-                        if ch is 1:
+                        if ch == 1:
                             e = VitalSigns()
                             e.pulse_rate = 90
                             e.diastolic_bp = 80
                             e.systolic_bp = 120
-                        elif ch is 2:
+                        elif ch == 2:
                             e = SurgicalProcedure()
                             e.personnel = random.choice(docs)
                         else:

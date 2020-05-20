@@ -10,10 +10,16 @@ from . import api
 from .authentication import auth
 from . import errors
 from .success import success_response
+from .item_getters import get_items_list, get_item, post_item
 
 
 @api.route("/patients/")
 def get_patients():
+    return get_items_list(
+        md.Patient,
+        'api.get_patients'
+    )
+    """
     page = request.args.get('page', 1, type=int)
     pagination = md.Patient.query.paginate(
         page, per_page=20, error_out=False
@@ -43,10 +49,16 @@ def get_patients():
         'next': next,
         'count': pagination.total
     })
+    """
 
 
 @api.route("/patients/<int:patient_id>")
 def get_patient(patient_id):
+    return get_item(
+        md.Patient,
+        patient_id
+    )
+    """
     patient = md.Patient.query.get_or_404(patient_id)
 
     data = patient.get_serialized()
@@ -55,10 +67,16 @@ def get_patient(patient_id):
     #data['url'] = url_for('api.get_patient', patient_id=patient.id, _external=True)
 
     return jsonify(data)
+    """
 
 
 @api.route("/patients/<int:patient_id>", methods=['POST'])
 def post_patient(patient_id):
+    return post_item(
+        md.Patient,
+        patient_id
+    )
+    """
     patient = md.Patient.query.get_or_404(patient_id)
 
     data = request.get_json()
@@ -71,7 +89,7 @@ def post_patient(patient_id):
     db.session.commit()
 
     return success_response("Patient Saved")
-
+    """
 """
 @api.route("/patients/<int:patient_id>/versions/")
 def patient_versions(patient_id):
