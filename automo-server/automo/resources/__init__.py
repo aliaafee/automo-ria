@@ -14,7 +14,8 @@ from . import users,\
               addresses,\
               phone_numbers,\
               beds,\
-              wards
+              wards,\
+              admissions
 
 @api.before_request
 @authentication.auth.login_required

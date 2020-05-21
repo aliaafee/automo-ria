@@ -13,7 +13,10 @@ from .item_getters import get_query_result, get_one_query_result, post_one_query
 def get_patient_encounters(patient_id):
     return get_query_result(
         md.Encounter.query.filter_by(patient_id=patient_id, parent=None),
-        'api.get_patient_encounters'
+        'api.get_patient_encounters',
+        api_route_values={
+            'patient_id': patient_id
+        }
     )
 
 

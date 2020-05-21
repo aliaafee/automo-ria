@@ -30,7 +30,10 @@ def post_ward(ward_id):
 def get_ward_beds(ward_id):
     return get_query_result(
         md.Bed.query.filter_by(ward_id=ward_id),
-        'api.get_ward_beds'
+        'api.get_ward_beds',
+        api_route_values={
+            'ward_id': ward_id
+        }
     )
 
 

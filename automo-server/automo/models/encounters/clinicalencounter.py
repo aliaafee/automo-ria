@@ -1,4 +1,6 @@
 """Clinical Encounter"""
+from flask import url_for
+
 from ... import db
 
 from .encounter import Encounter
@@ -77,6 +79,27 @@ class Admission(ClinicalEncounter):
     """Admission Encounter. Each hospital stay is associated with a bed, when the
       patient is discharged after the hospital stay, the bed attribute is cleared and the bed
       number is moved to the discharged_bed attribute."""
+    
+    serialized_attrs = [
+        'id',
+        'label',
+        'type',
+        'start_time',
+        'end_time',
+        #'children',
+        'personnel_id',
+        'problems'
+    ]
+
+    def url(self):
+        return url_for(
+            'api.get_patient_admission',
+            patient_id=self.patient_id,
+            admission_id=self.id,
+            _external=True
+        )
+
+
     id = db.Column(db.Integer, db.ForeignKey('clinicalencounter.id'), primary_key=True)
 
     __mapper_args__ = {

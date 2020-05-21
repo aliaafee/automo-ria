@@ -32,11 +32,9 @@ class SerializerMixin(object):
 class ValidatorMixin(object):
     validators = {}
 
-    def find_type(self, class_, colname):
-        if hasattr(class_, '__table__') and colname in class_.__table__.c:
-            return class_.__table__.c[colname].type
-        #for base in class_.__bases__:
-        #    return self.find_type(base, colname)
+    def find_type(self, instance, colname):
+        if hasattr(instance, colname):
+            return getattr(instance.__class__, colname).property.columns[0].type
         raise NameError(colname)
 
 
@@ -44,7 +42,7 @@ class ValidatorMixin(object):
         """Accepts data as dictionary, validates and inserts it,
            Inserts no fields when error is found and raises an error"""
 
-        pprint(data)
+        #pprint(data)
 
         invalid_fields = []
         for name, value in data.items():
@@ -76,9 +74,7 @@ class ValidatorMixin(object):
         except NameError:
             return False
 
-        col_python_type_name = col_type.python_type.__name__
-
-        print(type(col_type))
+        #print(type(col_type))
 
         if type(col_type) is sqlalchemy.sql.sqltypes.String:
             #Validate Strings

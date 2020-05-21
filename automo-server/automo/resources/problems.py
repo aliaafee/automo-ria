@@ -11,7 +11,10 @@ from .item_getters import get_query_result, get_one_query_result, post_one_query
 def get_patient_problems(patient_id):
     return get_query_result(
         md.Problem.query.filter_by(patient_id=patient_id),
-        'api.get_patient_problems'
+        'api.get_patient_problems',
+        api_route_values={
+            'patient_id': patient_id
+        }
     )
 
 
