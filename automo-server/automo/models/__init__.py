@@ -26,6 +26,8 @@ from .patient import Patient
 from .address import Address
 from .bed import Bed
 from .ward import Ward
+from .department import Department
+from .hospital import Hospital
 from .problem_encounter import problem_encounter_association_table
 from .problem import Problem
 from .notes import Note,\

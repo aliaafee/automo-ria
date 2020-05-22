@@ -22,6 +22,9 @@ class Personnel(db.Model):
 
     encounters = db.relationship("Encounter", back_populates="personnel")
 
+    department_id = db.Column(db.Integer, db.ForeignKey('department.id'))
+    department = db.relationship("Department", back_populates="personnel")
+
     user = db.relationship("User", uselist=False, back_populates="personnel",
                         foreign_keys="User.personnel_id")
 

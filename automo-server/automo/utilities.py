@@ -9,6 +9,8 @@ from flask_script import Command, Option
 
 from .icd10import import import_icd10
 from .models import User, Role, Patient, Address, Admission, Problem, Ward, Bed, Doctor, VitalSigns, SurgicalProcedure, RenalFunctionTest, ClinicalEncounter, PhoneNumber
+from . import models as md 
+
 from . import db
 
 
@@ -101,12 +103,24 @@ class FakeData(Command):
         total_progress = doctors_count + wards_count + patients_count + patients_count
 
         with click.progressbar(length=total_progress, label="Faking Data") as bar:
+            hosp = md.Hospital()
+            hosp.name = "Some Big Hospital"
+            hosp.address = "Big Street, Sometown, Country"
+            hosp.phone_no = "9801243, 8731294"
+            db.session.add(hosp)
+
+            dept = md.Department()
+            dept.name = "Department of Surgery"
+            hosp.departments.append(dept)
+
+
             docs = []
             for i in range(doctors_count):
                 doc = Doctor()
                 doc.name = "Dr. {}".format(fake.name())
                 doc.record_card_no = str(random.randint(1000,9999))
                 db.session.add(doc)
+                dept.personnel.append(doc)
                 docs.append(doc)
                 bar.update(1)
 
@@ -117,6 +131,7 @@ class FakeData(Command):
                 ward = Ward(name="Ward {}".format(i))
                 ward.bed_prefix = "w{}".format(i)
                 db.session.add(ward)
+                hosp.wards.append(ward)
                 wards.append(ward)
                 for i in range(random.randint(10,15)):
                     bed = Bed(number=str(i))
@@ -157,6 +172,12 @@ class FakeData(Command):
                         random.choice(beds),
                         f_datetime()
                     )
+                    e = VitalSigns()
+                    e.pulse_rate = 90
+                    e.diastolic_bp = 80
+                    e.systolic_bp = 120
+                    ad.add_child_encounter(e)
+                    
                     for i in range(random.randint(0, 5)):
                         ch = random.choice([1,2,3])
                         e = None
