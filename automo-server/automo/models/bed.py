@@ -29,6 +29,10 @@ class Bed(SerializerMixin, ValidatorMixin, db.Model):
     ward_id = db.Column(db.Integer, db.ForeignKey('ward.id'))
     ward = db.relationship("Ward", back_populates="beds")
 
+    @property
+    def name(self):
+        return "{} - {}".format(self.ward.bed_prefix, self.number)
+
     admission = db.relationship("Admission", uselist=False, back_populates="bed",
                              foreign_keys="Admission.bed_id")
     previous_admissions = db.relationship("Admission", back_populates="discharged_bed",

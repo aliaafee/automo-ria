@@ -4,6 +4,7 @@ const ResourceForm = require("./controls/resource-form");
 const TextField = require("./controls/text-field");
 const Frame = require("./frames/base-frame");
 const PatientFrame = require("./frames/patient-frame");
+const AdmissionFrame = require("./frames/admission")
 
 
 class MainWindow {
@@ -31,7 +32,7 @@ class MainWindow {
     displayPatientList(data) {
         var result = "";
     
-        data['patients'].forEach(element => {
+        data['items'].forEach(element => {
             result += `<tr><td>${element['id']}</td><td>${element['name']}</td><td>${element['url']}</td></tr>`
         });
     
@@ -54,10 +55,15 @@ class MainWindow {
             </div>
         `);
 
-        this.patient_view = new PatientFrame('patient-frame', 'patient-frame', this.connection);
+        //this.patient_view = new PatientFrame('patient-frame', 'patient-frame', this.connection);
 
-        this.patient_view.render();
-        this.patient_view.setPatient(patient);
+        //this.patient_view.render();
+        //this.patient_view.setPatient(patient);
+
+        this.admission_view = new AdmissionFrame('patient-frame', 'patient-frame', this.connection);
+
+        this.admission_view.render();
+        //this.admission_view.setPatient(patient);
 
         /*
         this.patient_form = new ResourceForm(
@@ -127,25 +133,18 @@ class MainWindow {
                         data['patients'],
                         data => {
                             this.displayPatientList(data);
+                        },
+                        () => {
+                            console.log("Didnt Work Again")
                         }
                     )
+                },
+                () => {
+                    console.log("Didnt Work")
                 }
             )
         });
 
-        $('#btn-patient-list').click(() => {
-            this.connection.get(
-                this.connection.index_url,
-                data => {
-                    this.connection.get(
-                        data['patients'],
-                        data => {
-                            this.displayPatientList(data);
-                        }
-                    )
-                }
-            )
-        });
 
         $('#btn-patient-one').click(() => {
             console.log("Patient One");
@@ -155,10 +154,15 @@ class MainWindow {
                     this.connection.get(
                         data['patients'],
                         data => {
-                            this.displayPatient(data.patients[0]);
+                            this.displayPatient(data.items[0]);
                         }
+                        ,
+                        console.log("Error getting patient")
                     )
-                }
+                },
+                () => {
+                    console.log("Error getting index")
+                } 
             )
         });
 

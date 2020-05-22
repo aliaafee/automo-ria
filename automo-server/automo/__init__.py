@@ -7,6 +7,7 @@ from flask_bootstrap import Bootstrap
 
 from config import config
 from .json_encoder import CustomJSONEncoder
+from .template_filters import register_filters
 
 db = SQLAlchemy()
 #login_manager = LoginManager()
@@ -18,6 +19,8 @@ def create_app(config_name):
     app = Flask(__name__)
 
     app.json_encoder = CustomJSONEncoder
+
+    register_filters(app)
 
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)

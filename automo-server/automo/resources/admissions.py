@@ -1,5 +1,5 @@
-from flask import url_for, jsonify, request
-from flask_weasyprint import HTML, render_pdf
+from flask import url_for, jsonify, request, render_template
+from flask_weasyprint import HTML, CSS, render_pdf
 
 from .. import models as md
 from .. import db
@@ -50,7 +50,18 @@ def get_patient_admission(patient_id, admission_id):
         .filter(md.Admission.patient_id == patient_id)\
         .filter(md.Admission.id == admission_id)
 
-    return get_one_query_result(query)
+    admission = query.first()
+
+    additional_data = {}
+    if admission is not None:
+        if admission.end_time is not None:
+            additional_data['discharge-summary'] = url_for(
+                'api.post_patient_admission_discharge_summary',
+                patient_id=patient_id, admission_id=admission_id,
+                _external = True
+            )
+
+    return get_one_query_result(query, additional_data=additional_data)
 
 
 @api.route("patients/<int:patient_id>/admissions/<int:admission_id>", methods=['POST'])
@@ -78,6 +89,8 @@ def get_patient_admission_encounters(patient_id, admission_id):
     )
 
 
+
+
 @api.route("patients/<int:patient_id>/admissions/<int:admission_id>/discharge-summary.pdf")
 def post_patient_admission_discharge_summary(patient_id, admission_id):
     query = md.Admission.query\
@@ -91,9 +104,13 @@ def post_patient_admission_discharge_summary(patient_id, admission_id):
         return errors.resource_not_found("Item with not found.")
 
     return render_pdf(
-        HTML(string="<h1>Discharge Summary</h1> <p>Hello man</p>")
+        HTML(
+            string=render_template(
+                'admission/discharge-summary.html',
+                admission=admission
+            )
+        ),
+        stylesheets=[
+            CSS(filename="./automo/templates/admission/discharge-summary.css")
+        ]
     )
-
-    #print(admission)
-
-    #return success_response("Got Discharge Summary")

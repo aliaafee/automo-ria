@@ -1,0 +1,8 @@
+@page {
+    size: A4; /* Change from the default size of A4 */
+    margin: 1cm; /* Set margin on each page */
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}

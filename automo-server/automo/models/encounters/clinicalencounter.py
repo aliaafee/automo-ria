@@ -44,24 +44,24 @@ class ClinicalEncounter(Encounter):
 
     written_by = db.Column(db.String(255))
 
-    def prescribe_drug(self, session, drug, drug_str, drug_order, active=True):
+    def prescribe_drug(self, drug, drug_str, drug_order, active=True):
         """Precribe medication. Drug can be passed as an object, or object can be None
           and a string name of Drug can be passed. If this string name not found in drug list
           it will be added."""
-        new_presc = self._create_new_prescription(session, drug, drug_str, drug_order)
+        new_presc = self._create_new_prescription(drug, drug_str, drug_order)
         self.prescription.append(new_presc)
 
-    def _create_new_prescription(self, session, drug, drug_str, drug_order, active=True):
+    def _create_new_prescription(self, drug, drug_str, drug_order, active=True):
         if drug is None:
             if drug_str == "":
                 raise dbexception.AutoMODatabaseError("New drug name cannot be empty")
-            query = session.query(Drug)\
+            query = db.session.query(Drug)\
                         .filter(Drug.name == drug_str)
             if query.count() == 0:
                 new_drug = Drug(
                     name = drug_str
                 )
-                session.add(new_drug)
+                db.session.add(new_drug)
                 drug = new_drug
             else:
                 drug = query.first()

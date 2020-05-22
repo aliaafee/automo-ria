@@ -247,11 +247,15 @@ class ClientApp:
              "http://127.0.0.1:5000/api/patients/1",
              'http://127.0.0.1:5000/api/patients/1/encounters/',
              'http://127.0.0.1:5000/api/patients/1/problems/',
-             'http://127.0.0.1:5000/api/patients/11/phone-numbers/',
+             'http://127.0.0.1:5000/api/patients/1/phone-numbers/',
              'http://127.0.0.1:5000/api/addresses',
              'http://127.0.0.1:5000/api/wards/',
              'http://127.0.0.1:5000/api/beds/',
-             'http://127.0.0.1:5000/api/wards/1/beds/'
+             'http://127.0.0.1:5000/api/wards/1/beds/',
+             'http://127.0.0.1:5000/api/patients/1/admissions/',
+             'http://127.0.0.1:5000/api/patients/1/admissions/?discharges=True',
+             'http://127.0.0.1:5000/api/patients/1/admissions/1/encounters/',
+             'http://127.0.0.1:5000/api/patients/1/admissions/1/discharge-summary.pdf'
         ]
 
         failed = 0
@@ -371,7 +375,14 @@ class ClientApp:
                 {
                     'number': 'XB{}'.format(randint(1,100))
                 }
-            )
+            ),
+            (
+                'http://127.0.0.1:5000/api/patients/1/admissions/1',
+                {
+                    'start_time': datetime.datetime.now().isoformat(),
+                    'end_time': datetime.datetime.now().isoformat()
+                }
+            ),
         ]
 
         failed = 0

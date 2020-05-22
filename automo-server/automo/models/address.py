@@ -35,6 +35,20 @@ class Address(SerializerMixin, ValidatorMixin, db.Model):
     country = db.Column(db.String(255))
     phone_no = db.Column(db.String(250))
 
+    @property
+    def one_line(self):
+        items = [
+            self.line_1, 
+            self.line_2, 
+            self.line_3, 
+            self.city, 
+            self.region, 
+            self.country,
+            "Phone {}".format(self.phone_no) if self.phone_no else None
+        ]
+
+        return ", ".join([item for item in items if item])
+
 
     permanent_residents = relationship("Patient", back_populates="permanent_address",
                                        foreign_keys="Patient.permanent_address_id")
