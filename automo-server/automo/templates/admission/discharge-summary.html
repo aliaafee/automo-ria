@@ -1,165 +1,170 @@
 <html>
     <body>
-        <!--<div class="header">
-            <h1>HOSPITAL TITLE</h1>
-            <h2>Hospital Address</h2>
-            <h2>Hospital Numbers</h2>
-        </div>-->
+        <div class="header">
+            <div class="header-hospital-name">{{ admission.discharged_bed.ward.hospital.name }}</div>
+            <div class="header-hospital-address">{{ admission.discharged_bed.ward.hospital.address }}</div>
+            <div class="header-hospital-phone">{{ admission.discharged_bed.ward.hospital.phone_no }}</div>
+        </div>
         <h1>Discharge Summary</h1>
-        Department of Psychiatry
-        Please bring this discharge summary whenever you come for consultation.
+        <div class="subtitle">{{ admission.personnel.department.name }}</div>
+        <div class="info">(Please bring this discharge summary whenever you come for consultation.)</div>
         <table>
             <tr>
-                <td>Name</td>
+                <td class="label">Name</td>
                 <td>{{ admission.patient.name }}</td>
-                <td>Ward</td>
-                <td>{{ admission.discharged_bed.name }}</td>
+                <td class="label">Age/Sex</td>
+                <td>{{ admission.patient.age|format_duration_verbose }} / {{ admission.patient.sex }}</td>
             </tr>
             <tr>
-                <td>Age</td>
-                <td>{{ admission.patient.age|format_duration_verbose }}</td>
-                <td>NIC Number</td>
+                <td class="label">NIC No.</td>
                 <td>{{ admission.patient.national_id_no }}</td>
-            </tr>
-            <tr>
-                <td>Sex</td>
-                <td>{{ admission.patient.sex }}</td>
-                <td>Hospital Number</td>
+                <td class="label">Hosp. No.</td>
                 <td>{{ admission.patient.hospital_no }}</td>
             </tr>
             <tr>
-                <td>Address</td>
+                <td class="label">Address</td>
                 <td colspan="2">{{ admission.patient.permanent_address.one_line }}</td>
             </tr>
         </table>
-
+        <hr>
         <table>
             <tr>
-                <td>Date of Admission</td>
+                <td class="label">Ward</td>
+                <td>{{ admission.discharged_bed.name }}</td>
+                <td class="label-wide">Date of Admission</td>
                 <td>{{ admission.start_time|formate_date }}</td>
-                <td>Date of Discharge</td>
+                <td class="label-wide">Date of Discharge</td>
                 <td>{{ admission.end_time|formate_date }}</td>
             </tr>
         </table>
+        <hr>
 
-        <table>
-            <tr>
-                <td><h2>Diagnosis</h2></td>
-                <td>
-                    <ul>
-                        {% for problem in admission.problems %}
-                            <li>
-                                <b>{{ problem.icd10class_code }}</b>
-                                -
-                                {{ problem.icd10class.preferred_plain }}
-                                {% if problem.icd10modifier_class  %}
-                                    , (
-                                        {{ problem.icd10modifier_class.code_short }} - 
-                                        {{ problem.icd10modifier_class.preferred }}
-                                    )
-                                {% endif %}
-                                {% if problem.icd10modifier_extra_class  %}
-                                    , (
-                                        {{ problem.icd10modifier_extra_class.code_short }} - 
-                                        {{ problem.icd10modifier_extra_class.preferred }}
-                                    )
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </td>
-            </tr>
+        <div class="section-container">
+            <div class="section-label">
+                Diagnosis
+            </div>
+            <div class="section-content">
+                {% for problem in admission.problems %}
+                    <p>
+                        <b>{{ problem.icd10class_code }}</b>
+                        -
+                        {{ problem.icd10class.preferred_plain }}
+                        {% if problem.icd10modifier_class  %}
+                            , (
+                                {{ problem.icd10modifier_class.code_short }} - 
+                                {{ problem.icd10modifier_class.preferred }}
+                            )
+                        {% endif %}
+                        {% if problem.icd10modifier_extra_class  %}
+                            , (
+                                {{ problem.icd10modifier_extra_class.code_short }} - 
+                                {{ problem.icd10modifier_extra_class.preferred }}
+                            )
+                        {% endif %}
+                    </p>
+                {% endfor %}
+            </div>
+        </div>
 
-            <tr>
-                <td><h2>History</h2></td>
-                <td>
-                    {% if admission.history %}
+        <div class="section-container">
+            <div class="section-label">
+                History
+            </div>
+            <div class="section-content">
+                {% if admission.history %}
                         <p>{{ admission.history }}</p>
                     {% endif %}
+                {% if admission.past_history %}
+                    <p>{{ admission.past_history }}</p>
+                {% endif %}
+            </div>
+        </div>
 
-                    {% if admission.past_history %}
-                        <p>{{ admission.past_history }}</p>
-                    {% endif %}
-                </td>
-            </tr>
-
-            <tr>
-                <td><h2>Examination</h2></td>
-                <td>
-                    {% if admission.general_inspection %}
-                        <p>{{ admission.general_inspection }}</p>
+        <div class="section-container">
+            <div class="section-label">
+                Examination
+            </div>
+            <div class="section-content">
+                {% if admission.general_inspection %}
+                        <p><b>General Inspection: </b>{{ admission.general_inspection }}</p>
                     {% endif %}
 
                     {% if admission.exam_head %}
-                        <p>{{ admission.exam_head }}</p>
+                        <p><b>Head: </b>{{ admission.exam_head }}</p>
                     {% endif %}
 
                     {% if admission.exam_neck %}
-                        <p>{{ admission.exam_neck }}</p>
+                        <p><b>Neck: </b>{{ admission.exam_neck }}</p>
                     {% endif %}
 
                     {% if admission.exam_chest %}
-                        <p>{{ admission.exam_chest }}</p>
+                        <p><b>Chest: </b>{{ admission.exam_chest }}</p>
                     {% endif %}
 
                     {% if admission.exam_abdomen %}
-                        <p>{{ admission.exam_abdomen }}</p>
+                        <p><b>Abdomen: </b>{{ admission.exam_abdomen }}</p>
                     {% endif %}
 
                     {% if admission.exam_genitalia %}
-                        <p>{{ admission.exam_genitalia }}</p>
+                        <p><b>Genitalia: </b>{{ admission.exam_genitalia }}</p>
                     {% endif %}
 
                     {% if admission.exam_pelvic_rectal %}
-                        <p>{{ admission.exam_pelvic_rectal }}</p>
+                        <p><b>Pelvic & Rectal: </b>{{ admission.exam_pelvic_rectal }}</p>
                     {% endif %}
 
                     {% if admission.exam_extremities %}
-                        <p>{{ admission.exam_extremities }}</p>
+                        <p><b>Extremities: </b>{{ admission.exam_extremities }}</p>
                     {% endif %}
 
                     {% if admission.exam_other %}
-                        <p>{{ admission.exam_other }}</p>
-                    {% endif %}
-                </td>
-            </tr>
+                        <p><b>Other: </b>{{ admission.exam_other }}</p>
+                {% endif %}
+            </div>
+        </div>
 
-            <tr>
-                <td><h2>Investigations</h2></td>
-                <td>
-                    <p>All Enclosed</p>
-                </td>
-            </tr>
+        <div class="section-container">
+            <div class="section-label">
+                Investigations
+            </div>
+            <div class="section-content">
+                <p>All Enclosed</p>
+            </div>
+        </div>
 
-            <tr>
-                <td><h2>Hospital Course</h2></td>
-                <td>
-                    {{ admission.hospital_course }}
-                </td>
-            </tr>
+        <div class="section-container">
+            <div class="section-label">
+                Hospital Course
+            </div>
+            <div class="section-content">
+                <p>{{ admission.hospital_course }}</p>
+            </div>
+        </div>
 
-            <tr>
-                <td><h2>Advice at Discharge</h2></td>
-                <td>
-                    <ol>
-                        {% for entry in admission.prescription %}
-                            {% if entry.active %}
-                                <li>{{ entry.drug.name }} {{ entry.drug_order }}</li>
-                            {% endif %}
-                        {% endfor %}
-                    </ol>
-                    {% if admission.discharge_advice %}
-                        <p>{{ admission.discharge_advice }}</p>
-                    {% endif %}
-                </td>
-            </tr>
-        </table>
+        <div class="section-container">
+            <div class="section-label">
+                Advice at Discharge
+            </div>
+            <div class="section-content">
+                <ol>
+                    {% for entry in admission.prescription %}
+                        {% if entry.active %}
+                            <li>{{ entry.drug.name }} {{ entry.drug_order }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ol>
+                {% if admission.discharge_advice %}
+                    <p>{{ admission.discharge_advice }}</p>
+                {% endif %}
+            </div>
+        </div>
 
+        <hr>
         <table>
             <tr>
-                <td><h2>Admitting Doctor</h2></td>
-                <td>
-                    <p>{{ admission.personnel.name }}</p>
+                <td class="signature-label">Admitting Doctor</td>
+                <td class="signature">
+                    {{ admission.personnel.name }}
                 </td>
             </tr>
         </table>

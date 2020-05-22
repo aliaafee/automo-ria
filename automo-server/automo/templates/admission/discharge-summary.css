@@ -4,5 +4,118 @@
 }
 
 body {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 10pt;
+}
+
+div.header {
     font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+
+div.header-hospital-name {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 12pt;
+}
+
+div.header-hospital-address {
+    font-size: 8pt;
+}
+
+div.header-hospital-phone {
+    font-size: 8pt;
+}
+
+h1 {
+    text-transform: uppercase;
+    font-size: 12pt;
+    text-align: center;
+    margin-bottom: 1mm;
+}
+
+div.subtitle {
+    text-align: center;
+    font-weight: bold;
+    font-size: 12pt;
+    margin-bottom: 1mm;
+}
+
+div.info {
+    text-align: center;
+    font-size: 8pt;
+    margin-bottom: 1mm;
+}
+
+table {
+    width: 100%;
+}
+
+td {
+    padding: 1mm;
+    vertical-align: top;
+}
+
+td.label {
+    font-weight: bold;
+    width: 1.5cm;
+}
+
+td.label-wide {
+    font-weight: bold;
+    width: 3cm;
+}
+
+
+td.label-heading {
+    font-size: 12pt;
+    width: 2cm;
+}
+
+td.label-heading h2 {
+    font-size: 12pt;
+}
+
+td.label-heading {
+    font-size: 12pt;
+    width: 2cm;
+}
+
+td.label-heading h2 {
+    font-size: 12pt;
+}
+
+td.signature {
+    font-weight: bold;
+}
+
+td.signature-label {
+    width: 3cm;
+    font-weight: bold;
+}
+
+div.section-container {
+    display: flex;
+}
+
+/*
+div.section-container div {
+    border: solid 1px black;
+}*/
+
+div.section-label {
+    font-weight: bold;
+    font-size: 12pt;
+    padding-top: 2mm;
+    padding-bottom: 2mm;
+    flex: 1 0 2.8cm;
+}
+
+div.section-content {
+    flex: 1 0 15.2cm
+}
+
+div.section-content p {
+    margin-top: 2mm;
+    margin-bottom: 2mm;
 }

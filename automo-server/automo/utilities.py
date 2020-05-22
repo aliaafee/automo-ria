@@ -172,10 +172,15 @@ class FakeData(Command):
                         random.choice(beds),
                         f_datetime()
                     )
+
+                    for field in ['chief_complaints', 'history', 'past_history', 'general_inspection', 'exam-head', 'exam_neck', 'exam_chest', 'exam_abdomen', 'exam_genitalia', 'exam_pelvic_rectal',  'exam_extremities', 'exam_other']:
+                        setattr(ad, field, fake.paragraph() + fake.paragraph() + fake.paragraph() + fake.paragraph())
+
+
                     e = VitalSigns()
-                    e.pulse_rate = 90
-                    e.diastolic_bp = 80
-                    e.systolic_bp = 120
+                    e.pulse_rate = random.randint(60, 100)
+                    e.diastolic_bp = random.randint(50, 60)
+                    e.systolic_bp = e.diastolic_bp + random.randint(0, 60)
                     ad.add_child_encounter(e)
                     
                     for i in range(random.randint(0, 5)):
@@ -183,15 +188,15 @@ class FakeData(Command):
                         e = None
                         if ch == 1:
                             e = VitalSigns()
-                            e.pulse_rate = 90
-                            e.diastolic_bp = 80
-                            e.systolic_bp = 120
+                            e.pulse_rate = random.randint(60, 100)
+                            e.diastolic_bp = random.randint(50, 60)
+                            e.systolic_bp = e.diastolic_bp + random.randint(0, 60)
                         elif ch == 2:
                             e = SurgicalProcedure()
                             e.personnel = random.choice(docs)
                         else:
                             e = RenalFunctionTest()
-                            e.creatinine = 100
+                            e.creatinine = random.randint(40, 120)
                         ad.add_child_encounter(e)
                     patient.discharge(
                         ad.start_time + timedelta(days=(random.randint(1, 10)))

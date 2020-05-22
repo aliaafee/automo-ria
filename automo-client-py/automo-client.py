@@ -283,7 +283,7 @@ class ClientApp:
                 },
             ),
             (
-                "http://127.0.0.1:5000/api/patients/1/encounters/3",
+                "http://127.0.0.1:5000/api/patients/1/encounters/2",
                 {
                     'pulse_rate': random() * 100
                 },
