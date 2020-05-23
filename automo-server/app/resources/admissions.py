@@ -111,6 +111,10 @@ def post_patient_admission_discharge_summary(patient_id, admission_id):
             )
         ),
         stylesheets=[
-            CSS(filename="./automo/templates/admission/discharge-summary.css")
+            CSS(
+                string=render_template(
+                    'admission/discharge-summary.css'
+                )
+            )
         ]
     )

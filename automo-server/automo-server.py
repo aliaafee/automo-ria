@@ -1,11 +1,12 @@
 import os
+
 from flask_script import Manager, Shell
 from flask_migrate import MigrateCommand
 
-from automo import create_app, db
-from automo import models
-from automo import resources
-from automo import utilities
+from app import create_app, db
+from app import models
+from app import resources
+from app import utilities
 
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')

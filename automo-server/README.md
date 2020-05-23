@@ -14,5 +14,10 @@ Basic Usage
 5) python automo-cli.py runserver
    To run the server
 
+   OR
+   To run with gunicorn
+
+   gunicorn -c gunicorn.conf.py automo-server:app
+
 
 
