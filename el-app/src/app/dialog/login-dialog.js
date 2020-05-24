@@ -57,7 +57,7 @@ module.exports = class LoginDialog extends FormDialog {
     }
 
 
-    tryLogin(connection, onSuccess, onCancel) {
+    tryLogin(onSuccess, onCancel) {
         this.show(
             (data) => {
                 this.spinner.show();

@@ -1,11 +1,13 @@
 const Logger = require("./app/logger");
 const Connection = require("./app/connection");
 const LoginDialog = require("./app/dialog/login-dialog");
+const PatientBrowser = require('./app/panel/patient-browser');
 
 logger = new Logger();
 connection = new Connection(logger);
 
 dlgLogin = new LoginDialog();
+pnlPatientBrowser = new PatientBrowser()
 
 displayPatients = (data) => {
     var result = "";
@@ -27,6 +29,8 @@ displayPatients = (data) => {
 }
 
 showMainWindow = () => {
+    document.body.appendChild(pnlPatientBrowser.createElement());
+    /*
     connection.get(
         connection.index_url,
         data => {
@@ -50,9 +54,10 @@ showMainWindow = () => {
             console.log('clean up');
         }
     )
+    */
 }
 
-/*
+
 document.body.appendChild(dlgLogin.createElement());
 
 dlgLogin.form.setValue({
@@ -62,16 +67,17 @@ dlgLogin.form.setValue({
 })
 
 dlgLogin.tryLogin(
-    connection,
     () => {
         console.log("Success");
         showMainWindow();
+
     },
     () => {
         console.log("Exit")
     }
 );
-*/
+
+
 /*
 const Icd10CoderDialog = require('./app/dialog/icd10coder-dialog');
 
@@ -310,10 +316,10 @@ p1.element.style.borderRadius = '0';
 */
 
 
+/*
 const PatientBrowser = require('./app/panel/patient-browser');
 
 b = new PatientBrowser();
 
 document.body.appendChild(b.createElement());
-
-
+*/

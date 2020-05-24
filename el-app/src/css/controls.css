@@ -154,6 +154,15 @@ button:hover {
     height: 15px;;
 }
 
+.list-box li.button {
+    color: grey;
+    font-style: italic;
+}
+
+.list-box div.spinner-container {
+    padding: 5px;;
+}
+
 .field {
     margin-bottom: 5px;
 }

@@ -1,3 +1,4 @@
+from sqlalchemy import or_
 from flask import url_for, jsonify, g, request
 from flask_restful import Resource
 
@@ -10,11 +11,41 @@ from . import api
 from .authentication import auth
 from . import errors
 from .success import success_response
-from .item_getters import get_items_list, get_item, post_item
+from .item_getters import get_items_list, get_item, post_item, get_query_result
 
 
 @api.route("/patients/")
 def get_patients():
+    str_search = request.args.get('q', "", type=str)
+
+    query_result = md.Patient.query.filter(
+                or_(
+                    or_(
+                        md.Patient.hospital_no.like("%{0}%".format(str_search)),
+                        md.Patient.national_id_no.like("%{0}%".format(str_search))
+                    ),
+                    md.Patient.name.like("%{}%".format(str_search))
+                )
+            )
+
+    return get_query_result(
+        query_result,
+        'api.get_patients',
+        fields=[
+            'id',
+            'hospital_no',
+            'national_id_no',
+            'name',
+            'sex',
+            'age'
+        ],
+        api_route_values={
+            'q': str_search
+        }
+    )
+
+
+    """
     return get_items_list(
         md.Patient,
         'api.get_patients',
@@ -23,9 +54,10 @@ def get_patients():
             'hospital_no',
             'name',
             'sex',
-            'time_of_birth'
+            'age'
         ]
     )
+    """
 
 
 @api.route("/patients/<int:patient_id>")

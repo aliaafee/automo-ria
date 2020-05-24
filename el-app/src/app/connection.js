@@ -5,6 +5,7 @@ const User = require("./user")
 module.exports = class Connection {
     constructor(logger) {
         this.index_url = null
+        this.resource_index = {}
         this.user = null;
         this.logger = logger;
     }
@@ -18,7 +19,9 @@ module.exports = class Connection {
             index_url,
             username,
             password,
-            () => {
+            (resource_index) => {
+                this.resource_index = resource_index;
+                console.log(resource_index)
                 on_success();
                 on_finally != null ? on_finally() : false;
                 this.logger.log_success(`User '${username}' logged in.`);

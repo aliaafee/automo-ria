@@ -160,6 +160,9 @@ module.exports = class Spitter extends Control {
             }
         }
 
+        this.pane1.element.style.flexDirection = 'column'
+        this.pane2.element.style.flexDirection = 'column'
+
         return this.element;
     }
 }

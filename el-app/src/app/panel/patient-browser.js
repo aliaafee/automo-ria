@@ -1,6 +1,9 @@
+const queryString = require('query-string');
+
 const Control = require('../../controls/control');
 const TextBox = require('../../controls/text-box');
-const ListBox = require('../../controls/list-box');
+//const ListBox = require('../../controls/list-box');
+const ResourceList = require('../../controls/resource-list');
 const Splitter = require('../../controls/splitter');
 
 
@@ -10,7 +13,7 @@ class PatientList extends Control {
         super(option);
 
         this.searchBox = new TextBox();
-        this.resultList = new ListBox(
+        this.resultList = new ResourceList(
             (item) => {
                 return item.id;
             },
@@ -23,6 +26,30 @@ class PatientList extends Control {
         )
     }
 
+    _search() {
+        this.resultList.setResourceUrl(
+            connection.resource_index.patients + '?' + queryString.stringify(
+                {
+                    'q': this.searchBox.value()
+                }
+            )
+        )
+        /*
+        connection.get(
+            connection.index_url,
+            data => {
+                this.resultList.setResourceUrl(data.patients)
+            },
+            (error) => {
+                console.log(error);
+            },
+            () => {
+                console.log('clean up');
+            }
+        )
+        */
+    }
+
     createElement() {
         super.createElement();
 
@@ -31,6 +58,10 @@ class PatientList extends Control {
         this.element.appendChild(this.resultList.createElement());
 
         this.element.style.display = 'flex';
+        
+        this.searchBox.element.addEventListener('keyup', (ev) => {
+            this._search();
+        })
 
         return this.element;
     }
@@ -50,5 +81,9 @@ module.exports = class PatientBrowser extends Splitter {
             paitentView,
             options
         )
+    }
+
+    createElement() {
+        return super.createElement()
     }
 };

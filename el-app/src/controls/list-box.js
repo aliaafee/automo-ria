@@ -100,7 +100,16 @@ module.exports = class ListBox extends Scrolled {
         this.displayData();
     }
 
-    displayData() {
+    appendData(data) {
+        if (!this.data) {
+            this.data = data
+        } else {
+            this.data = this.data.concat(data);
+        }
+        this.displayData(true);
+    }
+
+    displayData(noScroll) {
         this._clear();
         
         this._itemIds = [];
@@ -119,7 +128,9 @@ module.exports = class ListBox extends Scrolled {
             this._itemElements.push(elem);
         })
 
-        this.element.scrollTop = 0;
+        if (!noScroll) {
+            this.element.scrollTop = 0;
+        }       
     }
 
     createElement() {

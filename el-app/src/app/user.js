@@ -101,12 +101,17 @@ module.exports = class User {
             .then(status)
             .then(response => response.json())
             .then(data => checkCredentials(data))
-            .then(data => {
-                this.token_url = data['auth_token'];
+            .then(resource_index => {
+                this.token_url = resource_index['auth_token'];
                 this.getToken(
                     () => {
-                        this.url = data['user'];
-                        this.getUserData(on_success, on_failed);
+                        this.url = resource_index['user'];
+                        this.getUserData(
+                            () => {
+                                on_success(resource_index)
+                            }, 
+                            on_failed
+                        );
                     },
                     on_failed
                 );
