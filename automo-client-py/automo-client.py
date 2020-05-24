@@ -7,6 +7,9 @@ from getpass import getpass
 from pprint import pprint
 from random import randint, random
 
+#For testing only
+requests.packages.urllib3.disable_warnings(requests.urllib3.exceptions.SubjectAltNameWarning)
+
 
 class User:
     username = None
@@ -23,8 +26,8 @@ class User:
 
         try:
             r = requests.get(index_url, auth=(self.username, self.password))
-        except requests.ConnectionError:
-            print("Login: Connection Error")
+        except requests.ConnectionError as e:
+            print("Login: Connection Error {}".format(e))
             return False
 
         if r.status_code == 401:
@@ -243,19 +246,19 @@ class ClientApp:
 
     def get_test(self):
         test_cases = [
-            'http://127.0.0.1:5000/api/patients/',
-             "http://127.0.0.1:5000/api/patients/1",
-             'http://127.0.0.1:5000/api/patients/1/encounters/',
-             'http://127.0.0.1:5000/api/patients/1/problems/',
-             'http://127.0.0.1:5000/api/patients/1/phone-numbers/',
-             'http://127.0.0.1:5000/api/addresses',
-             'http://127.0.0.1:5000/api/wards/',
-             'http://127.0.0.1:5000/api/beds/',
-             'http://127.0.0.1:5000/api/wards/1/beds/',
-             'http://127.0.0.1:5000/api/patients/1/admissions/',
-             'http://127.0.0.1:5000/api/patients/1/admissions/?discharges=True',
-             'http://127.0.0.1:5000/api/patients/1/admissions/1/encounters/',
-             'http://127.0.0.1:5000/api/patients/1/admissions/1/discharge-summary.pdf'
+             '{}patients/'.format(self.index_url),
+             '{}patients/1'.format(self.index_url),
+             '{}patients/1/encounters/'.format(self.index_url),
+             '{}patients/1/problems/'.format(self.index_url),
+             '{}patients/1/phone-numbers/'.format(self.index_url),
+             '{}addresses'.format(self.index_url),
+             '{}wards/'.format(self.index_url),
+             '{}beds/'.format(self.index_url),
+             '{}wards/1/beds/'.format(self.index_url),
+             '{}patients/1/admissions/'.format(self.index_url),
+             '{}patients/1/admissions/?discharges=True'.format(self.index_url),
+             '{}patients/1/admissions/1/encounters/'.format(self.index_url),
+             '{}patients/1/admissions/1/discharge-summary.pdf'.format(self.index_url)
         ]
 
         failed = 0
@@ -271,59 +274,59 @@ class ClientApp:
     def post_test(self, data_str=""):
         test_cases = [
             (
-                "http://127.0.0.1:5000/api/patients/1",
+                "{}patients/1".format(self.index_url),
                 {
                     'name': 'Testy Name {}'.format(randint(1, 100))
                 },
             ),
             (
-                "http://127.0.0.1:5000/api/patients/1",
+                "{}patients/1".format(self.index_url),
                 {
                     'allergies': 'Bad Medicine {}'.format(randint(1, 100))
                 },
             ),
             (
-                "http://127.0.0.1:5000/api/patients/1/encounters/2",
+                "{}patients/1/encounters/2".format(self.index_url),
                 {
                     'pulse_rate': random() * 100
                 },
             ),
             (
-                "http://127.0.0.1:5000/api/patients/1/problems/1",
+                "{}patients/1/problems/1".format(self.index_url),
                 {
                     'start_time': datetime.datetime.now().isoformat()
                 },
             ),
             (
-                "http://127.0.0.1:5000/api/patients/1/phone-numbers/1",
+                "{}patients/1/phone-numbers/1".format(self.index_url),
                 {
                     'name': 'Father {}'.format(randint(1, 100)),
                     'number': '{}'.format(randint(10000000,999999999))
                 }
             ),
             (
-                'http://127.0.0.1:5000/api/patients/1/current-address',
+                '{}patients/1/current-address'.format(self.index_url),
                 {
                     'line_1': 'House Number {}'.format(randint(1, 100)),
                     'line_1': 'Banana Republic {}'.format(randint(1, 100))
                 }
             ),
             (
-                'http://127.0.0.1:5000/api/patients/1/permanent-address',
+                '{}patients/1/permanent-address'.format(self.index_url),
                 {
                     'line_1': 'House Number {}'.format(randint(1, 100)),
                     'line_1': 'Banana Republic {}'.format(randint(1, 100))
                 }
             ),
             (
-                'http://127.0.0.1:5000/api/addresses/1',
+                '{}addresses/1'.format(self.index_url),
                 {
                     'line_1': 'House Number {}'.format(randint(1, 100)),
                     'line_1': 'Banana Republic {}'.format(randint(1, 100))
                 }
             ),
             (
-                'http://127.0.0.1:5000/api/patients/1',
+                '{}patients/1'.format(self.index_url),
                 {
                     'time_of_birth': datetime.datetime(1980, 10, 25, 12, 50, 20).isoformat(),
                     'time_of_death': datetime.datetime(2000, 10, 25, 12, 50, 20).isoformat()
@@ -331,14 +334,14 @@ class ClientApp:
             )
             ,
             (
-                'http://127.0.0.1:5000/api/patients/1',
+                '{}patients/1'.format(self.index_url),
                 {
                     'time_of_birth': datetime.datetime.now().isoformat(),
                     'time_of_death': datetime.datetime.now().isoformat()
                 }
             ),
             (
-                'http://127.0.0.1:5000/api/patients/1',
+                '{}patients/1'.format(self.index_url),
                 {
                     'time_of_birth': '{}-{}-{}T{}:{}:{}'.format(
                         randint(1900,2020),
@@ -359,25 +362,25 @@ class ClientApp:
                 }
             ),
             (
-                'http://127.0.0.1:5000/api/wards/1',
+                '{}wards/1'.format(self.index_url),
                 {
                     'name': 'Rando Ward {}'.format(randint(10,99))
                 }
             ),
             (
-                'http://127.0.0.1:5000/api/wards/1/beds/1',
+                '{}wards/1/beds/1'.format(self.index_url),
                 {
                     'number': 'AB{}'.format(randint(1,100))
                 }
             ),
             (
-                'http://127.0.0.1:5000/api/beds/2',
+                '{}beds/2'.format(self.index_url),
                 {
                     'number': 'XB{}'.format(randint(1,100))
                 }
             ),
             (
-                'http://127.0.0.1:5000/api/patients/1/admissions/1',
+                '{}patients/1/admissions/1'.format(self.index_url),
                 {
                     'start_time': datetime.datetime.now().isoformat(),
                     'end_time': datetime.datetime.now().isoformat()
@@ -447,7 +450,7 @@ class ClientApp:
 
 
 def main():
-    client_app = ClientApp('http://127.0.0.1:5000/api/')
+    client_app = ClientApp('https://127.0.0.1:5000/api/')
 
     client_app.start()
 
