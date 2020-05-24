@@ -8,3 +8,4 @@ patient-data*.sqlite
 .vscode
 __pycache__
 .directory
+certificates

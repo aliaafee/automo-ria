@@ -21,3 +21,11 @@ Basic Usage
 
 
 
+6) Generate ssl key
+   openssl req -x509 -newkey rsa:4096 -nodes -out cert.pem -keyout key.pem -days 365
+
+   Run with HTTPS
+   gunicorn --certfile certificates/cert.pem --keyfile certificates/key.pem -c gunicorn.conf.py automo-server:app
+
+
+
