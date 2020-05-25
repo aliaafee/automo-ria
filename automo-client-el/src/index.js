@@ -30,31 +30,6 @@ displayPatients = (data) => {
 
 showMainWindow = () => {
     document.body.appendChild(pnlPatientBrowser.createElement());
-    /*
-    connection.get(
-        connection.index_url,
-        data => {
-            connection.get(
-                data['patients'],
-                data => {
-                    displayPatients(data);
-                },
-                (error) => {
-                    console.log(error);
-                },
-                () => {
-                    console.log('clean up');
-                }
-            )
-        },
-        (error) => {
-            console.log(error);
-        },
-        () => {
-            console.log('clean up');
-        }
-    )
-    */
 }
 
 
@@ -78,7 +53,7 @@ dlgLogin.tryLogin(
 );
 
 
-/*
+
 const Icd10CoderDialog = require('./app/dialog/icd10coder-dialog');
 
 icd10 = new Icd10CoderDialog();
@@ -93,7 +68,7 @@ icd10.show(
         console.log("Cancelled");
     }
 );
-*/
+
 
 /*
 const ListBox =  require('./controls/list-box');

@@ -18,12 +18,29 @@ class PatientList extends Control {
                 return item.id;
             },
             (item) => {
-                return item.name;
+                return this._getPatientLabel(item);
             },
             (item) => {
                 console.log(item);
             }
         )
+    }
+
+    _getPatientLabel(patient) {
+        return `${patient.name}`
+        return `
+            <span class="patient-label">
+                <span class="patient-id-number">
+                    ${patient.national_id_no}
+                </span>
+                <span class="patient-name">
+                    ${patient.name}
+                </span>
+                <span class="patient-age-sex">
+                    ${patient.age} | ${patient.sex}
+                </span>
+            </span>
+        `
     }
 
     _search() {
@@ -62,6 +79,8 @@ class PatientList extends Control {
         this.searchBox.element.addEventListener('keyup', (ev) => {
             this._search();
         })
+
+        this._search();
 
         return this.element;
     }

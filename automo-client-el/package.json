@@ -1,26 +1,25 @@
 {
   "name": "automo-client-el",
   "version": "1.0.0",
-  "description": "Client for AutoMO Server",
-  "main": "./app/main.js",
+  "description": "Automo Client Electrone",
+  "productName": "Automo Client",
+  "main": "src/main.js",
   "scripts": {
     "start": "electron .",
-    "scss": "node-sass --watch app/scss -o app/css",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "install-app-deps"
+    "build": "electron-packager .",
+    "build-linux": "electron-packager . --platform=linux --out=build --asar --overwrite",
+    "build-win": "electron-packager . --platform=win32 --out=build --asar --overwrite",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ali Aafee",
   "license": "ISC",
   "dependencies": {
-    "bootstrap": "^4.3.1",
-    "electron": "^6.0.10",
-    "feather-icons": "^4.24.1",
-    "jquery": "^3.4.1",
-    "node-sass": "^4.12.0",
-    "popper.js": "^1.15.0",
+    "electron": "^6.0.11",
+    "electron-packager": "^14.2.1",
+    "query-string": "^6.12.1",
     "sqlite3": "^4.1.0"
   },
   "devDependencies": {
-    "electron-builder": "^21.2.0"
+    "electron-rebuild": "^1.8.6"
   }
 }
