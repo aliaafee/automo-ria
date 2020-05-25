@@ -53,7 +53,7 @@ dlgLogin.tryLogin(
 );
 
 
-
+/*
 const Icd10CoderDialog = require('./app/dialog/icd10coder-dialog');
 
 icd10 = new Icd10CoderDialog();
@@ -67,7 +67,7 @@ icd10.show(
     () => {
         console.log("Cancelled");
     }
-);
+);*/
 
 
 /*

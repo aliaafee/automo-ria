@@ -25,7 +25,7 @@ module.exports = class ListBox extends Scrolled {
         this._onItemClicked = (event) => {
             this.clearSelection();
 
-            this._selectedElement = event.target;
+            this._selectedElement = event.currentTarget;
             
             this._highlightSelection();
             this._onSelectItem(event);
@@ -54,7 +54,7 @@ module.exports = class ListBox extends Scrolled {
 
     _onSelectItem(event) {
         this._selectedItem = null;
-        var selectedId = event.target.getAttribute('item-id');
+        var selectedId = this._selectedElement.getAttribute('item-id');
         for (var i = 0; i < this._itemIds.length; i++) {
             if (this._itemIds[i] == selectedId) {
                 this._selectedItem = this.data[i];

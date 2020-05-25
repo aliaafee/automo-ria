@@ -27,7 +27,6 @@ class PatientList extends Control {
     }
 
     _getPatientLabel(patient) {
-        return `${patient.name}`
         return `
             <span class="patient-label">
                 <span class="patient-id-number">
