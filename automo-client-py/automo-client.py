@@ -450,7 +450,7 @@ class ClientApp:
 
 
 def main():
-    client_app = ClientApp('https://127.0.0.1:5000/api/')
+    client_app = ClientApp('http://127.0.0.1:5000/api/')
 
     client_app.start()
 

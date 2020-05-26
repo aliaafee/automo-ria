@@ -5,14 +5,17 @@ const TextBox = require('../../controls/text-box');
 //const ListBox = require('../../controls/list-box');
 const ResourceList = require('../../controls/resource-list');
 const Splitter = require('../../controls/splitter');
+const PatientPanel = require('./patient-panel');
 
 
 
 class PatientList extends Control {
-    constructor(option={}) {
+    constructor(onSelectPatient, option={}) {
         super(option);
 
-        this.searchBox = new TextBox();
+        this.searchBox = new TextBox({
+            placeholder: 'Search'
+        });
         this.resultList = new ResourceList(
             (item) => {
                 return item.id;
@@ -21,24 +24,27 @@ class PatientList extends Control {
                 return this._getPatientLabel(item);
             },
             (item) => {
-                console.log(item);
+                onSelectPatient(item);
             }
         )
     }
 
     _getPatientLabel(patient) {
         return `
-            <span class="patient-label">
-                <span class="patient-id-number">
+            <div class="patient-label">
+                <div class="patient-id-number">
                     ${patient.national_id_no}
-                </span>
-                <span class="patient-name">
+                </div>
+                <div class="patient-name">
                     ${patient.name}
-                </span>
-                <span class="patient-age-sex">
-                    ${patient.age} | ${patient.sex}
-                </span>
-            </span>
+                </div>
+                <div class="patient-age">
+                    ${patient.age}
+                </div>
+                <div class="patient-sex">
+                    ${patient.sex}
+                </div>
+            </div>
         `
     }
 
@@ -50,24 +56,12 @@ class PatientList extends Control {
                 }
             )
         )
-        /*
-        connection.get(
-            connection.index_url,
-            data => {
-                this.resultList.setResourceUrl(data.patients)
-            },
-            (error) => {
-                console.log(error);
-            },
-            () => {
-                console.log('clean up');
-            }
-        )
-        */
     }
 
     createElement() {
         super.createElement();
+
+        this.element.className = 'patient-list';
 
         this.element.appendChild(this.searchBox.createElement());
 
@@ -88,15 +82,17 @@ class PatientList extends Control {
 
 module.exports = class PatientBrowser extends Splitter {
     constructor(options={}) {
-        var patientList = new PatientList();
-        var paitentView = new Control();
+        var patientPanel = new PatientPanel();
+        var patientList = new PatientList((patient) => {
+            patientPanel.setPatient(patient);
+        });
 
-        options.pane1Size = '200px';
+        options.pane1Size = '260px';
         options.resizable = true;
 
         super(
             patientList,
-            paitentView,
+            patientPanel,
             options
         )
     }

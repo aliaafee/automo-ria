@@ -51,3 +51,89 @@
     padding: 10px;
 }
 
+.patient-list input {
+    margin: 5px;
+}
+
+.patient-list {
+    background-color: var(--light);
+    border-right: solid 1px var(--border);
+}
+
+.patient-list .list-box {
+    background-color: var(--light);
+    border: none;
+    border-radius: 0;
+}
+
+.patient-list .patient-label {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+}
+
+.patient-list .patient-label .patient-id-number {
+    flex: 0 0 60px;
+    padding-right: 5px;
+}
+
+.patient-list .patient-label .patient-name {
+    flex: 1 1;
+    padding-right: 5px;
+}
+
+.patient-list .patient-label .patient-age {
+    flex: 0 0 45px;
+    padding-right: 5px;
+}
+
+.patient-list .patient-label .patient-sex {
+    flex: 0 0 20px
+}
+
+.patient-panel{
+    background-color: var(--light);
+}
+
+.patient-panel .header {
+    padding: 15px;
+    margin: 15px;
+    background-color: var(--gray);
+    border-radius: var(--border-radius);
+    color: var(--light);
+}
+
+.patient-panel .body {
+    margin: 0 15px 15px 15px;
+}
+
+.patient-panel .header h1 {
+    margin: 10px 0 0 0;
+    padding-right: 15px;
+    color: var(--light);
+}
+
+.patient-panel .header span {
+    font-size: larger;
+}
+
+.patient-panel .tile {
+    border: solid 1px var(--border);
+    border-radius: var(--border-radius);
+    background-color: var(--white);
+    margin-bottom: 15px;
+}
+
+.patient-panel .tile h2 {
+    padding: 5px 15px 5px 15px;
+    margin: 0;
+    font-size: small;
+    border-bottom: solid 1px var(--border);
+    background-color: var(--light);
+    border-top-right-radius: var(--border-radius);
+    border-top-left-radius: var(--border-radius);
+}
+
+.patient-panel .tile .tile-body {
+    padding: 5px 15px 5px 15px;
+}
