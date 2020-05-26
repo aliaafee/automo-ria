@@ -108,7 +108,7 @@
 }
 
 .patient-panel .header h1 {
-    margin: 10px 0 0 0;
+    margin: 0 0 10px 0;
     padding-right: 15px;
     color: var(--light);
 }
@@ -124,10 +124,10 @@
     margin-bottom: 15px;
 }
 
-.patient-panel .tile h2 {
+.patient-panel .tile h1 {
     padding: 5px 15px 5px 15px;
     margin: 0;
-    font-size: small;
+    font-size: 10pt;
     border-bottom: solid 1px var(--border);
     background-color: var(--light);
     border-top-right-radius: var(--border-radius);

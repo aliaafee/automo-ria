@@ -143,6 +143,8 @@ class FakeData(Command):
 
             for i in range(patients_count):
                 patient = Patient()
+                patient.national_id_no = 'A{}'.format(random.randint(100000,999999));
+                patient.hospital_no = '{}'.format(random.randint(100000, 999999))
                 patient.name = fake.name()
                 patient.time_of_birth = f_datetime()
                 patient.permanent_address = address()

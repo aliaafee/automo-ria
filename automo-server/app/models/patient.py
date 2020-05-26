@@ -21,6 +21,7 @@ class Patient(SerializerMixin, ValidatorMixin, db.Model):
         'hospital_no',
         'national_id_no',
         'name',
+        'age',
         'time_of_birth',
         'time_of_death',
         'sex',
