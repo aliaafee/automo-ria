@@ -22,7 +22,7 @@ module.exports = class ResourceList extends ListBox {
         connection.get(
             url,
             data => {
-                console.log(data);
+                //console.log(data);
                 this.resource_data = data;
                 this.setData(data.items)
             },
@@ -73,7 +73,6 @@ module.exports = class ResourceList extends ListBox {
         super.displayData(noScroll);
 
         if (this.resource_data.next) {
-            console.log("XX");
             var next_elem = document.createElement('li');
             next_elem.setAttribute('next-url', this.resource_data.next);
             next_elem.className = 'button'

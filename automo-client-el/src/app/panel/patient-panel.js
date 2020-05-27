@@ -1,10 +1,81 @@
 const Scrolled = require('../../controls/scrolled');
+const Tile =  require('../../controls/tile');
+const ResourceAccordion = require('../../controls/resource-accordion');
+
+
+
+
+class ProblemsTile extends Tile {
+    constructor(options={}) {
+        super('Problems', options);
+
+        this.resourceList = new ResourceAccordion(
+            (item) => {
+                return item.id
+            },
+            (item) => {
+                return item.icd10class.preferred
+            },
+            (item) => {
+                
+            },
+            options
+        );
+    }
+
+    setPatient(patient) {
+        this.resourceList.setResourceUrl(patient.problems);
+    }
+
+    createElement() {
+        super.createElement();
+
+        this.element.appendChild(this.resourceList.createElement());
+
+        return this.element
+    }
+}
+
+class AdmissionsTile extends Tile {
+    constructor(options={}) {
+        super('Problems', options);
+
+        this.resourceList = new ResourceAccordion(
+            (item) => {
+                return item.id
+            },
+            (item) => {
+                return item.start_time
+            },
+            (item) => {
+                
+            },
+            options
+        );
+    }
+
+    setPatient(patient) {
+        this.resourceList.setResourceUrl(patient.admissions);
+    }
+
+    createElement() {
+        super.createElement();
+
+        this.element.appendChild(this.resourceList.createElement());
+
+        return this.element
+    }
+}
+
 
 module.exports = class PatientPanel extends Scrolled {
     constructor(options={}) {
         super(options)
 
         this.patient = null;
+
+        this.problemsTile = new ProblemsTile();
+        this.admissionsTile = new AdmissionsTile();
     }
 
     _setPatient(patient) {
@@ -18,6 +89,9 @@ module.exports = class PatientPanel extends Scrolled {
 
         this._headerElement.style.display = 'flex';
         this._bodyElement.style.display = 'flex';
+
+        this.problemsTile.setPatient(patient);
+        this.admissionsTile.setPatient(patient);
     }
 
     setPatient(patient) {
@@ -27,14 +101,13 @@ module.exports = class PatientPanel extends Scrolled {
         connection.get(
             patient.url,
             patient => {
-                console.log(patient);
                 this._setPatient(patient)
             },
             (error) => {
                 console.log(error);
             },
             () => {
-                console.log("Clean Up");
+                
             }
         )
     }
@@ -83,6 +156,7 @@ module.exports = class PatientPanel extends Scrolled {
         this._bodyElement.style.flexDirection = 'column';
         this.element.appendChild(this._bodyElement);
 
+        /*
         this._problemsElement = document.createElement('div');
         this._problemsElement.classList = 'tile problems'
         this._problemsElement.innerHTML = '<h1>Problems</h1><div class="tile-body">Problems<br>Problems<br>Problems<br></div>'
@@ -92,6 +166,10 @@ module.exports = class PatientPanel extends Scrolled {
         this._admissionsElement.classList = 'tile admissions'
         this._admissionsElement.innerHTML = '<h1>Admissions</h1><div class="tile-body">Admissions<br>Admissions<br>Admissions<br></div>'
         this._bodyElement.appendChild(this._admissionsElement)
+        */
+
+        this._bodyElement.appendChild(this.problemsTile.createElement());
+        this._bodyElement.appendChild(this.admissionsTile.createElement());
 
         this._headerElement.style.display = 'none';
         this._bodyElement.style.display = 'none';
