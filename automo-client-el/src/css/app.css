@@ -116,24 +116,3 @@
 .patient-panel .header span {
     font-size: larger;
 }
-
-.patient-panel .tile {
-    border: solid 1px var(--border);
-    border-radius: var(--border-radius);
-    background-color: var(--white);
-    margin-bottom: 15px;
-}
-
-.patient-panel .tile h1 {
-    padding: 5px 15px 5px 15px;
-    margin: 0;
-    font-size: 10pt;
-    border-bottom: solid 1px var(--border);
-    background-color: var(--light);
-    border-top-right-radius: var(--border-radius);
-    border-top-left-radius: var(--border-radius);
-}
-
-.patient-panel .tile .tile-body {
-    padding: 0;
-}

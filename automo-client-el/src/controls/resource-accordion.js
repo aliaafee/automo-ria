@@ -1,90 +1,150 @@
 const Control = require('./control');
+const Spinner = require('./spinner');
+const ResourceAccordionItem = require('./resource-accordion-item');
 
 module.exports = class ResourceAccordion extends Control {
-    constructor(idFunction, labelFunction, onSelectItem, options={}) {
+    constructor(idFunction, itemClass=ResourceAccordionItem, options={}) {
         super(options);
 
-        this.resource_data = null;
+        this.itemClass = itemClass;
+        this.data = null;
+        this.resourceData = null;
+        this._itemData = {};
+        this._itemChildren = {};
 
         this.idFunction = idFunction;
-        this.labelFunction = labelFunction;
-        this.onSelectItem = onSelectItem;
+        //this.labelFunction = labelFunction;
 
+        this.spinner = new Spinner();
+
+        /*
         this._onItemClicked = (event) => {
-            //this.clearSelection();
+            var selectedId = event.currentTarget.getAttribute('item-id');
 
-            //this._selectedElement = event.currentTarget;
-            
-            //this._highlightSelection();
-            //this._onSelectItem(event);
+            var selected_item = this._itemData[selectedId];
+
+            console.log(selected_item);
+        }
+        */
+
+        this._onNextItemClicked = (event) => {
+            this._loadNext();
         }
     }
 
+    _showSpinner() {
+        var element = document.createElement('li');
+        element.classList = 'root-item spinner-item';
+        this._listElement.appendChild(element);
+
+        element.appendChild(this.spinner.createElement())
+    }
+
+    _hideSpinner() {
+        var element = this.spinner.element.parentElement;
+        element.removeChild(this.spinner.element);
+        element.parentElement.removeChild(element)
+    }
+
+    /*
     _createListItem(itemid, label) {
         var item = document.createElement('li');
         item.setAttribute('item-id', itemid);
+        item.className = 'root-item';
         item.innerHTML = label;
 
-        item.addEventListener('click', this._onItemClicked);
+        //item.addEventListener('click', this._onItemClicked);
 
         return item;
     }
+    */
+
+    _createNextItem() {
+        this._nextElement = document.createElement('li');
+        this._nextElement.classList = 'root-item next-item';
+        this._nextElement.innerHTML = 'Load More...'
+
+        this._nextElement.addEventListener('click', this._onNextItemClicked);
+        
+        return this._nextElement;
+    }
+
+    _removeNextItem() {
+        this._nextElement.parentElement.removeChild(this._nextElement);
+    }
 
     _clear() {
-        while (this._listElement.firstChild) {
-            this._listElement.firstChild.remove();
+        for (var key in this._itemChildren) {
+            this._listElement.removeChild(this._itemChildren[key].element);
+        }
+        if (this._nextElement != null) {
+            this._listElement.removeChild(this._nextElement);
+            this._nextElement = null;
+        }
+        this._data = null;
+        this._itemChildren = {};
+    }
+    
+    _setData(data) {
+        this._clear();
+        this._appendData(data);
+    }
+
+    _appendData(data) {
+        if (this.data == null) {
+            this.data = data;
+        } else {
+            this.data = this.data.concat(data);
+        }
+
+        data.forEach((item) => {
+            var item_id = this.idFunction(item)
+
+            this._itemChildren[item_id] = new this.itemClass(item);
+            this._listElement.appendChild(this._itemChildren[item_id].createElement());
+        })
+
+        if (this.resourceData.next != null) {
+            this._listElement.appendChild(this._createNextItem());
+        } else {
+            this._nextElement = null;
         }
     }
 
-    _setData(data) {
-        this.resource_data = data
-
-        this._clear();
-
-        this.resource_data.items.forEach((item) => {
-            var elem = this._createListItem(
-                this.idFunction(item),
-                this.labelFunction(item),
-            )
-            this._listElement.appendChild(elem);
-        })
-    }
-
-    displayData(noScroll) {
-        this._clear();
-        
-        this._itemIds = [];
-        this._itemElements = [];
-        this.data.forEach((item) => {
-            var item_id = this.idFunction(item);
-
-            this._itemIds.push(item_id);
-
-            var elem = this._createListItem(
-                item_id,
-                this.labelFunction(item)
-            );
-
-            this._listElement.appendChild(elem);
-            this._itemElements.push(elem);
-        })
-
-        if (!noScroll) {
-            this.element.scrollTop = 0;
-        }       
-    }
-
-    setResourceUrl(url) {
+    _loadNext() {
+        this._removeNextItem();
+        this._showSpinner();
         connection.get(
-            url,
-            data => {
-                this._setData(data)
+            this.resourceData.next,
+            (data) => {
+                this.resourceData = data;
+                this._appendData(this.resourceData.items);
             },
             (error) => {
                 console.log(error);
             },
             () => {
-                ;
+                this._hideSpinner();
+            }
+        )
+    }
+
+    setResourceUrl(url) {
+        //this._listElement.style.display = 'none';
+        this._clear();
+        this._showSpinner();
+        connection.get(
+            url,
+            data => {
+                this.resourceData = data;
+                
+                this._setData(this.resourceData.items);
+            },
+            (error) => {
+                console.log(error);
+            },
+            () => {
+                this._hideSpinner();;
             }
         )
     }
@@ -92,7 +152,11 @@ module.exports = class ResourceAccordion extends Control {
     createElement() {
         super.createElement()
 
-        this._listElement = document.createElement('ul')
+        this.element.className = 'accordion';
+
+        this._listElement = document.createElement('ul');
+        this._listElement.style.flexDirection = 'column';
+        this._listElement.className = 'root-list';
         this.element.appendChild(this._listElement);
 
         return this.element;

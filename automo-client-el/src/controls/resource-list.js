@@ -47,7 +47,6 @@ module.exports = class ResourceList extends ListBox {
         connection.get(
             this.resource_data.next,
             data => {
-                console.log(data);
                 this.resource_data = data;
                 this.appendData(data.items)
             },

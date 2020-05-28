@@ -12,6 +12,19 @@ module.exports = class Control {
         this.element.focus();
     }
 
+    removeElement() {
+        if (this.element == null) {
+            return
+        }
+        parent = this.element.parentElement
+
+        if (parent == null) {
+            return
+        }
+
+        parent.removeChild(this.element);
+    }
+
     createElement() {
         //Create the element
         this.element = document.createElement('div');

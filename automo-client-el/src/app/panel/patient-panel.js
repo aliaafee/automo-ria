@@ -1,25 +1,19 @@
 const Scrolled = require('../../controls/scrolled');
 const Tile =  require('../../controls/tile');
 const ResourceAccordion = require('../../controls/resource-accordion');
-
+const ResourceAccordionItem = require('../../controls/resource-accordion-item');
 
 
 
 class ProblemsTile extends Tile {
     constructor(options={}) {
-        super('Problems', options);
+        super('Diagnosis', options);
 
         this.resourceList = new ResourceAccordion(
             (item) => {
-                return item.id
+                return item.id;
             },
-            (item) => {
-                return item.icd10class.preferred
-            },
-            (item) => {
-                
-            },
-            options
+            ResourceAccordionItem
         );
     }
 
@@ -30,27 +24,55 @@ class ProblemsTile extends Tile {
     createElement() {
         super.createElement();
 
-        this.element.appendChild(this.resourceList.createElement());
+        this._tileBodyElement.appendChild(this.resourceList.createElement());
 
         return this.element
     }
 }
 
+
+class AdmissionsItem extends ResourceAccordionItem {
+    constructor(itemData, options={}) {
+        super(itemData, options);
+    }
+
+    displayResource() {
+        this.startTime.innerHTML = this.resourceData.start_time;
+    }
+
+    createHeaderElement() {
+        super.createHeaderElement();
+
+        this.headerElement.innerHTML = `
+            <div>Admission</div>
+            <div>${this.itemData.start_time}</div>
+            <div>${this.itemData.end_time}</div>
+            <div>${this.itemData.personnel.name}</div>
+        `;
+
+        return this.headerElement;
+    }
+
+    createBodyElement() {
+        super.createBodyElement();
+
+        this.startTime = document.createElement('div');
+        this.bodyElement.appendChild(this.startTime);
+
+        return this.bodyElement;
+    }
+}
+
+
 class AdmissionsTile extends Tile {
     constructor(options={}) {
-        super('Problems', options);
+        super('Admissions', options);
 
         this.resourceList = new ResourceAccordion(
             (item) => {
-                return item.id
+                return item.id;
             },
-            (item) => {
-                return item.start_time
-            },
-            (item) => {
-                
-            },
-            options
+            AdmissionsItem
         );
     }
 
@@ -61,7 +83,7 @@ class AdmissionsTile extends Tile {
     createElement() {
         super.createElement();
 
-        this.element.appendChild(this.resourceList.createElement());
+        this._tileBodyElement.appendChild(this.resourceList.createElement());
 
         return this.element
     }
@@ -95,7 +117,12 @@ module.exports = class PatientPanel extends Scrolled {
     }
 
     setPatient(patient) {
-        this._headerElement.style.display = 'none';
+        this._idNumberElement.innerHTML = "NIC No.: " + patient.national_id_no;
+        this._hospNumberElement.innerHTML = ", Hospital No.: " +patient.hospital_no;
+        this._phoneNumberElement.innerHTML = "";
+        this._nameElement.innerHTML = patient.name;
+        this._ageSexElement.innerHTML = patient.age + "/" + patient.sex;
+        
         this._bodyElement.style.display = 'none';
 
         connection.get(

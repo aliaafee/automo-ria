@@ -87,7 +87,7 @@ class Admission(ClinicalEncounter):
         'start_time',
         'end_time',
         #'children',
-        'personnel_id',
+        'personnel',
         'problems'
     ]
 

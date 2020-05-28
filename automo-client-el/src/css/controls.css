@@ -21,7 +21,8 @@
     --light: #f8f9fa;
     --dark: #343a40;
     --hover: #e9ecefde;
-    --border: rgba(0, 0, 0, 0.125);
+    --border: #343a4032; 
+    --a: rgba(0, 0, 0, 0.125);
     --border-radius: 5px;
 }
 
@@ -156,11 +157,13 @@ button:hover {
     padding: 0;
     margin: unset;
     flex-grow: 1;
+    list-style: none;
 }
 
 .list-box li {
     display: flex;
     padding: 5px;
+    cursor: pointer;
 }
 
 .list-box li:hover {
@@ -336,7 +339,7 @@ button:hover {
 }
 
 .tile {
-    border: solid 1px var(--border);
+    
     border-radius: var(--border-radius);
     background-color: var(--white);
     margin-bottom: 15px;
@@ -346,12 +349,79 @@ button:hover {
     padding: 5px 15px 5px 15px;
     margin: 0;
     font-size: 10pt;
-    border-bottom: solid 1px var(--border);
-    background-color: var(--light);
+    /*border-bottom: solid 1px var(--border);*/
+    border: solid 1px var(--border);
+    background-color: var(--border);
     border-top-right-radius: var(--border-radius);
     border-top-left-radius: var(--border-radius);
 }
 
 .tile .tile-body {
+    /*padding: 5px 15px 5px 15px;*/
+    border: solid 1px var(--border);
+    border-top: none;
+    padding: 0px;
+    border-bottom-right-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
+}
+
+.accordion {
+
+}
+
+.accordion ul.root-list {
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+    list-style: none;
+}
+
+.accordion ul li.root-item {
+    background-color: var(--light);
+    border-bottom: solid 1px var(--border);
+}
+
+.accordion ul li.next-item {
     padding: 5px 15px 5px 15px;
+    color: grey;
+    font-style: italic;
+    cursor: pointer;
+}
+
+.accordion ul li.spinner-item {
+    padding: 5px 15px 5px 15px;
+}
+
+.accordion ul li.root-item:last-child {
+    border-bottom: none;
+}
+
+.tile .accordion ul li.root-item:last-child {
+    border-bottom-right-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
+}
+
+.accordion ul li.root-item:hover {
+    background-color: var(--hover);
+}
+
+.accordion ul li.root-item-selected {
+    background-color: var(--primary);
+    color: var(--light);
+}
+
+.accordion li.root-item .root-item-head {
+    padding: 5px 15px 5px 15px;
+    cursor: pointer;
+}
+
+.accordion li.root-item .root-item-body {
+    padding: 5px 15px 5px 15px;
+    background-color: white;
+    border-top: solid 1px var(--border);
+}
+
+.tile .accordion ul li.root-item:last-child .root-item-body {
+    border-bottom-right-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
 }

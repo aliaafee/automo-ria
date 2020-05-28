@@ -1,10 +1,17 @@
 """Personnel"""
 from .. import db
+from .mixins import SerializerMixin, ValidatorMixin
 
 
-class Personnel(db.Model):
+class Personnel(db.Model, SerializerMixin, ValidatorMixin):
     """Health Facility Personnel"""
     __versioned__ = {}
+
+    serialized_attrs = [
+        'id',
+        'name',
+        'record_card_no'
+    ]
     
     id = db.Column(db.Integer, primary_key=True)
 
@@ -32,6 +39,13 @@ class Personnel(db.Model):
 class Doctor(Personnel):
     """Doctors."""
     id = db.Column(db.Integer, db.ForeignKey('personnel.id'), primary_key=True)
+
+    serialized_attrs = [
+        'id',
+        'name',
+        'record_card_no',
+        'pmr_no'
+    ]
 
     __mapper_args__ = {
         'polymorphic_identity':'doctor',

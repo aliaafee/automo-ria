@@ -43,12 +43,11 @@ dlgLogin.form.setValue({
 
 dlgLogin.tryLogin(
     () => {
-        console.log("Success");
+        console.log("Login Sucessful.");
         showMainWindow();
-
     },
     () => {
-        console.log("Exit")
+        console.log("Cancelled.")
     }
 );
 
