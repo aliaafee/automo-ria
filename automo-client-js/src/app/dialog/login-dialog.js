@@ -36,7 +36,7 @@ module.exports = class LoginDialog extends FormDialog {
         super(
             form, 
             {
-                title: 'AutoMO - Login',
+                title: 'Login',
                 okLabel: 'Login',
                 width: '400px',
                 centered: true
