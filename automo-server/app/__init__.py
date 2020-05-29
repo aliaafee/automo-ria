@@ -33,8 +33,8 @@ def create_app(config_name):
     #login_manager.login_view = 'auth.login'
     #login_manager.login_message = "You must be logged in to access this page."
 
-    #from .blueprints import main_blueprint 
-    #app.register_blueprint(main_blueprint)
+    from .blueprints import main_blueprint 
+    app.register_blueprint(main_blueprint)
 
     #from .blueprints import auth_blueprint
     #app.register_blueprint(auth_blueprint)

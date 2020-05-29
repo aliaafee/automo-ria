@@ -1,0 +1,16 @@
+{
+  "name": "automo-client",
+  "version": "1.0.0",
+  "description": "Javascript client for AutoMO-Server.",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "browserify src/index.js -o ../automo-server/app/static/scripts/bundle.js",
+    "watch": "watchify src/index.js -o ../automo-server/app/static/scripts/bundle.js --debug --verbose",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ali Aafee",
+  "license": "ISC",
+  "dependencies": {
+    "query-string": "^6.12.1"
+  }
+}

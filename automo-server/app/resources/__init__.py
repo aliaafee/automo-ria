@@ -20,5 +20,7 @@ from . import users,\
 @api.before_request
 @authentication.auth.login_required
 def before_request():
+    if not hasattr(g, 'current_user'):
+        return errors.unauthorized('Unauthorized')
     if not g.current_user:
         return errors.unauthorized('Unauthorized')

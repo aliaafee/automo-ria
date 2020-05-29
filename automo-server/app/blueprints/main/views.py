@@ -3,17 +3,18 @@ from flask_login import login_required, current_user
 
 from ... import models as md
 from ... import db
-from ...decorators import permission_required
+#from ...decorators import permission_required
 
 from . import main
 
 
 @main.route('/')
-@login_required
+#@login_required
 def homepage():
-    return render_template('base.html')
+    return render_template('index.html')
 
 
+"""
 @main.route('/name/<new>')
 @login_required
 def change_name(new):
@@ -23,3 +24,4 @@ def change_name(new):
     db.session.add(p)
     db.session.commit()
     return "name changed"
+"""

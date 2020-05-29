@@ -1,0 +1,118 @@
+.icd10coder .category-label {
+    display: flex;
+}
+
+.icd10coder .category-label .code {
+    min-width: 50px;
+    font-weight: bold;
+}
+
+.icd10coder .category-label .text {
+    flex-grow: 1;
+}
+
+.icd10coder .main-category {
+    /*border-top: solid 1px black;*/
+    box-shadow: inset 0 2px 0 rgba(0, 0, 0, 1);
+}
+
+.icd10coder .category-label .lusion .label {
+    flex: 0 0 40px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.icd10coder .category-label .lusion {
+    margin-top: 5px;
+}
+
+.icd10coder .category-label .preferred {
+    font-weight: bold;
+}
+
+.icd10coder .category-label .preferred-long {
+    padding-left: 10px;
+}
+
+.icd10coder .dialog-body {
+    display: flex;
+}
+
+.icd10coder .category-list {
+    border-radius: 0;
+    border-top: none;
+    border-left: none;
+    border-bottom: none;
+    flex-grow: 1;
+}
+
+.icd10coder .form {
+    /*min-width: 200px;*/
+    padding: 10px;
+}
+
+.patient-list input {
+    margin: 5px;
+}
+
+.patient-list {
+    background-color: var(--light);
+    border-right: solid 1px var(--border);
+}
+
+.patient-list .list-box {
+    background-color: var(--light);
+    border: none;
+    border-radius: 0;
+}
+
+.patient-list .patient-label {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+}
+
+.patient-list .patient-label .patient-id-number {
+    flex: 0 0 60px;
+    padding-right: 5px;
+}
+
+.patient-list .patient-label .patient-name {
+    flex: 1 1;
+    padding-right: 5px;
+}
+
+.patient-list .patient-label .patient-age {
+    flex: 0 0 45px;
+    padding-right: 5px;
+}
+
+.patient-list .patient-label .patient-sex {
+    flex: 0 0 20px
+}
+
+.patient-panel{
+    background-color: var(--light);
+}
+
+.patient-panel .header {
+    padding: 15px;
+    margin: 15px;
+    background-color: var(--gray);
+    border-radius: var(--border-radius);
+    color: var(--light);
+}
+
+.patient-panel .body {
+    margin: 0 15px 15px 15px;
+}
+
+.patient-panel .header h1 {
+    margin: 0 0 10px 0;
+    padding-right: 15px;
+    color: var(--light);
+}
+
+.patient-panel .header span {
+    font-size: larger;
+}
