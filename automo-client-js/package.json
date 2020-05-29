@@ -10,7 +10,5 @@
   },
   "author": "Ali Aafee",
   "license": "ISC",
-  "dependencies": {
-    "query-string": "^6.12.1"
-  }
+  "dependencies": {}
 }

@@ -1,4 +1,5 @@
-const queryString = require('query-string');
+//const queryString = require('query-string');
+const querystring = require('querystring');
 
 const Control = require('../../controls/control');
 const TextBox = require('../../controls/text-box');
@@ -50,7 +51,7 @@ class PatientList extends Control {
 
     _search() {
         this.resultList.setResourceUrl(
-            connection.resource_index.patients + '?' + queryString.stringify(
+            connection.resource_index.patients + '?' + querystring.stringify(
                 {
                     'q': this.searchBox.value()
                 }

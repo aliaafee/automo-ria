@@ -11,7 +11,7 @@ from .success import success_response
 def get_query_result(query, api_route, fields=None, api_route_values={}):
     page = request.args.get('page', 1, type=int)
     pagination = query.paginate(
-        page, per_page=3, error_out=False
+        page, per_page=20, error_out=False
     )
     items = pagination.items
     
