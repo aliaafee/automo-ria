@@ -16,7 +16,7 @@ module.exports = class ResourceList extends ListBox {
         this.resource_data = {}
     }
 
-    setResourceUrl(url) {
+    setResourceUrl(url, onDone) {
         this.spinner.show();
         this._listElement.style.display = 'none';
         connection.get(
@@ -24,7 +24,10 @@ module.exports = class ResourceList extends ListBox {
             data => {
                 //console.log(data);
                 this.resource_data = data;
-                this.setData(data.items)
+                this.setData(data.items);
+                if (onDone) {
+                    onDone();
+                }
             },
             (error) => {
                 console.log(error);

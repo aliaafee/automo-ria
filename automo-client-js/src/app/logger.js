@@ -28,7 +28,7 @@ module.exports = class Logger {
 
     log_success(message) {
         if (this.statusElement == null) {
-            console.log(message);
+            //console.log(message);
             return;
         }
         this.statusElement.innerHtml = message;

@@ -45,21 +45,6 @@ def get_patients():
     )
 
 
-    """
-    return get_items_list(
-        md.Patient,
-        'api.get_patients',
-        fields=[
-            'id',
-            'hospital_no',
-            'name',
-            'sex',
-            'age'
-        ]
-    )
-    """
-
-
 @api.route("/patients/<int:patient_id>")
 def get_patient(patient_id):
     return get_item(

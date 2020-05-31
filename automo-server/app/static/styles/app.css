@@ -44,6 +44,19 @@
     border-left: none;
     border-bottom: none;
     flex-grow: 1;
+    background-color: var(--white);
+}
+
+.icd10coder .category-list li {
+    cursor: default;
+}
+
+.icd10coder .category-list input {
+    cursor: pointer;
+}
+
+.icd10coder .category-list a {
+    cursor: pointer;
 }
 
 .icd10coder .form {

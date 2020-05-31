@@ -2,12 +2,15 @@ const Logger = require("./app/logger");
 const Connection = require("./app/connection");
 const LoginDialog = require("./app/dialog/login-dialog");
 const PatientBrowser = require('./app/panel/patient-browser');
+const Icd10CoderDialog = require('./app/dialog/icd10coder-dialog');
 
 logger = new Logger();
 connection = new Connection(logger);
 
 dlgLogin = new LoginDialog();
-pnlPatientBrowser = new PatientBrowser()
+pnlPatientBrowser = new PatientBrowser();
+dlgIcd10 = new Icd10CoderDialog();
+
 
 displayPatients = (data) => {
     var result = "";
@@ -30,6 +33,17 @@ displayPatients = (data) => {
 
 showMainWindow = () => {
     document.body.appendChild(pnlPatientBrowser.createElement());
+    /*
+    document.body.appendChild(dlgIcd10.createElement());
+    dlgIcd10.show(
+        (value) => {
+            console.log(value);
+        },
+        () => {
+            console.log("Cancelled");
+        }
+    )
+    */
 }
 
 
@@ -50,6 +64,9 @@ dlgLogin.tryLogin(
         console.log("Cancelled.")
     }
 );
+
+
+
 
 
 /*

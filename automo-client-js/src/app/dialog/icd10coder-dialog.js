@@ -1,15 +1,12 @@
-const sqlite3 = require('sqlite3').verbose();
 const querystring = require('querystring');
 
 const Dialog = require('../../controls/dialog/dialog');
-const SearchBox = require('../../controls/search-box');
-//const Spinner = require('../../controls/spinner');
+const ResourceSearchBox = require('../../controls/resource-search-box');
 const Button = require('../../controls/button');
-const RadioListBox = require('../../controls/radio-list-box');
+const ResourceRadioList = require('../../controls/resource-radio-list');
 const Form = require('../../controls/form/form');
 const TextField = require('../../controls/form/text-field');
 const SelectField = require('../../controls/form/select-field');
-//const Splitter = require('../../controls/splitter');
 
 
 module.exports = class Icd10CoderDialog extends Dialog {
@@ -19,21 +16,12 @@ module.exports = class Icd10CoderDialog extends Dialog {
         super(options);
 
         this.selectedCategory = null;
+        this.selectedBlockCode = null;
 
-        this.icd10db = new sqlite3.Database(
-            './src/icd10.db',
-            sqlite3.OPEN_READWRITE,
-            (err) => {
-                if (err) {
-                    console.error(err.message);
-                }
-            }
-        );
+        this.selectedModifier = null;
+        this.selectedModifierExtra = null;
 
-        this.searchBox = new SearchBox(
-            (query, on_done) => {
-                return this._search(query, on_done);
-            },
+        this.searchBox = new ResourceSearchBox(
             (item) => {
                 return item.code;
             },
@@ -47,7 +35,7 @@ module.exports = class Icd10CoderDialog extends Dialog {
                 placeholder: 'Search ICD-10 Code',
                 popupHeight: '200px'
             }
-        );
+        )
 
         this.btnOk = new Button(
             options.okLabel != null ? options.okLabel : 'Save',
@@ -59,7 +47,7 @@ module.exports = class Icd10CoderDialog extends Dialog {
             }
         );
 
-        this.categoryList = new RadioListBox(
+        this.categoryList = new ResourceRadioList(
             (category) => {
                 return category.code;
             },
@@ -77,7 +65,7 @@ module.exports = class Icd10CoderDialog extends Dialog {
                     var query_data = querystring.decode(query)
                     let code = query_data['category?code']
                     if (code != null) {
-                        this.setSelectedCategory(code, () => {});
+                        this.setSelectedCategoryFromCode(code, () => {});
                     }
                 }
             }
@@ -124,16 +112,12 @@ module.exports = class Icd10CoderDialog extends Dialog {
                 rows: 5
             }
         ));
+    }
 
-        //this.spinner = new Spinner();
-        /*
-        this.splitter = new Splitter(
-            this.categoryList,
-            this.form,
-            {
-                pane2Size: '200px'
-            }
-        )*/
+    show(onOk, onCancel) {
+        this.searchBox.setResourceUrl(connection.resource_index.icd10.categories)
+
+        super.show(onOk, onCancel);
     }
 
     value() {
@@ -143,151 +127,127 @@ module.exports = class Icd10CoderDialog extends Dialog {
     }
 
     getCategory(code, onDone) {
-        var sql = `SELECT * FROM icd10class WHERE code=="${code}"`;
+        var url = connection.resource_index.icd10.categories + code
 
-        this.icd10db.get(sql, (err, row) => {
-            if (err) {
-                throw err;
+        connection.get(
+            url,
+            data => {
+                onDone(data);
+            },
+            (error) => {
+                console.log("Not Found");
+                onDone({});
+            },
+            () => {
+                ;
             }
-            onDone(row);
-        });
+        )
     }
 
     loadSelectedBlock(onDone) {
-        var sql = `SELECT * FROM icd10class WHERE parent_block_code=="${this.selectedBlock.code}"`;
-
-        this.icd10db.all(sql, [], (err, rows) => {
-            if (err) {
-                console.log("error");
-                throw err;
+        var url = connection.resource_index.icd10.categories + '?' + querystring.stringify(
+            {
+                block: this.selectedBlockCode,
+                detailed: true,
+                per_page: 100
             }
-            this.categoryList.setData(rows);
-            onDone();
-        })
+        )
+
+        this.categoryList.setResourceUrl(url, onDone);
     }
 
-    setSelectedCategory(code, onDone, scroll = true) {
+    setSelectedCategoryFromCode(code, onDone) {
         this.getCategory(code, (category) => {
-            if (category == null) {
-                onDone();
-                return;
-            }
-            this.selectedCategory = category;
-            this._loadModifiers();
-
-            if (this.selectedBlock != null) {
-                if (this.selectedBlock.code == this.selectedCategory.parent_block_code) {
-                    this.categoryList.setSelection(this.selectedCategory.code)
-                    onDone();
-                    return;
-                }
-            }
-
-            this.getCategory(this.selectedCategory.parent_block_code, (block) => {
-                this.selectedBlock = block;
-                this.loadSelectedBlock(() => {
-                    this.categoryList.setSelection(this.selectedCategory.code);
-                    onDone();
-                })
-            })
+            this.setSelectedCategory(category, onDone);
         })
     }
 
-    _loadModifier(modifier_code, modifierField) {
-        if (modifier_code == null) {
+    setSelectedCategory(category, onDone) {
+        if (category == null) {
+            onDone();
+            return;
+        }
+        this.selectedCategory = category;
+        this._loadModifiers();
+
+        if (this.selectedBlockCode != null) {
+            if (this.selectedBlockCode == this.selectedCategory.parent_block_code) {
+                this.categoryList.setSelection(this.selectedCategory.code);
+                onDone();
+                return
+            }
+        }
+
+        this.selectedBlockCode = this.selectedCategory.parent_block_code;
+
+        this.loadSelectedBlock(() => {
+            requestAnimationFrame(() => {
+                //Extra time needed to allow the DOM to update before we can scroll to it
+                this.categoryList.setSelection(this.selectedCategory.code);
+                onDone()
+            }) 
+        })
+    }
+
+    _loadModifier(modifier, selectedModifier, modifierField) {
+        if (modifier == null) {
+            modifierField.clear();
             modifierField.hide();
             return;
         }
 
-        var sql = `
-            SELECT code, code_short, preferred
-            FROM icd10modifierclass
-            WHERE modifier_code == "${modifier_code}"`;
+        if (selectedModifier != null) {
+            if (modifier.code == selectedModifier.code) {
+                return;
+            }
+        }
 
-        modifierField.show();
-        this.icd10db.all(sql, [], (err, rows) => {
-            if (err) {
-                modifierField.clear();
+        modifierField.setLabel(modifier.name);
+
+        var url = connection.resource_index.icd10.modifierclasses + '?' + querystring.stringify(
+            {
+                'modifier_code' : modifier.code
+            }
+        )
+
+        connection.get(
+            url,
+            data => {
+                modifierField.setData(data.items)
+                modifierField.show();
+            },
+            (error) => {
                 modifierField.hide();
-                throw err;
+            },
+            () => {
+                ;
             }
-            modifierField.setData(rows)
-        });
-
-        var sql = `
-            SELECT name
-            FROM icd10modifier
-            WHERE code == "${modifier_code}"`;
-
-        this.icd10db.get(sql, [], (err, row) => {
-            if (err) {
-                select.html("");
-                group.hide();
-                throw err;
-            }
-            modifierField.setLabel(row.name);
-        });
+        )
     }
 
     _loadModifiers() {
         this._loadModifier(
-            this.selectedCategory.modifier_code,
-            this.form.getFieldByName('icd10modifier_class')
+            this.selectedCategory.modifier,
+            this.selectedModifier,
+            this.form.getFieldByName('icd10modifier_class'),
         );
+        this.selectedModifier = this.selectedCategory.modifier;
+
         this._loadModifier(
-            this.selectedCategory.modifier_extra_code,
+            this.selectedCategory.modifier_extra,
+            this.selectedModifierExtra,
             this.form.getFieldByName('icd10modifier_extra_class')
         );
+        this.selectedModifierExtra = this.selectedCategory.modifier_extra;
     }
 
     _onSelectSearchResult(item) {
-        this.setSelectedCategory(item.code, () => { });
+        this.setSelectedCategory(item, () => { });
     }
 
     _onSelectCategory(category) {
         this.selectedCategory = category;
         this._loadModifiers();
-    }
-
-    _search(query, on_done) {
-        var preferred_and_query = [];
-        query.split(" ").forEach((word) => {
-            preferred_and_query.push(`preferred_plain LIKE "%${word}%"`);
-        })
-
-        var preferred_long_and_query = [];
-        query.split(" ").forEach((word) => {
-            preferred_long_and_query.push(`preferred_long LIKE "%${word}%"`);
-        })
-
-        var sql = `
-            SELECT code, preferred_plain 
-            FROM icd10class
-            WHERE kind == "category" AND ${preferred_and_query.join(" AND ")}
-    
-            UNION
-    
-            SELECT code, preferred_plain
-            FROM icd10class
-            WHERE kind == "category" AND ${preferred_long_and_query.join(" AND ")}
-            
-            UNION
-            
-            SELECT code, preferred_plain
-            FROM icd10class
-            WHERE kind == "category" AND code LIKE "%${query}%"
-            
-            LIMIT 20`
-
-        //this.spinner.show();
-        this.icd10db.all(sql, [], (err, rows) => {
-            if (err) {
-                //this.spinner.hideSoft();
-                throw err;
-            }
-            //this.spinner.hideSoft();
-            on_done(rows);
-        })
     }
 
     _getCategoryLabel(category) {
@@ -339,11 +299,6 @@ module.exports = class Icd10CoderDialog extends Dialog {
 
         this.headerElement.appendChild(this.searchBox.createElement());
         this.searchBox.element.style.flexGrow = 1;
-
-        //this.headerElement.appendChild(this.spinner.createElement());
-        //this.spinner.hideSoft();
-
-        //this.bodyElement.appendChild(this.splitter.createElement());
 
         this.bodyElement.appendChild(this.categoryList.createElement());
         this.categoryList.element.classList.add('category-list');

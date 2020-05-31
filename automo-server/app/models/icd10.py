@@ -28,7 +28,8 @@ class Icd10ModifierClass(SerializerMixin, db.Model):
     serialized_attrs = [
         'code',
         'code_short',
-        'preferred'
+        'preferred',
+        'modifier_code'
     ]
 
     code = db.Column(db.String(20), primary_key=True)

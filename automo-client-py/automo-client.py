@@ -258,12 +258,18 @@ class ClientApp:
              '{}patients/1/admissions/'.format(self.index_url),
              '{}patients/1/admissions/?discharges=True'.format(self.index_url),
              '{}patients/1/admissions/1/encounters/'.format(self.index_url),
-             '{}patients/1/admissions/1/discharge-summary.pdf'.format(self.index_url)
+             '{}patients/1/admissions/1/discharge-summary.pdf'.format(self.index_url),
+             '{}icd10/categories/'.format(self.index_url),
+             '{}icd10/categories/A01'.format(self.index_url),
+             '{}icd10/categories/?block=A00-A09&per_page=100'.format(self.index_url),
+             '{}icd10/categories/?block=A00-A09&per_page=100&detailed=True'.format(self.index_url),
+             '{}icd10/modifierclasses/'.format(self.index_url),
+             '{}icd10/modifierclasses/?modifier_code=S05F10_4'.format(self.index_url)
         ]
 
         failed = 0
         for url in test_cases:
-            print("> Getting {}".format(url))
+            print("> get {}".format(url))
             try:
                 data = self.conn.get(url)
             except:
