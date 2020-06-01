@@ -10,5 +10,7 @@
   },
   "author": "Ali Aafee",
   "license": "ISC",
-  "dependencies": {}
+  "dependencies": {
+    "moment": "^2.26.0"
+  }
 }

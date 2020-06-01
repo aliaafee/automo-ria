@@ -129,3 +129,29 @@
 .patient-panel .header span {
     font-size: larger;
 }
+
+li.admission-item .root-item-head {
+    padding: 0 0 0 0 !important;
+    display: flex;
+}
+
+li.admission-item .root-item-head div {
+    padding: 5px 15px 5px 15px;
+}
+
+li.admission-item .root-item-head div.label {
+    font-weight: bold;
+}
+
+li.admission-item .root-item-head div.date {
+    width: 30%;
+}
+
+li.admission-item .root-item-head div.duration {
+    flex-grow: 20%;
+}
+
+li.admission-item .root-item-head div.doctor {
+    font-weight: bold;
+    width: 30%;
+}

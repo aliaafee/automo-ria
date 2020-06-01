@@ -4,6 +4,8 @@ const LoginDialog = require("./app/dialog/login-dialog");
 const PatientBrowser = require('./app/panel/patient-browser');
 const Icd10CoderDialog = require('./app/dialog/icd10coder-dialog');
 
+const DATEFORMAT = 'D MMM YYYY';
+
 logger = new Logger();
 connection = new Connection(logger);
 

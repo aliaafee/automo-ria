@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const Scrolled = require('../../controls/scrolled');
 const Tile =  require('../../controls/tile');
 const ResourceAccordion = require('../../controls/resource-accordion');
@@ -44,10 +46,20 @@ class AdmissionsItem extends ResourceAccordionItem {
         super.createHeaderElement();
 
         this.headerElement.innerHTML = `
-            <div>Admission</div>
-            <div>${this.itemData.start_time}</div>
-            <div>${this.itemData.end_time}</div>
-            <div>${this.itemData.personnel.name}</div>
+            <div class="label">
+                <span>Admission</span>
+            </div>
+            <div class="date">
+                <span>${moment(this.itemData.start_time).format('D MMM YYYY')}</span>
+                to
+                <span>${moment(this.itemData.end_time).format('D MMM YYYY')}</span>
+            </div>
+            <div class="duration">
+                (${moment(this.itemData.end_time).diff(this.itemData.start_time, 'days')} days)
+            </div>
+            <div class="doctor">
+                ${this.itemData.personnel.name}
+            </div>
         `;
 
         return this.headerElement;
@@ -60,6 +72,14 @@ class AdmissionsItem extends ResourceAccordionItem {
         this.bodyElement.appendChild(this.startTime);
 
         return this.bodyElement;
+    }
+
+    createElement() {
+        super.createElement()
+
+        this.element.classList.add('admission-item');
+
+        return this.element
     }
 }
 
