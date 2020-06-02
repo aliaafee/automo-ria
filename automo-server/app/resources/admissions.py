@@ -40,7 +40,16 @@ def get_patient_admissions(patient_id):
         'api.get_patient_admissions',
         api_route_values={
             'patient_id' : patient_id 
-        }
+        },
+        fields=[
+            'id',
+            'label',
+            'type',
+            'start_time',
+            'end_time',
+            'personnel',
+            'problems'
+        ]
     )
 
 
@@ -61,7 +70,32 @@ def get_patient_admission(patient_id, admission_id):
                 _external = True
             )
 
-    return get_one_query_result(query, additional_data=additional_data)
+    return get_one_query_result(
+        query, 
+        additional_data=additional_data,
+        fields=[
+            'id',
+            'label',
+            'type',
+            'start_time',
+            'end_time',
+            #'children',
+            'personnel',
+            'problems',
+            'chief_complaints',
+            'history',
+            'past_history',
+            'general_inspection',
+            'exam_head',
+            'exam_neck',
+            'exam_chest',
+            'exam_abdomen',
+            'exam_genitalia',
+            'exam_pelvic_rectal',
+            'exam_extremities',
+            'exam_other'
+        ]
+    )
 
 
 @api.route("patients/<int:patient_id>/admissions/<int:admission_id>", methods=['POST'])

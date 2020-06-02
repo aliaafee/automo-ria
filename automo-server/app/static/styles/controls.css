@@ -97,6 +97,10 @@ select:disabled {
     -webkit-appearance: none;
 }
 
+div.locked-text-box {
+    padding: 5px;
+}
+
 button {
     font-family: inherit;
     font-size: inherit;
@@ -132,7 +136,7 @@ button:hover {
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: var(--light);
+    background: #ffffff00;
 }
 
 /* Handle */

@@ -70,7 +70,6 @@
 
 .patient-list {
     background-color: var(--light);
-    border-right: solid 1px var(--border);
 }
 
 .patient-list .list-box {
@@ -106,6 +105,7 @@
 
 .patient-panel{
     background-color: var(--light);
+    border-left: solid 1px var(--border);
 }
 
 .patient-panel .header {

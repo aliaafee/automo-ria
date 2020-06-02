@@ -8,6 +8,7 @@ module.exports = class LoginDialog extends FormDialog {
     constructor(options={}) {
         var form = new Form();
 
+        /*
         form.addField(new TextField(
             'index_url',
             {
@@ -15,6 +16,7 @@ module.exports = class LoginDialog extends FormDialog {
                 required: true
             }
         ));
+        */
         
         form.addField(new TextField(
             'username',
@@ -62,7 +64,7 @@ module.exports = class LoginDialog extends FormDialog {
             (data) => {
                 this.spinner.show();
                 connection.login(
-                    data.index_url, data.username, data.password,
+                    '/api/', data.username, data.password,
                     () => {
                         this.hide();
                         onSuccess();

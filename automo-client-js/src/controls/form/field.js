@@ -20,6 +20,8 @@ module.exports = class Field extends Control {
         this._placeholderElement = null;
         this._helpElement = null;
         this._invalidElement = null;
+
+        this._locked = false;
     }
 
     value() {
@@ -27,7 +29,13 @@ module.exports = class Field extends Control {
     }
 
     setValue(value) {
-        return;
+        if (this._locked) {
+            if (value == null) {
+                this.element.style.display = 'none';
+                return
+            }
+            this.element.style.display = 'flex';
+        }
     }
 
     setLabel(text) {
@@ -76,11 +84,15 @@ module.exports = class Field extends Control {
     }
 
     lock() {
-        return;
+        this._locked = true;
+        if (this.value() == null) {
+            this.element.style.display = 'none';
+        }
     }
 
     unlock() {
-        return;
+        this._locked = false;
+        this.element.style.display = 'flex';
     }
 
     createElement() {

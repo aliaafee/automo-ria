@@ -10,17 +10,37 @@ module.exports = class TextBox extends Control {
          *  rows=2
          */
         super(options);
+
+        this._locked = false;
+        this._lockedValue = null;
+        this._parentElement = null;
     }
 
     value() {
+        if (this._locked) {
+            return this._lockedValue;
+        }
+
         return this.element.value;
     }
 
     setValue(value) {
+        if (this._locked) {
+            this._lockedValue = value;
+            this.element.innerHTML = value;
+            return;
+        }
         this.element.value = value;
     }
 
     isBlank() {
+        if (this._locked) {
+            if (this._lockedValue == '') {
+                return true
+            }
+            return false;
+        }
+
         if (this.element.value == '') {
             return true;
         }
@@ -28,11 +48,32 @@ module.exports = class TextBox extends Control {
     }
 
     lock() {
-        this.element.setAttribute('readonly', '');
+        //this.element.setAttribute('readonly', '');
+        this._locked = true;
+        this._lockedValue = this.value();
+        this._parentElement = this.element.parentElement;
+
+        this._parentElement.removeChild(this.element);
+        this.element = document.createElement('div');
+        this.element.className = 'locked-text-box'
+        this._parentElement.appendChild(this.element);
+
+        this.element.innerHTML = this._lockedValue;
     }
 
     unlock() {
-        this.element.removeAttribute('readonly');
+        //this.element.removeAttribute('readonly');
+        if (!this._locked) {
+            return
+        }
+
+        this._locked = false;
+
+        this._parentElement.removeChild(this.element);
+        this.element = this.createElement();
+        this._parentElement.appendChild(this.element);
+
+        this.element.value = this._lockedValue;
     }
 
     createElement() {

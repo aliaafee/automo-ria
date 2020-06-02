@@ -49,16 +49,18 @@ module.exports = class Spitter extends Control {
 
 
     _setElementHeight(element, height) {
-        element.style.height = height;
+        //element.style.height = height;
         element.style.minHeight = height;
-        element.style.maxHeight = height;
+        //element.style.maxHeight = height;
+        element.style.flexBasis = height;
     }
 
 
     _setElementWidth(element, width) {
-        element.style.width = width;
+        //element.style.width = width;
         element.style.minWidth = width;
-        element.style.maxWidth = width;
+        //element.style.maxWidth = width;
+        element.style.flexBasis = width;
     }
 
 
@@ -137,22 +139,28 @@ module.exports = class Spitter extends Control {
         this.element.appendChild(this.pane2.createElement());
 
         if (this.options.pane1Size != null) {
-            this.pane2.element.style.flexGrow = 1;
-
+            this.pane2.element.style.flexGrow = 0;
+            //this.pane1.element.style.flexGrow = 1;
+            
             if (this.options.direction == 'column') {
                 this._setElementHeight(this.pane1.element, this.options.pane1Size);
+                this.pane2.element.style.height = '100%';
             } else {
                 this._setElementWidth(this.pane1.element, this.options.pane1Size);
+                this.pane2.element.style.width = '100%';
             }
         } else {
             if (this.options.pane2Size != null) {
-                this.pane1.element.style.flexGrow = 1;
+                this.pane1.element.style.flexGrow = 0;
+                //this.pane2.element.style.flexGrow = 1;
                 
                 if (this.options.direction == 'column') {
                     //This works now
                     this._setElementHeight(this.pane2.element, this.options.pane2Size);
+                    this.pane1.element.style.height = '100%';
                 } else {
                     this._setElementWidth(this.pane2.element, this.options.pane2Size);
+                    this.pane1.element.style.width = '100%';
                 }
             } else {
                 this.pane1.element.style.flexGrow = 1;
@@ -162,6 +170,9 @@ module.exports = class Spitter extends Control {
 
         this.pane1.element.style.flexDirection = 'column'
         this.pane2.element.style.flexDirection = 'column'
+
+        this.pane1.element.style.boxSizing = 'border-box';
+        this.pane2.element.style.boxSizing = 'border-box';
 
         return this.element;
     }

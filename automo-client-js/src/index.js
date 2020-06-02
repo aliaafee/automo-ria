@@ -52,7 +52,7 @@ showMainWindow = () => {
 document.body.appendChild(dlgLogin.createElement());
 
 dlgLogin.form.setValue({
-    index_url: 'http://127.0.0.1:5000/api/',
+    //index_url: '/api/',
     username: 'admin',
     password: 'a'
 })

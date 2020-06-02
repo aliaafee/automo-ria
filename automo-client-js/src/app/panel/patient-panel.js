@@ -4,6 +4,7 @@ const Scrolled = require('../../controls/scrolled');
 const Tile =  require('../../controls/tile');
 const ResourceAccordion = require('../../controls/resource-accordion');
 const ResourceAccordionItem = require('../../controls/resource-accordion-item');
+const AdmissionPanel = require('./admission-panel');
 
 
 
@@ -36,10 +37,13 @@ class ProblemsTile extends Tile {
 class AdmissionsItem extends ResourceAccordionItem {
     constructor(itemData, options={}) {
         super(itemData, options);
+
+        this.admission_panel = new AdmissionPanel();
     }
 
     displayResource() {
-        this.startTime.innerHTML = this.resourceData.start_time;
+        //this.startTime.innerHTML = this.resourceData.start_time;
+        this.admission_panel.setData(this.resourceData);
     }
 
     createHeaderElement() {
@@ -68,8 +72,9 @@ class AdmissionsItem extends ResourceAccordionItem {
     createBodyElement() {
         super.createBodyElement();
 
-        this.startTime = document.createElement('div');
-        this.bodyElement.appendChild(this.startTime);
+        //this.startTime = document.createElement('div');
+        //this.bodyElement.appendChild(this.startTime);
+        this.bodyElement.appendChild(this.admission_panel.createElement());
 
         return this.bodyElement;
     }

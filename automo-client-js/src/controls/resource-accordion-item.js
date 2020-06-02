@@ -12,6 +12,9 @@ module.exports = class ResourceAccordionItem extends Control {
 
         this.spinner = new Spinner();
 
+        this.headerElement = null;
+        this.bodyElement = null;
+
         this._onClickHeader = (event) => {
             this.toggleBody();
         }
@@ -25,7 +28,11 @@ module.exports = class ResourceAccordionItem extends Control {
         this.spinner.removeElement();
     }
 
-    toggleBody() {
+    toggleBody() {;
+        if (this.bodyElement == null) {
+            this.showBody();
+            return
+        }
         if (this.bodyElement.style.display == 'none') {
             this.showBody();
             return;
@@ -34,8 +41,10 @@ module.exports = class ResourceAccordionItem extends Control {
     }
 
     showBody() {
+        if (this.bodyElement == null) {
+            this.element.appendChild(this.createBodyElement());
+        }
         this.bodyElement.style.display = 'flex';
-
         this.loadResource();
     }
 
@@ -82,6 +91,7 @@ module.exports = class ResourceAccordionItem extends Control {
     createBodyElement() {
         this.bodyElement = document.createElement('div');
         this.bodyElement.className = 'root-item-body';
+        this.bodyElement.style.flexGrow = 1;
 
         return this.bodyElement;
     }
@@ -89,11 +99,12 @@ module.exports = class ResourceAccordionItem extends Control {
     createElement() {
         this.element = document.createElement('li');
         this.element.className = 'root-item';
+        this.element.style.flexGrow = 1;
 
         this.element.appendChild(this.createHeaderElement());
-        this.element.appendChild(this.createBodyElement());
+        //this.element.appendChild(this.createBodyElement());
 
-        this.hideBody();
+        //this.hideBody();
 
         return this.element;
     }

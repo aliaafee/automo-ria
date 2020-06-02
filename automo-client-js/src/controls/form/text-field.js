@@ -27,14 +27,17 @@ module.exports = class TextField extends Field {
     }
 
     setValue(value) {
+        super.setValue(value);
         this._textBox.setValue(value);
     }
 
     lock() {
+        super.lock();
         this._textBox.lock();
     }
 
     unlock() {
+        super.unlock();
         this._textBox.unlock();
     }
 
