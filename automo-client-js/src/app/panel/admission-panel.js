@@ -4,6 +4,9 @@ const TextField = require('../../controls/form/text-field');
 const DateTimeField = require('../../controls/form/date-time-field');
 const DateField = require('../../controls/form/date-field');
 const BedField = require('../form/bed-field');
+const PrescriptionField = require('../form/prescription-field');
+const DoctorField = require('../form/doctor-field');
+const ProblemsField = require('../form/problems-field');
 
 module.exports = class AdmissionPanel extends Control {
     constructor (options) {
@@ -29,11 +32,28 @@ module.exports = class AdmissionPanel extends Control {
             }
         ))
 
+        this.form.addField(new DoctorField(
+            'personnel',
+            {
+                label: "Consultant",
+                required: true,
+                labelSize: '125px'
+            }
+        ))
+
         this.form.addField(new BedField(
             'discharged_bed',
             {
                 label: 'Bed',
                 labelSize: '125px'
+            }
+        ))
+
+        this.form.addField(new ProblemsField(
+            'problems',
+            {
+                label: 'Diagnosis',
+                labelTop: true
             }
         ))
 
@@ -156,6 +176,46 @@ module.exports = class AdmissionPanel extends Control {
                 labelTop: true
             }
         ))
+
+        this.form.addField(new TextField(
+            'hospital_course',
+            {
+                label: 'Hospital Course',
+                type: 'textarea',
+                required: true,
+                labelTop: true
+            }
+        ))
+
+        this.form.addField(new TextField(
+            'discharge_advice',
+            {
+                label: 'Discharge Advice',
+                type: 'textarea',
+                required: true,
+                labelTop: true
+            }
+        ))
+
+        this.form.addField(new PrescriptionField(
+            'prescription',
+            {
+                label: 'Prescription',
+                labelTop: true
+            }
+        ))
+
+        this.form.addField(new TextField(
+            'follow_up',
+            {
+                label: 'Follow Up',
+                type: 'textarea',
+                required: true,
+                labelTop: true
+            }
+        ))
+
+        
     }
 
     setData(data) {

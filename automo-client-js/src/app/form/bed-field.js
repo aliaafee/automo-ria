@@ -7,17 +7,21 @@ module.exports = class BedField extends TextField {
         this._value = null;
     }
 
-    setValue(value) {
-        super.setValue(value);
-        
-        this._value = value;
+    value() {
+        return this._value;
+    }
 
-        if (value == null) {
-            this._textBox.setValue("");
-            return;
+    displayValue() {
+        if (this._value == null) {
+            return "";
         }
-        this._textBox.setValue(
-            value.ward.name + ' - ' + value.number
-        )
+        return this._value.ward.name + ' - ' + this._value.number
+    }
+
+    setValue(value) {
+        this._value = value;
+        super.setValue(value);
+
+        //this._textBox.setValue(this.displayValue());
     }
 }

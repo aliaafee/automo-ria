@@ -30,7 +30,7 @@ module.exports = class Field extends Control {
 
     setValue(value) {
         if (this._locked) {
-            if (value == null) {
+            if (!value) {
                 this.element.style.display = 'none';
                 return
             }

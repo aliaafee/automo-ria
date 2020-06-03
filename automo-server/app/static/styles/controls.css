@@ -214,6 +214,7 @@ button:hover {
 
 .field label {
     padding: 5px 10px 5px 0;
+    color: var(--gray);
 }
 
 .field .help-text,

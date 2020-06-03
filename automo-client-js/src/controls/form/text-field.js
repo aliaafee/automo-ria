@@ -26,19 +26,31 @@ module.exports = class TextField extends Field {
         return this._textBox.value();
     }
 
+    displayValue() {
+        return this.value();
+    }
+
     setValue(value) {
         super.setValue(value);
         this._textBox.setValue(value);
+        if (this._lockedView.style.display != 'none') {
+            this._lockedView.innerHTML = this.displayValue();
+        }
     }
 
     lock() {
         super.lock();
-        this._textBox.lock();
+        //this._textBox.lock();
+        this._textBox.element.style.display = 'none';
+        this._lockedView.style.display = 'flex';
+        this._lockedView.innerHTML = this.displayValue();
     }
 
     unlock() {
         super.unlock();
-        this._textBox.unlock();
+        //this._textBox.unlock();
+        this._textBox.element.style.display = 'flex';
+        this._lockedView.style.display = 'none';
     }
 
     createElement() {
@@ -47,6 +59,11 @@ module.exports = class TextField extends Field {
         this._placeholderElement.appendChild(
             this._textBox.createElement()
         );
+
+        this._lockedView = document.createElement('div');
+        this._lockedView.className = 'locked-text-box';
+        this._lockedView.style.display = 'none';
+        this._placeholderElement.appendChild(this._lockedView)
 
         this._textBox.element.style.flexGrow = 1;
 

@@ -22,12 +22,10 @@ class Problem(SerializerMixin, ValidatorMixin, db.Model):
         'id',
         'start_time',
         'end_time',
-        'icd10class_code',
         'icd10class',
-        'icd10modifier_class_code',
         'icd10modifier_class',
-        'icd10modifier_extra_class_code',
-        'icd10modifier_extra_class'
+        'icd10modifier_extra_class',
+        'comment'
     ]
 
     def url(self):
