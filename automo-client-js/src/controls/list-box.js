@@ -22,7 +22,12 @@ module.exports = class ListBox extends Scrolled {
         this._selectedItem = null;
         this._selectedElement = null;
 
+        this._locked = false;
+
         this._onItemClicked = (event) => {
+            if (this._locked) {
+                return;
+            }
             this.clearSelection();
 
             this._selectedElement = event.currentTarget;
@@ -30,6 +35,16 @@ module.exports = class ListBox extends Scrolled {
             this._highlightSelection();
             this._onSelectItem(event);
         }
+    }
+
+    lock() {
+        this._locked = true;
+        this.element.classList.add('locked');
+    }
+
+    unlock() {
+        this._locked = false;
+        this.element.classList.remove('locked')
     }
 
     _createListItem(itemid, label) {

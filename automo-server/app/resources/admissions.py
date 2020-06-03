@@ -77,6 +77,8 @@ def get_patient_admission(patient_id, admission_id):
             'id',
             'label',
             'type',
+            'bed',
+            'discharged_bed',
             'start_time',
             'end_time',
             #'children',
@@ -93,7 +95,11 @@ def get_patient_admission(patient_id, admission_id):
             'exam_genitalia',
             'exam_pelvic_rectal',
             'exam_extremities',
-            'exam_other'
+            'exam_other',
+            'hospital_course',
+            'discharge_advice',
+            'prescription',
+            'follow_up'
         ]
     )
 

@@ -129,7 +129,7 @@ module.exports = class ResourceAccordion extends Control {
         )
     }
 
-    setResourceUrl(url) {
+    setResourceUrl(url, onDone) {
         //this._listElement.style.display = 'none';
         this._clear();
         this._showSpinner();
@@ -139,6 +139,8 @@ module.exports = class ResourceAccordion extends Control {
                 this.resourceData = data;
                 
                 this._setData(this.resourceData.items);
+
+                onDone();
             },
             (error) => {
                 console.log(error);

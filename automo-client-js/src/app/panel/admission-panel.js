@@ -3,6 +3,7 @@ const Form = require("../../controls/form/form");
 const TextField = require('../../controls/form/text-field');
 const DateTimeField = require('../../controls/form/date-time-field');
 const DateField = require('../../controls/form/date-field');
+const BedField = require('../form/bed-field');
 
 module.exports = class AdmissionPanel extends Control {
     constructor (options) {
@@ -24,6 +25,14 @@ module.exports = class AdmissionPanel extends Control {
             {
                 label: "Discharged Date",
                 required: true,
+                labelSize: '125px'
+            }
+        ))
+
+        this.form.addField(new BedField(
+            'discharged_bed',
+            {
+                label: 'Bed',
                 labelSize: '125px'
             }
         ))

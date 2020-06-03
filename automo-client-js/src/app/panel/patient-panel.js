@@ -5,9 +5,10 @@ const Tile =  require('../../controls/tile');
 const ResourceAccordion = require('../../controls/resource-accordion');
 const ResourceAccordionItem = require('../../controls/resource-accordion-item');
 const AdmissionPanel = require('./admission-panel');
+const Spinner = require('../../controls/spinner');
 
 
-
+/*
 class ProblemsTile extends Tile {
     constructor(options={}) {
         super('Diagnosis', options);
@@ -20,8 +21,8 @@ class ProblemsTile extends Tile {
         );
     }
 
-    setPatient(patient) {
-        this.resourceList.setResourceUrl(patient.problems);
+    setPatient(patient, onDone) {
+        this.resourceList.setResourceUrl(patient.problems, onDone);
     }
 
     createElement() {
@@ -31,7 +32,7 @@ class ProblemsTile extends Tile {
 
         return this.element
     }
-}
+}*/
 
 
 class AdmissionsItem extends ResourceAccordionItem {
@@ -101,8 +102,8 @@ class AdmissionsTile extends Tile {
         );
     }
 
-    setPatient(patient) {
-        this.resourceList.setResourceUrl(patient.admissions);
+    setPatient(patient, onDone) {
+        this.resourceList.setResourceUrl(patient.admissions, onDone);
     }
 
     createElement() {
@@ -121,11 +122,13 @@ module.exports = class PatientPanel extends Scrolled {
 
         this.patient = null;
 
-        this.problemsTile = new ProblemsTile();
+        //this.problemsTile = new ProblemsTile();
         this.admissionsTile = new AdmissionsTile();
+
+        this.spinner = new Spinner();
     }
 
-    _setPatient(patient) {
+    _setPatient(patient, onDone) {
         this.patient = patient;
 
         this._idNumberElement.innerHTML = "NIC No.: " + patient.national_id_no;
@@ -137,11 +140,19 @@ module.exports = class PatientPanel extends Scrolled {
         this._headerElement.style.display = 'flex';
         this._bodyElement.style.display = 'flex';
 
-        this.problemsTile.setPatient(patient);
-        this.admissionsTile.setPatient(patient);
+        var processes = 1;
+        var setPatientDone = () => {
+            processes -= 1;
+            if (processes < 1) {
+                onDone();
+            }
+        }
+
+        //this.problemsTile.setPatient(patient, setPatientDone);
+        this.admissionsTile.setPatient(patient, setPatientDone);
     }
 
-    setPatient(patient) {
+    setPatient(patient, onDone) {
         this._idNumberElement.innerHTML = "NIC No.: " + patient.national_id_no;
         this._hospNumberElement.innerHTML = ", Hospital No.: " +patient.hospital_no;
         this._phoneNumberElement.innerHTML = "";
@@ -150,10 +161,12 @@ module.exports = class PatientPanel extends Scrolled {
         
         this._bodyElement.style.display = 'none';
 
+        this.spinner.show();
         connection.get(
             patient.url,
             patient => {
-                this._setPatient(patient)
+                this.spinner.hide();
+                this._setPatient(patient, onDone)
             },
             (error) => {
                 console.log(error);
@@ -219,8 +232,10 @@ module.exports = class PatientPanel extends Scrolled {
         this._admissionsElement.innerHTML = '<h1>Admissions</h1><div class="tile-body">Admissions<br>Admissions<br>Admissions<br></div>'
         this._bodyElement.appendChild(this._admissionsElement)
         */
+        this.element.appendChild(this.spinner.createElement());
+        this.spinner.hide();
 
-        this._bodyElement.appendChild(this.problemsTile.createElement());
+        //this._bodyElement.appendChild(this.problemsTile.createElement());
         this._bodyElement.appendChild(this.admissionsTile.createElement());
 
         this._headerElement.style.display = 'none';

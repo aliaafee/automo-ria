@@ -11,8 +11,10 @@ const PatientPanel = require('./patient-panel');
 
 
 class PatientList extends Control {
-    constructor(onSelectPatient, option={}) {
+    constructor(option={}) {
         super(option);
+
+        this.onSelectPatient = null;
 
         this.searchBox = new TextBox({
             placeholder: 'Search'
@@ -25,7 +27,7 @@ class PatientList extends Control {
                 return this._getPatientLabel(item);
             },
             (item) => {
-                onSelectPatient(item);
+                this.onSelectPatient(item);
             }
         )
     }
@@ -59,6 +61,14 @@ class PatientList extends Control {
         )
     }
 
+    lock() {
+        this.resultList.lock()
+    }
+
+    unlock() {
+        this.resultList.unlock();
+    }
+
     createElement() {
         super.createElement();
 
@@ -84,9 +94,7 @@ class PatientList extends Control {
 module.exports = class PatientBrowser extends Splitter {
     constructor(options={}) {
         var patientPanel = new PatientPanel();
-        var patientList = new PatientList((patient) => {
-            patientPanel.setPatient(patient);
-        });
+        var patientList = new PatientList();
 
         options.pane1Size = '260px';
         options.resizable = true;
@@ -96,6 +104,14 @@ module.exports = class PatientBrowser extends Splitter {
             patientPanel,
             options
         )
+
+        patientList.onSelectPatient = (patient) => {
+            patientList.lock();
+            patientPanel.setPatient(patient, () => {
+                patientList.unlock();
+                console.log("Patient Set");
+            });
+        }
     }
 
     createElement() {

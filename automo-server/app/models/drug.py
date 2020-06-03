@@ -1,9 +1,14 @@
 "Drug"
 from .. import db
+from .mixins import SerializerMixin, ValidatorMixin
 
-class Drug(db.Model):
+class Drug(db.Model, SerializerMixin, ValidatorMixin):
     """Drugs"""
     __versioned__ = {}
+
+    serialized_attrs = [
+        'name'
+    ]
     
     id = db.Column(db.Integer, primary_key=True)
 

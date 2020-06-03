@@ -179,6 +179,10 @@ button:hover {
     color: var(--light);
 }
 
+.list-box , .locked li.selected {
+    background-color: grey;
+}
+
 .list-box input[type='radio'] {
     padding: 0;
     margin: 0 10px 0 0;
