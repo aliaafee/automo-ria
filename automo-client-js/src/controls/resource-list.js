@@ -7,6 +7,7 @@ module.exports = class ResourceList extends ListBox {
         /* idFunction(result) { return result.unique_id }
          * labelFunction(result) { return result.label }
          * onResultClicked(result) { do something using result }
+         * autoLoadNext = false
          * 
          */
         super(idFunction, labelFunction, onSelectItem, options);
@@ -44,8 +45,9 @@ module.exports = class ResourceList extends ListBox {
         )
     }
 
-    _onLoadNextClicked(event) {
-        event.target.style.display = 'none';
+    _onLoadNextClicked() {
+        //event.target.style.display = 'none';
+        this._nextElem.style.display = 'none'
         this.spinner.show();
         connection.get(
             this.resource_data.next,
@@ -63,26 +65,59 @@ module.exports = class ResourceList extends ListBox {
         )
     }
 
+    _nextElemVisible() {
+        if (this._nextElem == null) {
+            return false;
+        }
+
+        var rect = this._nextElem.getBoundingClientRect();
+        
+        const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+        //const windowWidth = (window.innerWidth || document.documentElement.clientWidth);
+
+        const vertInView = (rect.top <= windowHeight) && ((rect.top + rect.height) >= 0);
+        //const horInView = (rect.left <= windowWidth) && ((rect.left + rect.width) >= 0);
+
+        return (vertInView);
+    }
+
+    _autoLoadNext() {
+        if (!this.options.autoLoadNext) {
+            return
+        }
+
+        if (!this._nextElemVisible()) {
+            return;
+        }
+
+        this._onLoadNextClicked();
+    }
+
     displayNotFound() {
-        var next_elem = document.createElement('li');
-        next_elem.className = 'button'
-        next_elem.innerHTML = 'Not Found.';
-        this._listElement.appendChild(next_elem);
+        var notFoundElem = document.createElement('li');
+        notFoundElem.className = 'button'
+        notFoundElem.innerHTML = 'Not Found.';
+        this._listElement.appendChild(notFoundElem);
     }
 
 
     displayData(noScroll) {
         super.displayData(noScroll);
 
+        this._nextElem = null;
         if (this.resource_data.next) {
-            var next_elem = document.createElement('li');
-            next_elem.setAttribute('next-url', this.resource_data.next);
-            next_elem.className = 'button'
-            next_elem.innerHTML = 'Load More...';
-            next_elem.addEventListener('click', (event) => { 
+            this._nextElem = document.createElement('li');
+            this._nextElem.setAttribute('next-url', this.resource_data.next);
+            this._nextElem.className = 'button'
+            this._nextElem.innerHTML = 'Load More...';
+            this._nextElem.addEventListener('click', (event) => { 
                 this._onLoadNextClicked(event) 
             } )
-            this._listElement.appendChild(next_elem);
+            this._listElement.appendChild(this._nextElem);
+
+            requestAnimationFrame(() => {
+                this._autoLoadNext();
+            })
         }
     }
 
@@ -94,6 +129,12 @@ module.exports = class ResourceList extends ListBox {
 
         this.element.appendChild(this.spinner.createElement());
         this.spinner.hide();
+
+        if (this.options.autoLoadNext) {
+            this.element.addEventListener('scroll', () => {
+                this._autoLoadNext();
+            })
+        }
 
         return this.element;
     }

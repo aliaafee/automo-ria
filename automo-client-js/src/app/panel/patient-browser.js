@@ -28,6 +28,9 @@ class PatientList extends Control {
             },
             (item) => {
                 this.onSelectPatient(item);
+            },
+            {
+                autoLoadNext: true
             }
         )
     }
