@@ -49,6 +49,14 @@ module.exports = class AdmissionPanel extends Control {
             }
         ))
 
+        this.form.addField(new BedField(
+            'bed',
+            {
+                label: 'Bed',
+                labelSize: '125px'
+            }
+        ))
+
         this.form.addField(new ProblemsField(
             'problems',
             {

@@ -10,7 +10,8 @@ class Personnel(db.Model, SerializerMixin, ValidatorMixin):
     serialized_attrs = [
         'id',
         'name',
-        'record_card_no'
+        'record_card_no',
+        'department'
     ]
     
     id = db.Column(db.Integer, primary_key=True)
@@ -44,7 +45,8 @@ class Doctor(Personnel):
         'id',
         'name',
         'record_card_no',
-        'pmr_no'
+        'pmr_no',
+        'department'
     ]
 
     __mapper_args__ = {
@@ -60,6 +62,14 @@ class MedicalOfficer(Personnel):
 
     id = db.Column(db.Integer, db.ForeignKey('personnel.id'), primary_key=True)
 
+    serialized_attrs = [
+        'id',
+        'name',
+        'record_card_no',
+        'pmr_no',
+        'department'
+    ]
+
     __mapper_args__ = {
         'polymorphic_identity':'medicalofficer',
     }
@@ -70,6 +80,14 @@ class MedicalOfficer(Personnel):
 class Nurse(Personnel):
     """Nurses."""
     id = db.Column(db.Integer, db.ForeignKey('personnel.id'), primary_key=True)
+
+    serialized_attrs = [
+        'id',
+        'name',
+        'record_card_no',
+        'pnr_no',
+        'department'
+    ]
 
     __mapper_args__ = {
         'polymorphic_identity':'nurse',

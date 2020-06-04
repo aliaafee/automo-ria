@@ -148,14 +148,14 @@ li.admission-item .root-item-head div.label {
 }
 
 li.admission-item .root-item-head div.date {
-    width: 30%;
+    min-width: 40%;
 }
 
 li.admission-item .root-item-head div.duration {
-    flex-grow: 20%;
+
 }
 
 li.admission-item .root-item-head div.doctor {
     font-weight: bold;
-    width: 30%;
+    min-width: 30%;
 }

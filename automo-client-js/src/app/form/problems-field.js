@@ -46,7 +46,15 @@ module.exports = class ProblemsField extends Field {
     }
 
     setValue(data) {
-        super.setValue(data);
+        if (data) {
+            if (data.length == 0) {
+                super.setValue(null);
+            } else {
+                super.setValue(data)
+            }
+        } else {
+            super.setValue(data)
+        }
 
         this._data = data;
         this._displayData();

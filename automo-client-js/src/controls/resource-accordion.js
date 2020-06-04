@@ -129,9 +129,10 @@ module.exports = class ResourceAccordion extends Control {
         )
     }
 
-    setResourceUrl(url, onDone) {
+    setResourceUrl(url, onDone, onFailed) {
         //this._listElement.style.display = 'none';
         this._clear();
+        this.show();
         this._showSpinner();
         connection.get(
             url,
@@ -139,14 +140,14 @@ module.exports = class ResourceAccordion extends Control {
                 this.resourceData = data;
                 
                 this._setData(this.resourceData.items);
-
                 onDone();
             },
             (error) => {
                 console.log(error);
+                onFailed();
             },
             () => {
-                this._hideSpinner();;
+                this._hideSpinner();
             }
         )
     }

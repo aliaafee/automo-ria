@@ -17,6 +17,7 @@ module.exports = class DateField extends TextField {
     }
 
     setValue(value) {
+        super.setValue(value);
         this._value = moment(value);
         this._textBox.setValue(this._value.format('YYYY-MM-DD'));
     }

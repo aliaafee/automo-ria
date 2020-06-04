@@ -53,7 +53,9 @@ def get_patient(patient_id):
         additional_data={
             'encounters': url_for('api.get_patient_encounters', patient_id=patient_id, _external=True),
             'problems': url_for('api.get_patient_problems', patient_id=patient_id, _external=True),
-            'admissions': url_for('api.get_patient_admissions', patient_id=patient_id, _external=True)
+            'admissions': url_for('api.get_patient_admissions', patient_id=patient_id, _external=True),
+            'admissions_previous': url_for('api.get_patient_admissions', patient_id=patient_id, discharged=True, _external=True),
+            'admissions_active': url_for('api.get_patient_admissions', patient_id=patient_id, active=True, _external=True)
         }
     )
 

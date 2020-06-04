@@ -27,13 +27,19 @@ def get_admissions():
 
 @api.route("patients/<int:patient_id>/admissions/")
 def get_patient_admissions(patient_id):
-    discharged = request.args.get('discharges', False, type=bool)
+    discharged = request.args.get('discharged', False, type=bool)
+    active = request.args.get('active', False, type=bool)
 
     query = md.Admission.query\
         .filter(md.Admission.patient_id == patient_id)
+
     if discharged:
         query = query.filter(md.Admission.end_time != None)
-    query = query.order_by(md.Admission.end_time.desc())
+
+    if active:
+        query = query.filter(md.Admission.end_time == None)
+
+    query = query.order_by(md.Admission.start_time.desc())
 
     return get_query_result(
         query,
@@ -69,6 +75,35 @@ def get_patient_admission(patient_id, admission_id):
                 patient_id=patient_id, admission_id=admission_id,
                 _external = True
             )
+
+    child_encounter_types = [
+        'vitalsigns',
+        'imaging',
+        'endoscopy',
+        'histopathology',
+        'otherreport',
+        'completebloodcount',
+        'renalfunctiontest',
+        'liverfunctiontest',
+        'othertest'
+    ]
+
+    encounters = {};
+    for child_encounter_type in child_encounter_types:
+        encounters[child_encounter_type] = url_for(
+            'api.get_patient_admission_encounters',
+            patient_id=patient_id, admission_id=admission_id,
+            type=child_encounter_type,
+            _external = True
+        )
+
+    encounters['all_encounters'] = url_for(
+        'api.get_patient_admission_encounters',
+        patient_id=patient_id, admission_id=admission_id,
+        _external = True
+    )
+
+    additional_data['encounters'] = encounters;
 
     return get_one_query_result(
         query, 
@@ -118,6 +153,10 @@ def get_patient_admission_encounters(patient_id, admission_id):
     query = md.Encounter.query\
         .filter(md.Encounter.patient_id == patient_id)\
         .filter(md.Encounter.parent_id == admission_id)
+
+    encounter_type = request.args.get('type', '')
+    if encounter_type:
+        query = query.filter(md.Encounter.type == encounter_type)
 
     return get_query_result(
         query,

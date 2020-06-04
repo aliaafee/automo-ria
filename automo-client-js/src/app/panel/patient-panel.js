@@ -35,7 +35,7 @@ class ProblemsTile extends Tile {
 }*/
 
 
-class AdmissionsItem extends ResourceAccordionItem {
+class AdmissionItem extends ResourceAccordionItem {
     constructor(itemData, options={}) {
         super(itemData, options);
 
@@ -43,7 +43,6 @@ class AdmissionsItem extends ResourceAccordionItem {
     }
 
     displayResource() {
-        //this.startTime.innerHTML = this.resourceData.start_time;
         this.admission_panel.setData(this.resourceData);
     }
 
@@ -51,8 +50,8 @@ class AdmissionsItem extends ResourceAccordionItem {
         super.createHeaderElement();
 
         this.headerElement.innerHTML = `
-            <div class="label">
-                <span>Admission</span>
+            <div class="doctor">
+                ${this.itemData.personnel.name}
             </div>
             <div class="date">
                 <span>${moment(this.itemData.start_time).format('D MMM YYYY')}</span>
@@ -62,9 +61,6 @@ class AdmissionsItem extends ResourceAccordionItem {
             <div class="duration">
                 (${moment(this.itemData.end_time).diff(this.itemData.start_time, 'days')} days)
             </div>
-            <div class="doctor">
-                ${this.itemData.personnel.name}
-            </div>
         `;
 
         return this.headerElement;
@@ -73,8 +69,6 @@ class AdmissionsItem extends ResourceAccordionItem {
     createBodyElement() {
         super.createBodyElement();
 
-        //this.startTime = document.createElement('div');
-        //this.bodyElement.appendChild(this.startTime);
         this.bodyElement.appendChild(this.admission_panel.createElement());
 
         return this.bodyElement;
@@ -89,21 +83,65 @@ class AdmissionsItem extends ResourceAccordionItem {
     }
 }
 
+class CurrentAdmissionTile extends AdmissionItem {
+    constructor(itemData, options={}) {
+        super(itemData, options);
+    }
+
+    createHeaderElement() {
+        super.createHeaderElement();
+
+        this.headerElement.innerHTML = `
+            <div class="doctor">
+                ${this.itemData.personnel.name}
+            </div>
+            <div class="date">
+                Admitted on 
+                <span>${moment(this.itemData.start_time).format('D MMM YYYY')}</span>
+            </div>
+        `;
+
+        return this.headerElement;
+    }
+}
+
 
 class AdmissionsTile extends Tile {
-    constructor(options={}) {
-        super('Admissions', options);
+    constructor(label ,options={}) {
+        /* options
+         *    admissionsType=admissions|admissions_active|admissions_previous
+         *    itemClass=AdmissionsItem|AdmissionsActiveItem
+         *
+         */
+        super(label, options);
+
+        this.admissionsType = 'admissions'
+        if (options.admissionsType != null) {
+            this.admissionsType = options.admissionsType;
+        }
+
+        this.itemClass = AdmissionItem;
+        if (options.itemClass != null) {
+            this.itemClass = options.itemClass;
+        }
 
         this.resourceList = new ResourceAccordion(
             (item) => {
                 return item.id;
             },
-            AdmissionsItem
+            this.itemClass
         );
     }
 
     setPatient(patient, onDone) {
-        this.resourceList.setResourceUrl(patient.admissions, onDone);
+        this.show();
+        this.resourceList.setResourceUrl(
+            patient[this.admissionsType],
+            onDone,
+            () => {
+                this.hide()
+                onDone();
+            });
     }
 
     createElement() {
@@ -115,6 +153,32 @@ class AdmissionsTile extends Tile {
     }
 }
 
+/*
+class CurrentAdmissionTile extends AdmissionsTile {
+    constructor(label ,options={}) {
+        super(label, options);
+
+        this.resourceList = new ResourceAccordion(
+            (item) => {
+                return item.id;
+            },
+            AdmissionsItem
+        );
+    }
+
+    setPatient(patient, onDone) {
+        this.resourceList.setResourceUrl(patient.admissions_active, onDone);
+    }
+
+    createElement() {
+        super.createElement();
+
+        this._tileBodyElement.appendChild(this.resourceList.createElement());
+
+        return this.element
+    }
+}*/
+
 
 module.exports = class PatientPanel extends Scrolled {
     constructor(options={}) {
@@ -122,8 +186,20 @@ module.exports = class PatientPanel extends Scrolled {
 
         this.patient = null;
 
-        //this.problemsTile = new ProblemsTile();
-        this.admissionsTile = new AdmissionsTile();
+        this.currentAdmissionTile = new AdmissionsTile(
+            'Current Admission',
+            {
+                admissionsType: 'admissions_active',
+                itemClass: CurrentAdmissionTile
+            }
+        );
+
+        this.admissionsTile = new AdmissionsTile(
+            'Previous Admissions',
+            {
+                admissionsType: 'admissions_previous'
+            }
+        );
 
         this.spinner = new Spinner();
     }
@@ -140,7 +216,7 @@ module.exports = class PatientPanel extends Scrolled {
         this._headerElement.style.display = 'flex';
         this._bodyElement.style.display = 'flex';
 
-        var processes = 1;
+        var processes = 2;
         var setPatientDone = () => {
             processes -= 1;
             if (processes < 1) {
@@ -148,7 +224,7 @@ module.exports = class PatientPanel extends Scrolled {
             }
         }
 
-        //this.problemsTile.setPatient(patient, setPatientDone);
+        this.currentAdmissionTile.setPatient(patient, setPatientDone);
         this.admissionsTile.setPatient(patient, setPatientDone);
     }
 
@@ -180,7 +256,6 @@ module.exports = class PatientPanel extends Scrolled {
     createElement() {
         super.createElement();
 
-        
         this.element.className = 'patient-panel';
         this.element.style.flexDirection = 'column';
 
@@ -221,21 +296,10 @@ module.exports = class PatientPanel extends Scrolled {
         this._bodyElement.style.flexDirection = 'column';
         this.element.appendChild(this._bodyElement);
 
-        /*
-        this._problemsElement = document.createElement('div');
-        this._problemsElement.classList = 'tile problems'
-        this._problemsElement.innerHTML = '<h1>Problems</h1><div class="tile-body">Problems<br>Problems<br>Problems<br></div>'
-        this._bodyElement.appendChild(this._problemsElement)
-
-        this._admissionsElement = document.createElement('div');
-        this._admissionsElement.classList = 'tile admissions'
-        this._admissionsElement.innerHTML = '<h1>Admissions</h1><div class="tile-body">Admissions<br>Admissions<br>Admissions<br></div>'
-        this._bodyElement.appendChild(this._admissionsElement)
-        */
         this.element.appendChild(this.spinner.createElement());
         this.spinner.hide();
 
-        //this._bodyElement.appendChild(this.problemsTile.createElement());
+        this._bodyElement.appendChild(this.currentAdmissionTile.createElement());
         this._bodyElement.appendChild(this.admissionsTile.createElement());
 
         this._headerElement.style.display = 'none';

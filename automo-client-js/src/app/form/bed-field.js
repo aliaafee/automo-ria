@@ -21,7 +21,5 @@ module.exports = class BedField extends TextField {
     setValue(value) {
         this._value = value;
         super.setValue(value);
-
-        //this._textBox.setValue(this.displayValue());
     }
 }
