@@ -179,7 +179,7 @@ button:hover {
     color: var(--light);
 }
 
-.list-box , .locked li.selected {
+.locked li.selected {
     background-color: grey;
 }
 

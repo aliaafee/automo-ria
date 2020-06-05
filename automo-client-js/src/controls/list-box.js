@@ -15,7 +15,10 @@ module.exports = class ListBox extends Scrolled {
 
         this.data = [];
         this._itemIds = [];
-        this._itemElements = [];
+        //this._itemElements = [];
+
+        this._listDataItems = {};
+        this._listChildElems = {};
 
         this._listElement = null;
 
@@ -57,26 +60,16 @@ module.exports = class ListBox extends Scrolled {
         return item;
     }
 
-    _clear() {
-        while (this._listElement.firstChild) {
-            this._listElement.firstChild.remove();
-        }
-    }
-
     _highlightSelection() {
         this._selectedElement.className = 'selected';
     }
 
     _onSelectItem(event) {
         this._selectedItem = null;
-        var selectedId = this._selectedElement.getAttribute('item-id');
-        for (var i = 0; i < this._itemIds.length; i++) {
-            if (this._itemIds[i] == selectedId) {
-                this._selectedItem = this.data[i];
-                this.onSelectItem(this._selectedItem);
-                return
-            }
-        }
+        var selectedItemId = this._selectedElement.getAttribute('item-id');
+
+        this._selectedItem = this._listDataItems[selectedItemId];
+        this.onSelectItem(this._selectedItem);
     }
 
     value() {
@@ -88,17 +81,13 @@ module.exports = class ListBox extends Scrolled {
             this.clearSelection();
             return;
         }
-        for (var i = 0; i < this._itemIds.length; i++) {
-            if (this._itemIds[i] == itemId) {
-                this.clearSelection();
 
-                this._selectedElement = this._itemElements[i];
-                this._selectedItem = this.data[i];
-                
-                this._highlightSelection();
-                this._selectedElement.scrollIntoView();
-            }
-        }
+        this._selectedItem = this._listDataItems[itemId]
+
+        this.clearSelection();
+        this._selectedElement = this._listChildElems[itemId];
+        this._highlightSelection();
+        this._selectedElement.scrollIntoView();
     }
 
     clearSelection() {
@@ -110,20 +99,57 @@ module.exports = class ListBox extends Scrolled {
         this._selectedItem = null;
     }
 
-    setData(data) {
-        this.data = data;
-        this.displayData();
+    _clear() {
+        while (this._listElement.firstChild) {
+            this._listElement.firstChild.remove();
+        }
+
+        this._listChildElems = {}
+        this._listDataItems = {}
+        this._data = null;
+        //this._itemIds = [];
     }
 
+    _appendData(data) {
+        if (this.data == null) {
+            this.data = data;
+        } else {
+            this.data = this.data.concat(data);
+        }
+
+        data.forEach((item) => {
+            var item_id = this.idFunction(item)
+            
+            //this._itemIds.push(item_id);
+
+            this._listDataItems[item_id] = item
+            
+            this._listChildElems[item_id] = this._createListItem(
+                item_id,
+                this.labelFunction(item)
+            );
+
+            this._listElement.appendChild(this._listChildElems[item_id]);
+        })
+    }
+
+    setData(data) {
+        this._clear();
+        this._appendData(data);
+    }
+
+    /*
     appendData(data) {
+        this._appendData()
+        return
         if (!this.data) {
             this.data = data
         } else {
             this.data = this.data.concat(data);
         }
         this.displayData(true);
-    }
-
+    }*/
+    /*
     displayData(noScroll) {
         this._clear();
         
@@ -146,7 +172,7 @@ module.exports = class ListBox extends Scrolled {
         if (!noScroll) {
             this.element.scrollTop = 0;
         }       
-    }
+    }*/
 
     createElement() {
         super.createElement();

@@ -33,7 +33,8 @@ module.exports = class Icd10CoderDialog extends Dialog {
             },
             {
                 placeholder: 'Search ICD-10 Code',
-                popupHeight: '200px'
+                popupHeight: '200px',
+                cache: true
             }
         )
 
@@ -58,6 +59,7 @@ module.exports = class Icd10CoderDialog extends Dialog {
                 this._onSelectCategory(category);
             },
             {
+                cache: true,
                 height: '300px',
                 onLink: (ev) => {
                     ev.preventDefault();

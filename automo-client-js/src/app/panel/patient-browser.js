@@ -30,7 +30,8 @@ class PatientList extends Control {
                 this.onSelectPatient(item);
             },
             {
-                autoLoadNext: true
+                autoLoadNext: true,
+                cache: false
             }
         )
     }

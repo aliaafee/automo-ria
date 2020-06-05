@@ -10,7 +10,7 @@ module.exports = class ResourceAccordion extends Control {
         this.data = null;
         this.resourceData = null;
         this._itemData = {};
-        this._itemChildren = {};
+        this._listChildren = {};
 
         this.idFunction = idFunction;
         //this.labelFunction = labelFunction;
@@ -74,15 +74,15 @@ module.exports = class ResourceAccordion extends Control {
     }
 
     _clear() {
-        for (var key in this._itemChildren) {
-            this._listElement.removeChild(this._itemChildren[key].element);
+        for (var key in this._listChildren) {
+            this._listElement.removeChild(this._listChildren[key].element);
         }
         if (this._nextElement != null) {
             this._listElement.removeChild(this._nextElement);
             this._nextElement = null;
         }
         this._data = null;
-        this._itemChildren = {};
+        this._listChildren = {};
     }
     
     _setData(data) {
@@ -100,8 +100,8 @@ module.exports = class ResourceAccordion extends Control {
         data.forEach((item) => {
             var item_id = this.idFunction(item)
 
-            this._itemChildren[item_id] = new this.itemClass(item);
-            this._listElement.appendChild(this._itemChildren[item_id].createElement());
+            this._listChildren[item_id] = new this.itemClass(item);
+            this._listElement.appendChild(this._listChildren[item_id].createElement());
         })
 
         if (this.resourceData.next != null) {

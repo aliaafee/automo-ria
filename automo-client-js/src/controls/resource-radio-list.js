@@ -28,27 +28,6 @@ module.exports = class ResourceRadioList extends ResourceList {
         this._selectedElement.firstChild.checked = true;
     }
 
-    setSelection(itemId, scroll = true) {
-        if (itemId == null || itemId == '') {
-            this.clearSelection();
-            return;
-        }
-        for (var i = 0; i < this._itemIds.length; i++) {
-            if (this._itemIds[i] == itemId) {
-                this.clearSelection()
-
-                this._selectedElement = this._itemElements[i];
-                this._selectedItem = this.data[i];
-                
-                this._highlightSelection();
-
-                if (scroll) {
-                    this._selectedElement.scrollIntoView();
-                }
-            }
-        }
-    }
-
     clearSelection() {
         if (this._selectedElement != null) {
             this._selectedElement.className = null;
@@ -76,8 +55,8 @@ module.exports = class ResourceRadioList extends ResourceList {
         return item;
     }
 
-    displayData() {
-        super.displayData();
+    _appendData(data) {
+        super._appendData(data);
 
         if (this.options.onLink != null) {
             var links = this.element.getElementsByTagName('a');

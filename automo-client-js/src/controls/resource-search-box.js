@@ -16,7 +16,8 @@ module.exports = class ResourceSearchBox extends Control {
          * 
          * Options:
          *  placeholder
-         *  populHeight
+         *  popupHeight
+         *  cache
          */
         super(options);
         this.idFunction = idFunction;
@@ -37,7 +38,8 @@ module.exports = class ResourceSearchBox extends Control {
                 this._onSelectResult(result);
             },
             {
-                height: options.popupHeight
+                height: options.popupHeight,
+                cache: options.cache
             }
         )
     }
