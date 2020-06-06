@@ -101,6 +101,8 @@ module.exports = class PatientBrowser extends Splitter {
         var patientList = new PatientList();
 
         options.pane1Size = '260px';
+        //options.pane2Size = '260px';
+        //options.direction = 'column';
         options.resizable = true;
 
         super(

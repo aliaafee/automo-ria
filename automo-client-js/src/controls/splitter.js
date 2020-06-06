@@ -49,18 +49,27 @@ module.exports = class Spitter extends Control {
 
 
     _setElementHeight(element, height) {
-        //element.style.height = height;
+        element.style.height = height;
         element.style.minHeight = height;
-        //element.style.maxHeight = height;
-        element.style.flexBasis = height;
+        element.style.maxHeight = height;
     }
 
 
     _setElementWidth(element, width) {
-        //element.style.width = width;
+        element.style.width = width;
         element.style.minWidth = width;
-        //element.style.maxWidth = width;
-        element.style.flexBasis = width;
+        element.style.maxWidth = width;
+    }
+
+
+    _setWidths(pane1Width, pane2Width) {
+        this._setElementWidth(this.pane1.element, pane1Width);
+        this._setElementWidth(this.pane2.element, pane2Width);
+    }
+
+    _setHeights(pane1Height, pane2Height) {
+        this._setElementHeight(this.pane1.element, pane1Height);
+        this._setElementHeight(this.pane2.element, pane2Height);
     }
 
 
@@ -71,12 +80,19 @@ module.exports = class Spitter extends Control {
                 var size = (this.pane1.element.offsetHeight - this.pos2);
                 if (size > maxSize) { return }
                 if (size < this.minSize) { return }
-                this._setElementHeight(this.pane1.element, size + 'px');
+                this._setHeights(
+                    `${size}px`,
+                    `calc(100% - ${size}px)`
+                )
+                
             } else {
                 var size = (this.pane2.element.offsetHeight + this.pos2);
                 if (size > maxSize) { return }
                 if (size < this.minSize) { return }
-                this._setElementHeight(this.pane2.element, size + 'px');
+                this._setHeights(
+                    `calc(100% - ${size}px)`,
+                    `${size}px`
+                )
             }
         } else {
             var maxSize = this.element.offsetWidth - this.minSize;
@@ -84,12 +100,18 @@ module.exports = class Spitter extends Control {
                 var size = (this.pane1.element.offsetWidth - this.pos1);
                 if (size >= maxSize) { return }
                 if (size < this.minSize) { return }
-                this._setElementWidth(this.pane1.element, size +'px');
+                this._setWidths(
+                    `${size}px`,
+                    `calc(100% - ${size}px)`
+                )
             } else {
                 var size = (this.pane2.element.offsetWidth + this.pos1);
                 if (size > maxSize) { return }
                 if (size < this.minSize) { return }
-                this._setElementWidth(this.pane2.element, size +'px');
+                this._setWidths(
+                    `calc(100% - ${size}px)`,
+                    `${size}px`
+                )
             }
         }
     }
@@ -141,29 +163,31 @@ module.exports = class Spitter extends Control {
         
         this.element.appendChild(this.pane2.createElement());
 
-        if (this.options.pane1Size != null) {
-            this.pane2.element.style.flexGrow = 0;
-            //this.pane1.element.style.flexGrow = 1;
-            
+        if (this.options.pane1Size != null) {            
             if (this.options.direction == 'column') {
-                this._setElementHeight(this.pane1.element, this.options.pane1Size);
-                this.pane2.element.style.height = '100%';
+                this._setHeights(
+                    `${this.options.pane1Size}`,
+                    `calc(100% - ${this.options.pane1Size})`
+                )
             } else {
-                this._setElementWidth(this.pane1.element, this.options.pane1Size);
-                this.pane2.element.style.width = '100%';
+                console.log('setWidth');
+                this._setWidths(
+                    `${this.options.pane1Size}`,
+                    `calc(100% - ${this.options.pane1Size})`
+                )
             }
         } else {
-            if (this.options.pane2Size != null) {
-                this.pane1.element.style.flexGrow = 0;
-                //this.pane2.element.style.flexGrow = 1;
-                
+            if (this.options.pane2Size != null) {                
                 if (this.options.direction == 'column') {
-                    //This works now
-                    this._setElementHeight(this.pane2.element, this.options.pane2Size);
-                    this.pane1.element.style.height = '100%';
+                    this._setHeights(
+                        `calc(100% - ${this.options.pane2Size})`,
+                        `${this.options.pane2Size}`
+                    )
                 } else {
-                    this._setElementWidth(this.pane2.element, this.options.pane2Size);
-                    this.pane1.element.style.width = '100%';
+                    this._setWidths(
+                        `calc(100% - ${this.options.pane2Size})`,
+                        `${this.options.pane2Size}`
+                    )
                 }
             } else {
                 this.pane1.element.style.flexGrow = 1;

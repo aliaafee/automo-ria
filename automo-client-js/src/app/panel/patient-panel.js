@@ -1,5 +1,6 @@
 const moment = require('moment');
 
+const Control = require('../../controls/control');
 const Scrolled = require('../../controls/scrolled');
 const Tile =  require('../../controls/tile');
 const ResourceAccordion = require('../../controls/resource-accordion');

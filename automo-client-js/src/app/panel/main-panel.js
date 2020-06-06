@@ -2,6 +2,8 @@ const Control = require('../../controls/control');
 const Button = require('../../controls/button')
 const PatientBrowser = require('../panel/patient-browser');
 
+const Icd10CoderDialog = require('../dialog/icd10coder-dialog');
+
 
 module.exports = class MainPanel extends Control {
     constructor(onUser, onLogout, options={}) {
@@ -38,9 +40,22 @@ module.exports = class MainPanel extends Control {
             new Button('A')
         )
         this.addSidebarItem(
-            new Button('W')
+            new Button('I', (event) => {
+                var icd10 = new Icd10CoderDialog();
+                document.body.appendChild(icd10.createElement());
+                icd10.show(
+                    (value) => {
+                        console.log(value);
+                        document.body.removeChild(icd10.element);
+                    },
+                    () => {
+                        console.log('Cancelled');
+                        document.body.removeChild(icd10.element);
+                    }
+                )
+            })
         )
-        //this.addSidebarSpacer()
+        this.addSidebarSpacer()
         this.addSidebarItem(
             new Button('S')
         )
@@ -58,10 +73,10 @@ module.exports = class MainPanel extends Control {
         this._sidebarItems.push(item);
     }
 
-    /*
+    
     addSidebarSpacer() {
         this._sidebarItems.push('_spacer');
-    }*/
+    }
 
     _createMenuBarElement() {
         this._menuBarElement = document.createElement('div')
@@ -113,11 +128,18 @@ module.exports = class MainPanel extends Control {
 
         //this._sideBarElement = document.createElement('div')
         //this._sideBarElement.className = 'side-bar';
-        this.element.appendChild(this._createSideBarElement())
+
+        var bodyElem = document.createElement('div');
+        bodyElem.className = 'main-panel-body';
+        bodyElem.style.display = 'flex';
+        this.element.appendChild(bodyElem);
+
+        bodyElem.appendChild(this._createSideBarElement())
 
         this._mainElement = document.createElement('div')
         this._mainElement.className = 'main-content';
-        this.element.appendChild(this._mainElement)
+        this._mainElement.style.display = 'flex';
+        bodyElem.appendChild(this._mainElement)
 
         //this._menuBarElement.innerHTML = `<div class="menu-bar-spacer"></div><div class="menu-bar-item">Dr Ali Aafee</div><div class="menu-bar-item">Logout</div>`;
         //this._sideBarElement.innerHTML = "side";

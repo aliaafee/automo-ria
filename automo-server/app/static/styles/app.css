@@ -161,14 +161,22 @@ li.admission-item .root-item-head div.doctor {
 }
 
 .main-panel {
-    flex-wrap: wrap;
-    align-items: stretch;
+    flex-direction: column;
     width: 100%;
+    height: 100%;
 }
 
 .menu-bar {
-    width: 100%;
     display: flex;
+    overflow: hidden;
+    width: 100%;
+    height: 30px;
+}
+
+.main-panel-body {
+    flex-direction: row;
+    max-height: calc(100% - 30px);
+    height: calc(100% - 30px);
 }
 
 .menu-bar-item {
@@ -193,6 +201,11 @@ button.menu-bar-item {
     display: flex;
     flex-direction: column;
     background-color: var(--dark);
+    width: 40px;
+}
+
+.main-content {
+    width: calc(100% - 40px);
 }
 
 .side-bar-item {
@@ -217,13 +230,7 @@ button.side-bar-item {
     border-radius: 0;
 }
 
-/*
-.side-bar-spacer {
-    background-color: var(--dark);
-    color: var(--white);
-}*/
 
-.main-content {
-    height: 100%;
+.side-bar-spacer {
     flex-grow: 1;
 }
