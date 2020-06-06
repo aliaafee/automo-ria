@@ -118,8 +118,18 @@ module.exports = class Icd10CoderDialog extends Dialog {
 
     show(onOk, onCancel) {
         this.searchBox.setResourceUrl(connection.resource_index.icd10.categories)
+        
+        this.selectedCategory = null;
+        this.selectedBlockCode = null;
+
+        this.selectedModifier = null;
+        this.selectedModifierExtra = null;
 
         super.show(onOk, onCancel);
+    }
+
+    hide() {
+        super.hide();
     }
 
     value() {

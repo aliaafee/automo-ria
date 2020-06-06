@@ -2,8 +2,6 @@ const Control = require('../../controls/control');
 const Button = require('../../controls/button')
 const PatientBrowser = require('../panel/patient-browser');
 
-const Icd10CoderDialog = require('../dialog/icd10coder-dialog');
-
 
 module.exports = class MainPanel extends Control {
     constructor(onUser, onLogout, options={}) {
@@ -41,16 +39,12 @@ module.exports = class MainPanel extends Control {
         )
         this.addSidebarItem(
             new Button('I', (event) => {
-                var icd10 = new Icd10CoderDialog();
-                document.body.appendChild(icd10.createElement());
-                icd10.show(
+                icd10Coder.show(
                     (value) => {
                         console.log(value);
-                        document.body.removeChild(icd10.element);
                     },
                     () => {
                         console.log('Cancelled');
-                        document.body.removeChild(icd10.element);
                     }
                 )
             })

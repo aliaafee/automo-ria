@@ -10,16 +10,15 @@ const DATEFORMAT = 'D MMM YYYY';
 logger = new Logger();
 connection = new Connection(logger);
 
+icd10Coder = new Icd10CoderDialog();
 dlgLogin = new LoginDialog();
 
-tryLogin = () =>{
-    document.body.appendChild(dlgLogin.createElement());
-    
-    dlgLogin.form.setValue({
+tryLogin = () =>{    
+    //dlgLogin.form.setValue({
         //index_url: '/api/',
-        username: 'admin',
-        password: 'a'
-    })
+        //username: 'admin',
+        //password: 'a'
+    //})
 
     dlgLogin.tryLogin(
         () => {
@@ -83,7 +82,7 @@ tryLogin();
 /*
 const Icd10CoderDialog = require('./app/dialog/icd10coder-dialog');
 
-icd10 = new Icd10CoderDialog();
+
 
 document.body.appendChild(icd10.createElement());
 

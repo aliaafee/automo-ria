@@ -236,6 +236,7 @@ module.exports = class PatientPanel extends Scrolled {
         this._nameElement.innerHTML = patient.name;
         this._ageSexElement.innerHTML = patient.age + "/" + patient.sex;
         
+        this._headerElement.style.display = 'flex';
         this._bodyElement.style.display = 'none';
 
         this.spinner.show();

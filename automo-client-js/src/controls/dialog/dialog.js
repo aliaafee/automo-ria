@@ -27,7 +27,13 @@ module.exports = class Dialog extends Control {
         this.onOk = onOk;
         this.onCancel = onCancel;
 
+        document.body.appendChild(this.createElement());
         super.show();
+    }
+
+    hide() {
+        super.hide();
+        document.body.removeChild(this.element);
     }
 
     _onCancel(ev) {
@@ -36,8 +42,9 @@ module.exports = class Dialog extends Control {
     }
 
     _onOk(ev) {
+        var value = this.value();
         this.hide();
-        this.onOk(this.value());
+        this.onOk(value);
     }
 
     createElement() {
@@ -83,7 +90,7 @@ module.exports = class Dialog extends Control {
         this.footerElement.className = 'dialog-footer';
         this._dialogElement.appendChild(this.footerElement);
 
-        this.hide();
+        super.hide();
 
         this.element.addEventListener('click', (ev) => {
             //this._onCancel();

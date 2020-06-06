@@ -23,7 +23,7 @@
     --hover: #e9ecefde;
     --border: #343a4032; 
     --a: rgba(0, 0, 0, 0.125);
-    --border-radius: 5px;
+    --border-radius: 3px;
 }
 
 *, *::before, *::after {
@@ -132,7 +132,8 @@ button:hover {
 
 /* width */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 5px;
+    border-radius: var(--border-radius);
 }
 
 /* Track */
@@ -294,7 +295,7 @@ button:hover {
 .dialog {
     background-color: var(--light);
     border: solid 1px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
+    border-radius: var(--border-radius);
 }
 
 .dialog-header {
