@@ -3,6 +3,7 @@ const Connection = require("./app/connection");
 const LoginDialog = require("./app/dialog/login-dialog");
 const PatientBrowser = require('./app/panel/patient-browser');
 const Icd10CoderDialog = require('./app/dialog/icd10coder-dialog');
+const MainPanel = require('./app/panel/main-panel');
 
 const DATEFORMAT = 'D MMM YYYY';
 
@@ -10,31 +11,63 @@ logger = new Logger();
 connection = new Connection(logger);
 
 dlgLogin = new LoginDialog();
+
+tryLogin = () =>{
+    document.body.appendChild(dlgLogin.createElement());
+    
+    dlgLogin.form.setValue({
+        //index_url: '/api/',
+        username: 'admin',
+        password: 'a'
+    })
+
+    dlgLogin.tryLogin(
+        () => {
+            console.log("Login Sucessful.");
+            showMainWindow();
+        },
+        () => {
+            console.log("Cancelled.")
+        }
+    );
+}
+
+logout = () => {
+    document.body.innerHTML = "";
+    connection.logout(
+        () => {
+            tryLogin();
+        },
+        () => {
+            console.log("Logout Failed");
+            tryLogin();
+        }
+    )
+}
+
+mainPanel = new MainPanel(
+    () => {
+
+    },
+    () => {
+        logout();
+    }
+);
 pnlPatientBrowser = new PatientBrowser();
 dlgIcd10 = new Icd10CoderDialog();
 
 
-displayPatients = (data) => {
-    var result = "";
-    
-    data['patients'].forEach(element => {
-        result += `<tr><td>${element['id']}</td><td>${element['name']}</td><td>${element['url']}</td></tr>`
-    });
-
-    document.body.innerHTML = (
-        `<table class="table table-striped table-sm">
-            <thead>
-                <tr><td>Id</td><td>Name</td><td>URL</td></tr>
-            </head>
-            <tbody>
-                ${result}
-            </tbody>
-        </table>`
-    );
+showMainWindow = () => {
+    document.body.appendChild(mainPanel.createElement());
 }
 
-showMainWindow = () => {
-    document.body.appendChild(pnlPatientBrowser.createElement());
+
+tryLogin();
+
+
+
+
+//document.body.appendChild(pnlPatientBrowser.createElement());
     /*
     document.body.appendChild(dlgIcd10.createElement());
     dlgIcd10.show(
@@ -46,30 +79,6 @@ showMainWindow = () => {
         }
     )
     */
-}
-
-
-document.body.appendChild(dlgLogin.createElement());
-
-dlgLogin.form.setValue({
-    //index_url: '/api/',
-    username: 'admin',
-    password: 'a'
-})
-
-dlgLogin.tryLogin(
-    () => {
-        console.log("Login Sucessful.");
-        showMainWindow();
-    },
-    () => {
-        console.log("Cancelled.")
-    }
-);
-
-
-
-
 
 /*
 const Icd10CoderDialog = require('./app/dialog/icd10coder-dialog');

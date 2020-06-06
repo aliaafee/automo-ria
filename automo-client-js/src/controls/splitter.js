@@ -126,6 +126,9 @@ module.exports = class Spitter extends Control {
 
         if (this.options.direction == 'column') {
             this.element.style.flexDirection = 'column';
+            this.element.style.width = '100%'
+        } else {
+            this.element.style.height = '100%'
         }
 
         this.element.appendChild(this.pane1.createElement());

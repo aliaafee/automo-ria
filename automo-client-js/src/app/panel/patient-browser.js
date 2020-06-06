@@ -11,8 +11,8 @@ const PatientPanel = require('./patient-panel');
 
 
 class PatientList extends Control {
-    constructor(option={}) {
-        super(option);
+    constructor(options={}) {
+        super(options);
 
         this.onSelectPatient = null;
 

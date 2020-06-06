@@ -36,6 +36,12 @@ class Personnel(db.Model, SerializerMixin, ValidatorMixin):
     user = db.relationship("User", uselist=False, back_populates="personnel",
                         foreign_keys="User.personnel_id")
 
+    @property
+    def complete_name(self):
+        if self.record_card_no == None:
+            return self.name
+        return '{} ({})'.format(self.name, self.record_card_no)
+
 
 class Doctor(Personnel):
     """Doctors."""
@@ -54,6 +60,12 @@ class Doctor(Personnel):
     }
 
     pmr_no = db.Column(db.String(250))
+
+    @property
+    def complete_name(self):
+        if self.pmr_no == None:
+            return self.name
+        return '{} ({})'.format(self.name, self.pmr_no)
 
 
 class MedicalOfficer(Personnel):
@@ -76,6 +88,12 @@ class MedicalOfficer(Personnel):
 
     pmr_no = db.Column(db.String(250))
 
+    @property
+    def complete_name(self):
+        if self.pmr_no == None:
+            return self.name
+        return '{} ({})'.format(self.name, self.pmr_no)
+
 
 class Nurse(Personnel):
     """Nurses."""
@@ -94,3 +112,9 @@ class Nurse(Personnel):
     }
 
     pnr_no = db.Column(db.String(250))
+
+    @property
+    def complete_name(self):
+        if self.pmr_no == None:
+            return self.name
+        return '{} ({})'.format(self.name, self.pnr_no)

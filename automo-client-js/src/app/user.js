@@ -4,12 +4,13 @@ const status = require("./status");
 module.exports = class User {
     constructor() {
         this.username = null;
-        this.fullname = null
+        //this.fullname = null
         this.password = null;
         this.token = null;
         this.token_expire_time = null;
         this.url = null;
         this.token_url = null;
+        this.data = null;
     }
 
 
@@ -26,10 +27,10 @@ module.exports = class User {
     }
 
     getName() {
-        if (this.fullname == null) {
-            return this.username;
-        }
-        return this.fullname;
+        //if (this.data.f == null) {
+        //    return this.username;
+        //}
+        return this.data.complete_name;
     }
 
 
@@ -71,7 +72,8 @@ module.exports = class User {
             .then(status)
             .then(response => response.json())
             .then(data => {
-                this.fullname = data.fullname;
+                //this.fullname = data.fullname;
+                this.data = data;
                 on_success();
             })
             .catch(error => {

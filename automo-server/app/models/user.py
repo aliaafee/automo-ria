@@ -7,11 +7,20 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from .. import db#, login_manager
 
 from .role import Role, Permission
+from .mixins import SerializerMixin, ValidatorMixin
 
 
-class User(UserMixin, db.Model):
+class User(SerializerMixin, ValidatorMixin, UserMixin, db.Model):
     """Database Users"""
     __tablename__ = "users"
+
+    serialized_attrs = [
+        'id',
+        'username',
+        'fullname',
+        'complete_name',
+        'personnel'
+    ]
 
     id = db.Column(db.Integer, primary_key=True)
 
@@ -34,8 +43,8 @@ class User(UserMixin, db.Model):
     @property
     def complete_name(self):
         if self.personnel is not None:
-            if self.personnel.name is not None:
-                return self.personnel.name
+            if self.personnel.complete_name is not None:
+                return self.personnel.complete_name
         if self.fullname is not None:
             return self.fullname
         return self.username

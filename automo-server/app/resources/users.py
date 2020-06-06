@@ -35,9 +35,4 @@ def user(username):
         if not g.current_user.is_administrator():
             return errors.resource_not_found("User `{}' not found.".format(username))
     
-    result = {
-        'username' : user.username,
-        'fullname' : user.fullname
-    }
-    
-    return jsonify(result)
+    return jsonify(user.get_serialized())
