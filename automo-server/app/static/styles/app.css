@@ -201,6 +201,7 @@ button.menu-bar-item {
     display: flex;
     flex-direction: column;
     background-color: var(--dark);
+    overflow: hidden;
     width: 40px;
 }
 
