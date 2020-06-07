@@ -54,7 +54,7 @@ def post_patient_address(patient_id, address_type):
         address = md.Address()
 
     try:
-        address.validate_and_setdata(data)
+        address.validate_and_update_data(data)
     except md.dbexception.FieldValueError as e:
         return errors.invalid_fields(e.invalid_fields)
 

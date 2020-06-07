@@ -35,6 +35,14 @@ class Patient(SerializerMixin, ValidatorMixin, db.Model):
         'active'
     ]
 
+    required_attrs = [
+        'name',
+        'hospital_no',
+        'national_id_no',
+        'time_of_birth',
+        'sex'
+    ]
+
     def url(self):
         return url_for('api.get_patient', patient_id=self.id, _external=True)
 

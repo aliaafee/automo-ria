@@ -59,7 +59,8 @@ class PatientList extends Control {
         this.resultList.setResourceUrl(
             connection.resource_index.patients + '?' + querystring.stringify(
                 {
-                    'q': this.searchBox.value()
+                    'q': this.searchBox.value(),
+                    'per_page': 30
                 }
             )
         )

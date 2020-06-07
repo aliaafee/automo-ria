@@ -184,14 +184,11 @@ class Connection:
 
         if r.status_code != 200:
             print("Post: Response Error {}".format(r.status_code))
-            print(r.text)
-            return None
 
         try:
             data = json.loads(r.text)
         except json.JSONDecodeError:
             print("Post: JSON decode error")
-            print(r.text)
             return None
         
         return data
@@ -237,6 +234,11 @@ class ClientApp:
         if command[0] == 'posttest':
             self.last_command = command_str
             self.post_test()
+            return True
+
+        if command[0] == 'newtest':
+            self.last_command = command_str
+            self.new_test()
             return True
 
 
@@ -393,6 +395,14 @@ class ClientApp:
                     'end_time': datetime.datetime.now().isoformat()
                 }
             ),
+            #(
+            #    '{}patients/1'.format(self.index_url),
+            #    {
+            #        'current_address': {
+            #            'city': 'City{}'.format(randint(1,100))
+            #        }
+            #    }
+            #)
         ]
 
         failed = 0
@@ -429,7 +439,85 @@ class ClientApp:
             
 
 
+    def new_test(self):
+        test_cases = [
+            (
+                "{}patients/".format(self.index_url),
+                {
+                    'name': 'Testy Name {}'.format(randint(1, 100)),
+                    'hospital_no': '{}'.format(randint(100000, 999999)),
+                    'national_id_no': 'A{}'.format(randint(100000, 999999)),
+                    'sex': 'X',
+                    'time_of_birth': datetime.datetime(
+                        randint(1900,1999),
+                        randint(1,12),
+                        randint(1, 25)
+                    ).isoformat()
+                },
+                None
+            ),
+            (
+                "{}patients/".format(self.index_url),
+                {
+                    'id': 10,
+                    'name': 'Testy Name {}'.format(randint(1, 100)),
+                    'hospital_no': '{}'.format(randint(100000, 999999)),
+                    'national_id_no': 'A{}'.format(randint(100000, 999999)),
+                    'sex': 'X',
+                    'time_of_birth': datetime.datetime(
+                        randint(1900,1999),
+                        randint(1,12),
+                        randint(1, 25)
+                    ).isoformat()
+                },
+                {
+                    "error": "unprocessable", 
+                    "invalid_fields": {
+                        "id": "Field cannot be set"
+                        }
+                }
+            ),
+            (
+                "{}patients/".format(self.index_url),
+                {
+                    'name': 'Testy Name {}'.format(randint(1, 100))
+                },
+                {
+                    'error': 'unprocessable', 'invalid_fields': {'hospital_no': 'Required', 'national_id_no': 'Required', 'sex': 'Required', 'time_of_birth': 'Required'}
+                }
+            )
+        ]
 
+        failed = 0
+        for url, data, expected_response in test_cases:
+            print("post {}".format(url))
+            response_data = self.conn.post_json(url, data)
+            if expected_response:
+                if expected_response == response_data:
+                    print("Got Expected Response")
+                else:
+                    failed += 1
+                    print(expected_response)
+                    print(response_data)
+            else:
+                try:
+                    print("get {}".format(response_data['url']))
+                    response_data = self.conn.get(response_data['url'])
+                except KeyError:
+                    response_data = None
+                if response_data:
+                    for key, value in data.items():
+                        match = False
+                        if response_data[key] == value:
+                            match = True
+                        else:
+                            failed += 1
+                        print("[{}] -> {} = {} [{}]".format(key, value, response_data[key], match))
+                else:
+                    failed += 1
+            print("")
+
+        print("{} Tests Failed".format(failed))
 
 
     def start(self):

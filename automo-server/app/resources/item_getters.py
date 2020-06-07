@@ -1,4 +1,5 @@
 """Generic functions for getting items"""
+from sqlalchemy import inspect, exc
 from flask import url_for, jsonify, request
 
 from .. import models as md
@@ -59,18 +60,22 @@ def post_one_query_result(query):
     item = query.first()
 
     if item is None:
-        return errors.resource_not_found("Item with not found.")
+        return errors.resource_not_found("Item not found.")
 
     data = request.get_json()
 
     try:
-        item.validate_and_setdata(data)
+        item.validate_and_update_data(data)
     except md.dbexception.FieldValueError as e:
         return errors.invalid_fields(e.invalid_fields)
 
-    db.session.commit()
+    try:
+        db.session.commit()
+    except exc.DatabaseError as e:
+        return errors.unprocessable("Database Error: {}".format(e))
 
-    return success_response("Item saved")
+    #return success_response("Item saved")
+    return item.get_serialized(data.keys())
 
 
 def get_items_list(model, api_route, fields=None):
@@ -89,4 +94,28 @@ def post_item(model, item_id):
     return post_one_query_result(
         model.query.filter_by(id=item_id)
     )
+
+
+def new_item(model):
+    item = model()
+
+    data = request.get_json()
+
+    try:
+        item.validate_and_insert_data(data)
+    except md.dbexception.FieldValueError as e:
+        return errors.invalid_fields(e.invalid_fields)
+
+    try:
+        db.session.add(item)
+        db.session.commit()
+    except exc.DatabaseError as e:
+        return errors.unprocessable('Database Error: {}'.format(e))
+
+    attrs = [inspect(model).primary_key[0].name]
+    attrs.extend(data.keys())
+
+    print(attrs);
+
+    return item.get_serialized(attrs);
 

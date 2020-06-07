@@ -11,7 +11,7 @@ from . import api
 from .authentication import auth
 from . import errors
 from .success import success_response
-from .item_getters import get_items_list, get_item, post_item, get_query_result
+from .item_getters import get_items_list, get_item, post_item, get_query_result, new_item
 
 
 @api.route("/patients/")
@@ -58,6 +58,11 @@ def get_patient(patient_id):
             'admissions_active': url_for('api.get_patient_admissions', patient_id=patient_id, active=True, _external=True)
         }
     )
+
+
+@api.route("/patients/", methods=['POST'])
+def new_patient():
+    return new_item(md.Patient)
 
 
 @api.route("/patients/<int:patient_id>", methods=['POST'])
