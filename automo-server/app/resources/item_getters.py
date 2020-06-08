@@ -65,16 +65,17 @@ def post_one_query_result(query):
     data = request.get_json()
 
     try:
-        item.validate_and_update_data(data)
-    except md.dbexception.FieldValueError as e:
-        return errors.invalid_fields(e.invalid_fields)
+        result = item.validate_and_update(data)
+        
+        if result:
+            db.session.rollback
+            return errors.invalid_fields(result)
 
-    try:
         db.session.commit()
-    except exc.DatabaseError as e:
-        return errors.unprocessable("Database Error: {}".format(e))
+    except Exception as e:
+        db.session.rollback()
+        return errors.unprocessable("Databse Error: {}".format(e))
 
-    #return success_response("Item saved")
     return item.get_serialized(data.keys())
 
 
@@ -102,20 +103,21 @@ def new_item(model):
     data = request.get_json()
 
     try:
-        item.validate_and_insert_data(data)
-    except md.dbexception.FieldValueError as e:
-        return errors.invalid_fields(e.invalid_fields)
+        result = item.validate_and_insert(data)
+        
+        if result:
+            db.session.rollback
+            return errors.invalid_fields(result)
 
-    try:
         db.session.add(item)
         db.session.commit()
-    except exc.DatabaseError as e:
-        return errors.unprocessable('Database Error: {}'.format(e))
+    except Exception as e:
+        db.session.rollback()
+        return errors.unprocessable("Databse Error: {}".format(e))
 
     attrs = [inspect(model).primary_key[0].name]
     attrs.extend(data.keys())
 
-    print(attrs);
+    return item.get_serialized(data.keys())
 
-    return item.get_serialized(attrs);
 

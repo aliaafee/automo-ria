@@ -21,6 +21,11 @@ class Address(SerializerMixin, ValidatorMixin, db.Model):
         'phone_no'
     ]
 
+    required_attrs = [
+        'city',
+        'country'
+    ]
+
     def url(self):
         return url_for('api.get_address', address_id=self.id, _external=True)
 

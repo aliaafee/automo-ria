@@ -33,51 +33,7 @@ class ValidatorMixin(object):
     required_attrs = []
 
 
-    def find_type(self, instance, colname):
-        if hasattr(instance, colname):
-            _property = getattr(instance.__class__, colname).property
-            if isinstance(_property, sqlalchemy.orm.properties.ColumnProperty):
-                return _property, _property.columns[0].type
-            else:
-                return _property, None
-        raise NameError(colname)
-
-
-    def validate_and_insert_data(self, data):
-        """Accepts data as dictionary, validates and inserts it,
-           Inserts no fields when error is found and raises an error"""
-
-        invalid_fields = {}
-
-        #Chech if primary_key field is not in data
-        primary_key_name = sqlalchemy.inspect(self.__class__).primary_key[0].name
-        if primary_key_name in data.keys():
-            invalid_fields[primary_key_name] = 'Field cannot be set'
-
-        #Check if there are no blank required fields
-        for required_attr in self.required_attrs:
-            if (required_attr not in data.keys()):
-                invalid_fields[required_attr] = 'Required'
-            else:
-                if not data[required_attr]:
-                    invalid_fields[required_attr] = 'Cannot be blank'
-
-        #Check to see if fields have valid data types
-        for name, value in data.items():
-            if not self.is_valid_attr(name, value):
-                invalid_fields[name] = 'Data Type is not valid'
-
-        if invalid_fields:
-            raise FieldValueError("Invalid fields", invalid_fields)
-
-        for name, value in data.items():
-            self.setattr(name, value)
-
-
-    def validate_and_update_data(self, data):
-        """Accepts data as dictionary, validates and inserts it,
-           Inserts no fields when error is found and raises an error"""
-
+    def validate_and_update(self, data):
         invalid_fields = {}
 
         #Check if primary_key field has not been changed if present
@@ -92,114 +48,115 @@ class ValidatorMixin(object):
                 if not data[required_attr]:
                     invalid_fields[required_attr] = 'Cannot be blank'
 
-        #Check to see if fields have valid data types
+        #Validate and update fields
         for name, value in data.items():
-            if not self.is_valid_attr(name, value):
-                invalid_fields[name] = 'Data Type is not valid'
+            result = self.validate_and_update_field(name, value)
+            if result:
+                invalid_fields[name] = result
 
-        if invalid_fields:
-            raise FieldValueError("Invalid fields", invalid_fields)
+        return invalid_fields
+
+
+    def validate_and_insert(self, data):
+        invalid_fields = {}
+
+        #Check if primary_key field has not been changed if present
+        primary_key_name = sqlalchemy.inspect(self.__class__).primary_key[0].name
+        if primary_key_name in data.keys():
+            if getattr(self, primary_key_name) != data[primary_key_name]:
+                invalid_fields[primary_key_name] = 'Field cannot be set'
+
+        #Check if there are no blank required fields
+        for required_attr in self.required_attrs:
+            if (required_attr not in data.keys()):
+                invalid_fields[required_attr] = 'Required'
+            else:
+                if data[required_attr] == None:
+                    invalid_fields[required_attr] = 'Cannot be blank'
 
         for name, value in data.items():
-            self.setattr(name, value)
+            result = self.validate_and_update_field(name, value)
+            if result:
+                invalid_fields[name] = result
 
-    
-    #def process_validators(self, name, value):
-    #    """Process any custom validators if they have been set"""
-    #    if name in self.validators:
-    #        if not self.validators[name](name, value):
-    #            return False
-    #    return True
+        return invalid_fields
 
 
-    def is_valid_attr(self, name, value):
-        """Check wheter the attr exists and the value is valid datatype"""
+    def validate_and_update_field(self, name, value):
         if not hasattr(self, name):
-            return False
+            return 'Attribute not found'
 
-        try:
-            _property, col_type = self.find_type(self, name)
-        except NameError:
-            return False
+        attr = getattr(self, name)
+        col_property = getattr(self.__class__, name).property
 
-        #print(type(col_type))
-        print(name, col_type)
+        if isinstance(col_property,sqlalchemy.orm.relationships.RelationshipProperty):
+            if  col_property.uselist:
+                return 'Attribute is a list, cannot set'
 
-        if type(col_type) is sqlalchemy.sql.sqltypes.Integer:
+            if value is None:
+                setattr(self, name, None)
+                return None
+            
+            if attr == None:
+                #Create new row and insert data
+                col_class = col_property.mapper.class_()
+                new_item = type(col_class)()
+                
+                setattr(self, name, new_item)
+                attr = getattr(self, name)
+
+                return attr.validate_and_insert(value)
+            
+            #Update the data in the row
+            return attr.validate_and_update(value)
+
+        
+        if not isinstance(col_property, sqlalchemy.orm.properties.ColumnProperty):
+            return 'Attribute cannot be set'
+
+        col_type = col_property.columns[0].type
+
+        converted_value = None
+
+        if value is None:
+            converted_value = None
+
+        elif type(col_type) is sqlalchemy.sql.sqltypes.Text:
             try:
-                int(value)
-            except ValueError:
-                return False
-            return True
+                converted_value = str(value)
+            except Exception as e:
+                return 'Text not valid. {}'.format(e)
 
-        if type(col_type) is sqlalchemy.sql.sqltypes.String:
-            #Validate Strings
+        elif type(col_type) is sqlalchemy.sql.sqltypes.String:
             col_length = col_type.length
             if len(value) > col_length:
-                return False
-            return True
-
-        if type(col_type) is sqlalchemy.sql.sqltypes.Text:
-            #Validate Text
-            return True
-
-        if type(col_type) is sqlalchemy.sql.sqltypes.Float:
-            #Validate Floats
+                return 'String is too long'
             try:
-                float(value)
-            except ValueError:
-                return False
-            return True
+                converted_value = str(value)
+            except Exception as e:
+                return 'String not valid. {}'.format(e)
 
-        if isinstance(col_type, sqlalchemy.sql.sqltypes.DateTime):
-            #Validate DateTime
+        elif type(col_type) is sqlalchemy.sql.sqltypes.Integer:
             try:
-                dateutil.parser.isoparse(value)
+                converted_value = int(value)
             except ValueError:
-                return False
-            return True            
+                return 'Invalid integer'
 
-        print("Invalid")
-        return False
+        elif type(col_type) is sqlalchemy.sql.sqltypes.Float:
+            try:
+                converted_value = float(value)
+            except ValueError:
+                return 'Invalid float'
 
+        elif type(col_type) is sqlalchemy.sql.sqltypes.DateTime:
+            try:
+                converted_value = dateutil.parser.isoparse(value)
+            except ValueError:
+                return 'Invalid date'
 
-    def setattr(self, name, value):
-        """Only call after validating, setattr after converting."""
-        if not hasattr(self, name):
-            raise KeyError(name)
-
-        try:
-            _property, col_type = self.find_type(self, name)
-        except NameError:
-            raise KeyError(name)
-
-        if type(col_type) is sqlalchemy.sql.sqltypes.Integer:
-            #Set Integers
-            setattr(self, name, value)
-            return
-
-
-        if type(col_type) is sqlalchemy.sql.sqltypes.String:
-            #Set Strings
-            setattr(self, name, value)
-            return
-
-        if type(col_type) is sqlalchemy.sql.sqltypes.Text:
-            #Set Text
-            setattr(self, name, value)
-            return
-
-        if type(col_type) is sqlalchemy.sql.sqltypes.Float:
-            #Set Floats
-            setattr(self, name, float(value))
-            return
-
-        if isinstance(col_type, sqlalchemy.sql.sqltypes.DateTime):
-            #Set DateTime
-            setattr(self, name, dateutil.parser.isoparse(value))
-            return
-
-        #Handle other types here
+        setattr(self, name, converted_value)
+        return None
+    
 
 
 

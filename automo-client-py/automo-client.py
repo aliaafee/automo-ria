@@ -287,59 +287,68 @@ class ClientApp:
                 {
                     'name': 'Testy Name {}'.format(randint(1, 100))
                 },
+                {},
             ),
             (
                 "{}patients/1".format(self.index_url),
                 {
                     'allergies': 'Bad Medicine {}'.format(randint(1, 100))
                 },
+                {},
             ),
             (
                 "{}patients/1/encounters/2".format(self.index_url),
                 {
                     'pulse_rate': random() * 100
                 },
+                {},
             ),
             (
                 "{}patients/1/problems/1".format(self.index_url),
                 {
                     'start_time': datetime.datetime.now().isoformat()
                 },
+                {},
             ),
             (
                 "{}patients/1/phone-numbers/1".format(self.index_url),
                 {
                     'name': 'Father {}'.format(randint(1, 100)),
                     'number': '{}'.format(randint(10000000,999999999))
-                }
+                },
+                {},
             ),
             (
                 '{}patients/1/current-address'.format(self.index_url),
                 {
                     'line_1': 'House Number {}'.format(randint(1, 100)),
                     'line_1': 'Banana Republic {}'.format(randint(1, 100))
-                }
+                },
+                {},
             ),
             (
                 '{}patients/1/permanent-address'.format(self.index_url),
                 {
                     'line_1': 'House Number {}'.format(randint(1, 100)),
                     'line_1': 'Banana Republic {}'.format(randint(1, 100))
-                }
+                },
+                {},
             ),
             (
                 '{}addresses/1'.format(self.index_url),
                 {
                     'line_1': 'House Number {}'.format(randint(1, 100)),
                     'line_1': 'Banana Republic {}'.format(randint(1, 100))
-                }
+                },
+                {},
             ),
             (
                 '{}patients/1'.format(self.index_url),
                 {
                     'time_of_birth': datetime.datetime(1980, 10, 25, 12, 50, 20).isoformat(),
                     'time_of_death': datetime.datetime(2000, 10, 25, 12, 50, 20).isoformat()
-                }
+                },
+                {},
             )
             ,
             (
@@ -347,7 +356,8 @@ class ClientApp:
                 {
                     'time_of_birth': datetime.datetime.now().isoformat(),
                     'time_of_death': datetime.datetime.now().isoformat()
-                }
+                },
+                {},
             ),
             (
                 '{}patients/1'.format(self.index_url),
@@ -368,69 +378,162 @@ class ClientApp:
                         randint(10,59),
                         randint(10,59)
                     ),
-                }
+                },
+                {},
             ),
             (
                 '{}wards/1'.format(self.index_url),
                 {
                     'name': 'Rando Ward {}'.format(randint(10,99))
-                }
+                },
+                {},
             ),
             (
                 '{}wards/1/beds/1'.format(self.index_url),
                 {
                     'number': 'AB{}'.format(randint(1,100))
-                }
+                },
+                {},
             ),
             (
                 '{}beds/2'.format(self.index_url),
                 {
                     'number': 'XB{}'.format(randint(1,100))
-                }
+                },
+                {},
             ),
             (
                 '{}patients/1/admissions/1'.format(self.index_url),
                 {
                     'start_time': datetime.datetime.now().isoformat(),
                     'end_time': datetime.datetime.now().isoformat()
-                }
+                },
+                {},
             ),
-            #(
-            #    '{}patients/1'.format(self.index_url),
-            #    {
-            #        'current_address': {
-            #            'city': 'City{}'.format(randint(1,100))
-            #        }
-            #    }
-            #)
+            (
+                "{}patients/1/encounters/2".format(self.index_url),
+                {
+                    'pulse_rate': 'String',
+                    'diastolic_bp': random() * 100
+                },
+                {'error': 'unprocessable', 'invalid_fields': {'pulse_rate': 'Invalid float'}},
+            ),
+            (
+                '{}patients/2'.format(self.index_url),
+                {
+                    'current_address': {
+                        'city': 'City{}'.format(randint(1,100)),
+                        'country': 'Maldives'
+                    }
+                },
+                {}
+            ),
+            (
+                '{}patients/1'.format(self.index_url),
+                {
+                    'phone_numbers': [
+                    ]
+                },
+                {'error': 'unprocessable', 'invalid_fields': {'phone_numbers': 'Attribute is a list, cannot set'}}
+            ),
+            (
+                '{}patients/2'.format(self.index_url),
+                {
+                    'current_address': None
+                },
+                {}
+            ),
+            (
+                '{}patients/2'.format(self.index_url),
+                {
+                    'current_address': {
+                        'city': 'City{}'.format(randint(1,100))
+                    }
+                },
+                {'error': 'unprocessable', 'invalid_fields': {'current_address': {'country': 'Required'}}}
+            ),
+            (
+                '{}patients/2'.format(self.index_url),
+                {
+                    'current_address': {
+                        'city': 'City{}'.format(randint(1,100)),
+                        'country': None
+                    }
+                }
+                ,
+                {'error': 'unprocessable', 'invalid_fields': {'current_address': {'country': 'Cannot be blank'}}}
+            ),
+            (
+                '{}patients/2'.format(self.index_url),
+                {
+                    'current_address': {
+                        'city': 'City{}'.format(randint(1,100)),
+                        'country': 'Maldives'
+                    }
+                }
+                ,
+                {}
+            ),
+            (
+                '{}patients/2'.format(self.index_url),
+                {
+                    'current_address': {
+                        'city': 'City{}'.format(randint(1,100)),
+                        'country': 'LongContr{}'.zfill(300)
+                    }
+                }
+                ,
+                {'error': 'unprocessable', 'invalid_fields': {'current_address': {'country': 'String is too long'}}}
+            ),
+            
         ]
 
         failed = 0
-        for url, data in test_cases:
+        for url, data, expected_response in test_cases:
             print("> Begin Test")
             #print("Sending Data")
             print(url)
             #pprint(data)
 
-            response_data = self.conn.post_json(url, data)
-            
-            #print("Response Data")
-            #pprint(response_data)
+            post_response_data = self.conn.post_json(url, data)
 
-            #print("Getting url")
-            response_data = self.conn.get(url)
-            #pprint(response_data)
-            #print("")
-            if response_data:
-                for key, value in data.items():
-                    match = False
-                    if response_data[key] == value:
-                        match = True
-                    else:
-                        failed += 1
-                    print("[{}] -> {} = {} [{}]".format(key, value, response_data[key], match))
+            print(post_response_data)
+
+            if expected_response:
+                if post_response_data == expected_response:
+                    print("Got Expected Response")
+                    response_data = self.conn.get(url)
+                else:
+                    failed += 1
+                    print(post_response_data)
             else:
-                failed += 1
+                response_data = self.conn.get(url)
+                #pprint(response_data)
+                #print("")
+                if response_data:
+                    for key, value in data.items():
+                        if type(value) is dict:
+                            for sub_key, sub_value in value.items():
+                                sub_match = False
+                                if response_data[key] != None:
+                                    if response_data[key][sub_key] == sub_value:
+                                        sub_match = True
+                                    else:
+                                        failed += 1
+                                    print("[{}.{}] -> {} = {} [{}]".format(key, sub_key, sub_value, response_data[key][sub_key], sub_match))
+                                else:
+                                    failed += 1
+                        else:
+                            match = False
+                            if response_data[key] == value:
+                                match = True
+                            else:
+                                print(post_response_data)
+                                failed += 1
+                            print("[{}] -> {} = {} [{}]".format(key, value, response_data[key], match))
+                else:
+                    print(response_data)
+                    failed += 1
 
             print(" ")
             print(" ")
@@ -497,8 +600,8 @@ class ClientApp:
                     print("Got Expected Response")
                 else:
                     failed += 1
-                    print(expected_response)
-                    print(response_data)
+                    print("Expected {} ".format(expected_response))
+                    print("Got      {} ".format(response_data))
             else:
                 try:
                     print("get {}".format(response_data['url']))
