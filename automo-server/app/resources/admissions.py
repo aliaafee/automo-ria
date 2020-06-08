@@ -68,6 +68,7 @@ def get_patient_admission(patient_id, admission_id):
     admission = query.first()
 
     additional_data = {}
+
     if admission is not None:
         if admission.end_time is not None:
             additional_data['discharge-summary'] = url_for(
@@ -103,7 +104,7 @@ def get_patient_admission(patient_id, admission_id):
         _external = True
     )
 
-    additional_data['encounters'] = encounters;
+    additional_data['encounters'] = encounters
 
     return get_one_query_result(
         query, 
@@ -166,8 +167,6 @@ def get_patient_admission_encounters(patient_id, admission_id):
             'admission_id' : admission_id
         }
     )
-
-
 
 
 @api.route("patients/<int:patient_id>/admissions/<int:admission_id>/discharge-summary.pdf")
