@@ -16,6 +16,11 @@ def main():
         'icd10': {
             'categories': url_for('api.get_icd10_categories', _external=True),
             'modifierclasses': url_for('api.get_icd10_modifier_classes', _external=True)
+        },
+        'wards': url_for('api.get_wards', _external=True),
+        'personnel': {
+            'all': url_for('api.get_personnel', _external=True),
+            'doctors': url_for('api.get_personnel', type='doctor', _external=True)
         }
     }
 

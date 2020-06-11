@@ -241,6 +241,11 @@ class ClientApp:
             self.new_test()
             return True
 
+        if command[0] == 'admittest':
+            self.last_command = command_str
+            self.admittest()
+            return True
+
 
         print("Unknown Command")
         return True
@@ -267,7 +272,9 @@ class ClientApp:
              '{}icd10/categories/?block=A00-A09&per_page=100&detailed=True'.format(self.index_url),
              '{}icd10/modifierclasses/'.format(self.index_url),
              '{}icd10/modifierclasses/?modifier_code=S05F10_4'.format(self.index_url),
-             '{}patients/1/admissions/1/encounters/?type=vitalsigns'.format(self.index_url)
+             '{}patients/1/admissions/1/encounters/?type=vitalsigns'.format(self.index_url),
+             '{}personnel/'.format(self.index_url),
+             '{}personnel/?type=doctor'.format(self.index_url)
         ]
 
         failed = 0
@@ -588,6 +595,48 @@ class ClientApp:
                 {
                     'error': 'unprocessable', 'invalid_fields': {'hospital_no': 'Required', 'national_id_no': 'Required', 'sex': 'Required', 'time_of_birth': 'Required'}
                 }
+            ),
+            (
+                "{}patients/3/admissions/".format(self.index_url),
+                {
+                    'personnel_id': 'X',
+                    'bed_id': 3
+                },
+                {'error': 'unprocessable', 'invalid_fields': {'bed_id': 'Bed w0 - 2 is already occupied', 'personnel_id': 'Doctor not found'}}
+            ),
+            (
+                "{}patients/3/admissions/".format(self.index_url),
+                {
+                    'personnel_id': 1,
+                    'bed_id': 'X'
+                },
+                {'error': 'unprocessable', 'invalid_fields': {'bed_id': 'Bed not found'}}
+            ),
+            (
+                "{}patients/3/admissions/".format(self.index_url),
+                {
+                    'personnel_id': 1,
+                    'bed_id': 3
+                },
+                {'error': 'unprocessable', 'invalid_fields': {'bed_id': 'Bed w0 - 2 is already occupied'}}
+            ),
+            (
+                "{}patients/3/admissions/".format(self.index_url),
+                {
+                    'personnel_id': 1,
+                    'bed_id': 3,
+                    'start_time': 'lol'
+                },
+                {'error': 'unprocessable', 'invalid_fields': {'bed_id': 'Bed w0 - 2 is already occupied'}}
+            ),
+            (
+                "{}patients/3/admissions/".format(self.index_url),
+                {
+                    'personnel_id': 1,
+                    'bed_id': 3,
+                    'start_time': 'lol'
+                },
+                {'error': 'unprocessable', 'invalid_fields': {'bed_id': 'Bed w0 - 2 is already occupied'}}
             )
         ]
 
@@ -621,6 +670,49 @@ class ClientApp:
             print("")
 
         print("{} Tests Failed".format(failed))
+
+
+    def admittest(self):
+        index = self.conn.get(self.index_url)
+
+        wards = self.conn.get(index['wards'])['items']
+        ward = self.conn.get(wards[2]['url'])
+        beds = self.conn.get(ward['beds'])['items']
+        bed = beds[1]
+        print(bed)
+
+        doctors = self.conn.get(index['personnel']['doctors'])['items']
+        #print(doctors)
+        doctor = self.conn.get(doctors[2]['url'])
+        print(doctor)
+        
+        patients = self.conn.get(index['patients'])['items']
+        patient = self.conn.get(patients[10]['url'])
+        active_admissions = self.conn.get(patient['admissions_active'])
+
+        print("")
+
+        if active_admissions is None:
+            print("Admitting Patient")
+            result = self.conn.post_json(
+                patient['admissions'],
+                {
+                    'bed_id': bed['id'],
+                    'personnel_id': doctor['id']
+                }
+            )
+            print(result)
+        else:
+            print("Already Admitted")
+            active_admission = self.conn.get(active_admissions['items'][0]['url'])
+            print("Discharging")
+            result = self.conn.post_json(
+                active_admission['discharge'],
+                {}
+            )
+            print(result)
+
+
 
 
     def start(self):

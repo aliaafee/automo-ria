@@ -138,7 +138,7 @@ class Admission(ClinicalEncounter):
     complication_disability = db.Column(db.Boolean)
 
 
-    def end(self, session, end_time=None):
+    def end(self, end_time=None):
         """Ends the admission"""
 
         """
@@ -152,7 +152,7 @@ class Admission(ClinicalEncounter):
                 return
         """
         
-        super(Admission, self).end(session, end_time)
+        super(Admission, self).end(end_time)
 
         self.discharged_bed = self.bed
         self.bed = None

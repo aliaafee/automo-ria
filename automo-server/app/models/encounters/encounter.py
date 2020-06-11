@@ -109,7 +109,7 @@ class Encounter(SerializerMixin, ValidatorMixin, db.Model):
             self.patient.encounters.remove(encounter)
 
 
-    def end(self, session, end_time=None):
+    def end(self, end_time=None):
         if self.end_time is not None:
             raise dbexception.AutoMODatabaseError("This encounter has already ended")
         if end_time is None:

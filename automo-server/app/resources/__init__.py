@@ -16,7 +16,8 @@ from . import users,\
               beds,\
               wards,\
               admissions,\
-              icd10
+              icd10,\
+              personnel
 
 @api.before_request
 @authentication.auth.login_required

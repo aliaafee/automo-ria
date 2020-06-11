@@ -1,5 +1,6 @@
 from flask import url_for, jsonify, request, render_template
 from flask_weasyprint import HTML, CSS, render_pdf
+import dateutil
 
 from .. import models as md
 from .. import db
@@ -59,6 +60,67 @@ def get_patient_admissions(patient_id):
     )
 
 
+@api.route("patients/<int:patient_id>/admissions/", methods=['POST'])
+def new_patient_admission(patient_id):
+    patient = md.Patient.query.get(patient_id)
+
+    if patient is None:
+        return errors.resource_not_found('Patient not found')
+
+    data = request.get_json()
+
+    invalid_fields = {}
+
+    personnel_id = data.pop('personnel_id', None)
+    if personnel_id is None:
+        invalid_fields['personnel_id'] = 'Doctor not set'
+    else:
+        doctor = md.Personnel.query.get(personnel_id)
+        if doctor is None:
+            invalid_fields['personnel_id'] = 'Doctor not found'
+
+    bed_id = data.pop('bed_id', None)
+    if bed_id is None:
+        invalid_fields['bed_id'] = 'Bed not set'
+    else:
+        bed = md.Bed.query.get(bed_id)
+        if bed is None:
+            invalid_fields['bed_id'] = 'Bed not found'
+        else:
+            if bed.admission is not None:
+                invalid_fields['bed_id'] = 'Bed {} is already occupied'.format(bed.name)
+
+    #start_time = data.pop('start_time', None)
+    end_time = data.pop('end_time', None)
+
+    if invalid_fields:
+        return errors.invalid_fields(invalid_fields)
+
+    try:
+        admission = patient.admit(doctor, bed)
+
+        result = admission.validate_and_update(data)
+        
+        if result:
+            db.session.rollback
+            return errors.invalid_fields(result)
+        
+        db.session.commit()
+
+        if end_time:
+            db.session.commit()
+            admission.end(end_time)
+
+    except md.dbexception.AutoMODatabaseError as e:
+        db.session.rollback()
+        return errors.unprocessable('Database Error: {}'.format(e))
+    except Exception as e:
+        db.session.rollback()
+        return errors.unprocessable('Error: {}'.format(e))
+
+    return admission.get_serialized()
+
+
 @api.route("patients/<int:patient_id>/admissions/<int:admission_id>")
 def get_patient_admission(patient_id, admission_id):
     query = md.Admission.query\
@@ -75,6 +137,13 @@ def get_patient_admission(patient_id, admission_id):
                 'api.post_patient_admission_discharge_summary',
                 patient_id=patient_id, admission_id=admission_id,
                 _external = True
+            )
+        else:
+            additional_data['discharge'] = url_for(
+                'api.post_patient_admission',
+                patient_id=patient_id, admission_id=admission_id,
+                end=True, 
+                _external=True
             )
 
     child_encounter_types = [
@@ -105,6 +174,7 @@ def get_patient_admission(patient_id, admission_id):
     )
 
     additional_data['encounters'] = encounters
+
 
     return get_one_query_result(
         query, 
@@ -145,6 +215,32 @@ def post_patient_admission(patient_id, admission_id):
     query = md.Admission.query\
         .filter(md.Admission.patient_id == patient_id)\
         .filter(md.Admission.id == admission_id)
+
+    end_admission = request.args.get('end', False, type=bool)
+    if end_admission:
+        admission = query.first()
+
+        if admission is None:
+            return errors.resource_not_found('Admission not found')
+
+        data = request.get_json()
+
+        try:
+            admission.end()
+            if 'end_time' in data:
+                result = admission.validate_and_update_field('end_time', data['end_time'])
+                if result:
+                    db.session.rollback()
+                    return errors.invalid_fields({'end_time': 'End time not valid'})
+            db.session.commit()
+        except md.dbexception.AutoMODatabaseError as e:
+            db.session.rollback()
+            return errors.unprocessable("Database Error: {}".format(e))
+        except Exception as e:
+            db.session.rollback()
+            return errors.unprocessable("Error: {}".format(e))
+
+        return admission.get_serialized()
 
     return post_one_query_result(query)
 

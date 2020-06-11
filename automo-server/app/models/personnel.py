@@ -1,4 +1,6 @@
 """Personnel"""
+from flask import url_for
+
 from .. import db
 from .mixins import SerializerMixin, ValidatorMixin
 
@@ -13,6 +15,9 @@ class Personnel(db.Model, SerializerMixin, ValidatorMixin):
         'record_card_no',
         'department'
     ]
+
+    def url(self):
+        return url_for('api.get_personnel_one', personnel_id=self.id, _external=True)
     
     id = db.Column(db.Integer, primary_key=True)
 
@@ -52,7 +57,8 @@ class Doctor(Personnel):
         'name',
         'record_card_no',
         'pmr_no',
-        'department'
+        'department',
+        'type'
     ]
 
     __mapper_args__ = {
@@ -79,7 +85,8 @@ class MedicalOfficer(Personnel):
         'name',
         'record_card_no',
         'pmr_no',
-        'department'
+        'department',
+        'type'
     ]
 
     __mapper_args__ = {
@@ -104,7 +111,8 @@ class Nurse(Personnel):
         'name',
         'record_card_no',
         'pnr_no',
-        'department'
+        'department',
+        'type'
     ]
 
     __mapper_args__ = {
