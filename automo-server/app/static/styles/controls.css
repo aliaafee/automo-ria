@@ -436,3 +436,9 @@ button:hover {
     border-bottom-right-radius: var(--border-radius);
     border-bottom-left-radius: var(--border-radius);
 }
+
+.accordion li.root-item .root-item-body .error {
+    margin: 0;
+    font-style: italic;
+    color: grey;
+}

@@ -57,7 +57,7 @@ module.exports = class ResourceAccordionItem extends Control {
         if (this.resourceData != null) {
             return;
         }
-
+        this.errorElement.style.display = 'none'
         this._showSpinner();
         connection.get(
             this.itemData.url,
@@ -67,6 +67,8 @@ module.exports = class ResourceAccordionItem extends Control {
             },
             (error) => {
                 console.log(error);
+                this.errorElement.style.display = 'flex'
+                this.errorElement.innerHTML = 'Faild to load'
             },
             () => {
                 this._hideSpinner();
@@ -92,6 +94,11 @@ module.exports = class ResourceAccordionItem extends Control {
         this.bodyElement = document.createElement('div');
         this.bodyElement.className = 'root-item-body';
         this.bodyElement.style.flexGrow = 1;
+
+        this.errorElement = document.createElement('div');
+        this.errorElement.className = 'error';
+        this.errorElement.style.display = 'none';
+        this.bodyElement.appendChild(this.errorElement);
 
         return this.bodyElement;
     }

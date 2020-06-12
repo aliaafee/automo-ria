@@ -139,10 +139,13 @@ class AdmissionsTile extends Tile {
         this.resourceList.setResourceUrl(
             patient[this.admissionsType],
             onDone,
-            () => {
-                this.hide()
+            (error) => {
+                if (error.status == 404) {
+                    this.hide()
+                }
                 onDone();
-            });
+            }
+        );
     }
 
     createElement() {
@@ -229,7 +232,7 @@ module.exports = class PatientPanel extends Scrolled {
         this.admissionsTile.setPatient(patient, setPatientDone);
     }
 
-    setPatient(patient, onDone) {
+    setPatient(patient, onDone, onFailed) {
         this._idNumberElement.innerHTML = "NIC No.: " + patient.national_id_no;
         this._hospNumberElement.innerHTML = ", Hospital No.: " +patient.hospital_no;
         this._phoneNumberElement.innerHTML = "";
@@ -238,6 +241,7 @@ module.exports = class PatientPanel extends Scrolled {
         
         this._headerElement.style.display = 'flex';
         this._bodyElement.style.display = 'none';
+        this._errorElement.style.display = 'none';
 
         this.spinner.show();
         connection.get(
@@ -247,7 +251,11 @@ module.exports = class PatientPanel extends Scrolled {
                 this._setPatient(patient, onDone)
             },
             (error) => {
+                this.spinner.hide();
                 console.log(error);
+                this._errorElement.innerHTML = 'Failed to Load'
+                this._errorElement.style.display = 'flex'
+                onFailed();
             },
             () => {
                 
@@ -304,8 +312,13 @@ module.exports = class PatientPanel extends Scrolled {
         this._bodyElement.appendChild(this.currentAdmissionTile.createElement());
         this._bodyElement.appendChild(this.admissionsTile.createElement());
 
+        this._errorElement = document.createElement('div');
+        this._errorElement.className = 'error';
+        this.element.appendChild(this._errorElement);
+
         this._headerElement.style.display = 'none';
         this._bodyElement.style.display = 'none';
+        this._errorElement.style.display = 'none';
         
         return this.element;
     }

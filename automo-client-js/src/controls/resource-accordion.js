@@ -59,14 +59,36 @@ module.exports = class ResourceAccordion extends Control {
     }
     */
 
-    _createNextItem() {
-        this._nextElement = document.createElement('li');
-        this._nextElement.classList = 'root-item next-item';
-        this._nextElement.innerHTML = 'Load More...'
+    _createNextItem(label="Load More...") {
+        if (this._nextElement != null) {
+            this._listElement.removeChild(this._nextElement)
+        }
+        this._nextElement = null;
+        if (this.resourceData.next != null) {
+            this._nextElement = document.createElement('li');
+            this._nextElement.classList = 'root-item next-item';
+            this._nextElement.innerHTML = label
 
-        this._nextElement.addEventListener('click', this._onNextItemClicked);
+            this._nextElement.addEventListener('click', (event) => {
+                this._onNextItemClicked(event);   
+            })
+
+            this._listElement.appendChild(this._nextElement);
+        }
+    }
+
+    _removeFailedElement() {
         
-        return this._nextElement;
+    }
+
+    _createFailedElement(label="Failed to Load") {
+        if (this._failedElement != null) {
+            this._listElement.removeChild(this._failedElement)
+        }
+        this._failedElement = document.createElement('li')
+        this._failedElement.classList = 'root-item next-item';
+        this._failedElement.innerHTML = label;
+        this._listElement.appendChild(this._failedElement);
     }
 
     _removeNextItem() {
@@ -81,6 +103,12 @@ module.exports = class ResourceAccordion extends Control {
             this._listElement.removeChild(this._nextElement);
             this._nextElement = null;
         }
+
+        if (this._failedElement != null) {
+            this._listElement.removeChild(this._failedElement)
+            this._failedElement = null;
+        }
+        
         this._data = null;
         this._listChildren = {};
     }
@@ -104,15 +132,17 @@ module.exports = class ResourceAccordion extends Control {
             this._listElement.appendChild(this._listChildren[item_id].createElement());
         })
 
-        if (this.resourceData.next != null) {
-            this._listElement.appendChild(this._createNextItem());
-        } else {
-            this._nextElement = null;
-        }
+        this._createNextItem();
+
+        //if (this.resourceData.next != null) {
+        //    this._listElement.appendChild(this._createNextItem());
+        //} else {
+        //    this._nextElement = null;
+        //}
     }
 
     _loadNext() {
-        this._removeNextItem();
+        //this._removeNextItem();
         this._showSpinner();
         connection.get(
             this.resourceData.next,
@@ -122,6 +152,7 @@ module.exports = class ResourceAccordion extends Control {
             },
             (error) => {
                 console.log(error);
+                this._createNextItem("Failed to load, retry...")
             },
             () => {
                 this._hideSpinner();
@@ -138,13 +169,13 @@ module.exports = class ResourceAccordion extends Control {
             url,
             data => {
                 this.resourceData = data;
-                
                 this._setData(this.resourceData.items);
                 onDone();
             },
             (error) => {
                 console.log(error);
-                onFailed();
+                this._createFailedElement();
+                onFailed(error);
             },
             () => {
                 this._hideSpinner();

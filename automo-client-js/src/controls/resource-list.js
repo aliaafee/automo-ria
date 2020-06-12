@@ -55,7 +55,9 @@ module.exports = class ResourceList extends ListBox {
                 this._clear();
                 this.resource_data = {};
                 if (error.status == 404) {
-                    this._displayNotFound();
+                    this._createFailedElement('Not Found...')
+                } else {
+                    this._createFailedElement()
                 }
             },
             () => {
@@ -66,10 +68,10 @@ module.exports = class ResourceList extends ListBox {
     }
 
     _onLoadNextClicked() {
-        if (this._nextElem != null) {
-            this._listElement.removeChild(this._nextElem);
+        if (this._nextElement != null) {
+            this._listElement.removeChild(this._nextElement);
         }
-        this._nextElem = null;
+        this._nextElement = null;
 
         var url = this.resource_data.next;
 
@@ -98,10 +100,13 @@ module.exports = class ResourceList extends ListBox {
             (error) => {
                 if (this._discardNext == false) {
                     console.log(error);
-                    this.resource_data = {};
-                    this._clear();
+                    //this.resource_data = {};
+                    //this._clear();
                     if (error.status == 404) {
-                        this._displayNotFound();
+                        this._createFailedElement('Not Found...')
+                    } else{
+                        this._createNextElement("Failed to load, retry...")
+                        this.options.autoLoadNext = false;
                     }
                 }
                 
@@ -113,11 +118,11 @@ module.exports = class ResourceList extends ListBox {
     }
 
     _nextElemVisible() {
-        if (this._nextElem == null) {
+        if (this._nextElement == null) {
             return false;
         }
 
-        var rect = this._nextElem.getBoundingClientRect();
+        var rect = this._nextElement.getBoundingClientRect();
         
         const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
 
@@ -140,25 +145,25 @@ module.exports = class ResourceList extends ListBox {
 
     _clear() {
         super._clear();
-        this._nextElem = null;
+
+        this._nextElement = null;
+        this._failedElement = null;
     }
 
-    _appendData(data) {
-        super._appendData(data)
-
-        if (this._nextElem != null) {
-            this._listElement.removeChild(this._nextElem);
+    _createNextElement(label="Load More...") {
+        if (this._nextElement != null) {
+            this._listElement.removeChild(this._nextElement);
+            this._nextElement = null;
         }
-        this._nextElem = null;
         if (this.resource_data.next) {
-            this._nextElem = document.createElement('li');
-            this._nextElem.setAttribute('next-url', this.resource_data.next);
-            this._nextElem.className = 'button'
-            this._nextElem.innerHTML = 'Load More...';
-            this._nextElem.addEventListener('click', (event) => { 
+            this._nextElement = document.createElement('li');
+            this._nextElement.setAttribute('next-url', this.resource_data.next);
+            this._nextElement.className = 'button'
+            this._nextElement.innerHTML = label;
+            this._nextElement.addEventListener('click', (event) => { 
                 this._onLoadNextClicked(event) 
             } )
-            this._listElement.appendChild(this._nextElem);
+            this._listElement.appendChild(this._nextElement);
 
             //requestAnimationFrame(() => {
             //    setTimeout(() => {this._autoLoadNext();}, 2000) 
@@ -166,12 +171,23 @@ module.exports = class ResourceList extends ListBox {
         }
     }
 
-    _displayNotFound() {
-        var notFoundElem = document.createElement('li');
-        notFoundElem.className = 'button'
-        notFoundElem.innerHTML = 'Not Found.';
-        this._listElement.appendChild(notFoundElem);
+    _appendData(data) {
+        super._appendData(data)
+    
+        this._createNextElement()
     }
+
+
+    _createFailedElement(label="Failed to Load") {
+        if (this._failedElement != null) {
+            this._listElement.removeChild(this._failedElement)
+        }
+        this._failedElement = document.createElement('li')
+        this._failedElement.className = 'button';
+        this._failedElement.innerHTML = label;
+        this._listElement.appendChild(this._failedElement);
+    }
+
 
     createElement() {
         super.createElement();

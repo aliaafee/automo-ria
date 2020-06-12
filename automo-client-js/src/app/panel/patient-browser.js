@@ -114,10 +114,16 @@ module.exports = class PatientBrowser extends Splitter {
 
         patientList.onSelectPatient = (patient) => {
             patientList.lock();
-            patientPanel.setPatient(patient, () => {
-                patientList.unlock();
-                console.log("Patient Set");
-            });
+            patientPanel.setPatient(
+                patient, 
+                () => {
+                    patientList.unlock();
+                    console.log("Patient Set");
+                },
+                () => {
+                    patientList.unlock();
+                }
+            );
         }
     }
 
