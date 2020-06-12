@@ -6,6 +6,27 @@ import dateutil.relativedelta
 from getpass import getpass
 from pprint import pprint
 from random import randint, random
+from faker import Faker
+
+fake = Faker()
+
+admission_fields = [
+    'chief_complaints', 
+    'history', 
+    'past_history', 
+    'general_inspection', 
+    'exam_head', 
+    'exam_neck', 
+    'exam_chest', 
+    'exam_abdomen', 
+    'exam_genitalia', 
+    'exam_pelvic_rectal',  
+    'exam_extremities', 
+    'exam_other',
+    'hospital_course',
+    'discharge_advice',
+    'follow_up'
+]
 
 #For testing only
 requests.packages.urllib3.disable_warnings(requests.urllib3.exceptions.SubjectAltNameWarning)
@@ -673,36 +694,30 @@ class ClientApp:
 
 
     def admittest(self):
+        ward_index = 1
+        bed_index = 2
+        doctor_index = 1
+        patient_index = 2
         index = self.conn.get(self.index_url)
 
         wards = self.conn.get(index['wards'])['items']
-        ward = self.conn.get(wards[2]['url'])
+        ward = self.conn.get(wards[ward_index]['url'])
         beds = self.conn.get(ward['beds'])['items']
-        bed = beds[1]
+        bed = beds[bed_index]
         print(bed)
 
         doctors = self.conn.get(index['personnel']['doctors'])['items']
         #print(doctors)
-        doctor = self.conn.get(doctors[2]['url'])
+        doctor = self.conn.get(doctors[doctor_index]['url'])
         print(doctor)
         
         patients = self.conn.get(index['patients'])['items']
-        patient = self.conn.get(patients[10]['url'])
+        patient = self.conn.get(patients[patient_index]['url'])
         active_admissions = self.conn.get(patient['admissions_active'])
 
         print("")
 
-        if active_admissions is None:
-            print("Admitting Patient")
-            result = self.conn.post_json(
-                patient['admissions'],
-                {
-                    'bed_id': bed['id'],
-                    'personnel_id': doctor['id']
-                }
-            )
-            print(result)
-        else:
+        if active_admissions is not None:
             print("Already Admitted")
             active_admission = self.conn.get(active_admissions['items'][0]['url'])
             print("Discharging")
@@ -712,6 +727,53 @@ class ClientApp:
             )
             print(result)
 
+        print("Admitting Patient")
+        result = self.conn.post_json(
+            patient['admissions'],
+            {
+                'bed_id': bed['id'],
+                'personnel_id': doctor['id']
+            }
+        )
+        print(result)
+        invalid_fields = result.pop('invalid_fields', None)
+        if invalid_fields is not None:
+            print("Could not admit {}".format(invalid_fields))
+            return
+
+        patient = self.conn.get(patients[patient_index]['url'])
+        active_admissions = self.conn.get(patient['admissions_active'])
+        active_admission = self.conn.get(active_admissions['items'][0]['url'])
+        print("Discharging")
+        result = self.conn.post_json(
+            active_admission['discharge'],
+            {}
+        )
+        print(result)
+
+        data = {
+            'bed_id': bed['id'],
+            'personnel_id': doctor['id']
+        }
+        for field in admission_fields:
+            data[field] = fake.paragraph()
+
+        print("Admitting Patient")
+        result = self.conn.post_json(
+            patient['admissions'],
+            data
+        )
+        print(result)
+
+        patient = self.conn.get(patients[patient_index]['url'])
+        active_admissions = self.conn.get(patient['admissions_active'])
+        active_admission = self.conn.get(active_admissions['items'][0]['url'])
+        print("Discharging")
+        result = self.conn.post_json(
+            active_admission['discharge'],
+            {}
+        )
+        print(result)
 
 
 
