@@ -164,7 +164,7 @@ class Patient(SerializerMixin, ValidatorMixin, db.Model):
         if discharge_time is None:
             discharge_time = datetime.datetime.now()
 
-        admission.end(session, discharge_time)
+        admission.end(discharge_time)
 
 
     def add_encounter(self, encounter):

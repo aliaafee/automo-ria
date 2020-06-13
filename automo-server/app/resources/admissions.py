@@ -174,6 +174,11 @@ def get_patient_admission(patient_id, admission_id):
     )
 
     additional_data['encounters'] = encounters
+    additional_data['problems_url'] = url_for(
+        'api.get_patient_admission_problems',
+        patient_id=patient_id, admission_id=admission_id,
+        _external = True
+    )
 
 
     return get_one_query_result(

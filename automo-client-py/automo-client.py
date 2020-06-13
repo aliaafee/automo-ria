@@ -5,7 +5,7 @@ import datetime
 import dateutil.relativedelta
 from getpass import getpass
 from pprint import pprint
-from random import randint, random
+from random import randint, random, choice
 from faker import Faker
 
 fake = Faker()
@@ -309,6 +309,7 @@ class ClientApp:
 
 
     def post_test(self, data_str=""):
+        iso_now = datetime.datetime.now().isoformat()
         test_cases = [
             (
                 "{}patients/1".format(self.index_url),
@@ -513,7 +514,43 @@ class ClientApp:
                 ,
                 {'error': 'unprocessable', 'invalid_fields': {'current_address': {'country': 'String is too long'}}}
             ),
-            
+            (
+                '{}patients/1/admissions/1/problems/'.format(self.index_url),
+                [
+                    {   
+                        'icd10class_code': choice(["A","B","C"]) + "0" + str(randint(1,9))
+                    }
+                ],
+                {'error': 'unprocessable', 'invalid_fields': [{'start_time': 'Required'}]}
+            ),
+            (
+                '{}patients/1/admissions/1/problems/'.format(self.index_url),
+                [
+                    {   
+                        'start_time': datetime.datetime.now().isoformat()
+                    }
+                ],
+                {'error': 'unprocessable', 'invalid_fields': [{'icd10class_code': 'Required'}]}
+            ),
+            (
+                '{}patients/1/admissions/1/problems/'.format(self.index_url),
+                [
+                    {   
+                        'icd10class_code': choice(["A","B","C"]) + "0" + str(randint(1,9)),
+                        'start_time': iso_now
+                    }
+                ],
+                {}
+            ),
+            (
+                '{}patients/1/admissions/1/problems/'.format(self.index_url),
+                [
+                    {   
+                        'id': 1
+                    }
+                ],
+                {'error': 'unprocessable', 'message': 'Databse Error: This problem already exists in this encounter'}
+            )
         ]
 
         failed = 0
@@ -534,11 +571,18 @@ class ClientApp:
                 else:
                     failed += 1
                     print(post_response_data)
+            elif isinstance(data, list):
+                print("Got a list")
+                for item, item_r in zip(data, post_response_data):
+                    if 'icd10class_code' in item:
+                        if item['icd10class_code'] != item_r['icd10class']['code']:
+                            failed += 1
             else:
                 response_data = self.conn.get(url)
                 #pprint(response_data)
                 #print("")
-                if response_data:
+                print(isinstance(response_data, list))
+                if isinstance(response_data, dict):
                     for key, value in data.items():
                         if type(value) is dict:
                             for sub_key, sub_value in value.items():
@@ -693,7 +737,126 @@ class ClientApp:
         print("{} Tests Failed".format(failed))
 
 
+    def register_and_admit_random_patient(self):
+        problems_count = 5
+
+        def fake_address():
+            add = {}
+            add_str = fake.address().split('\n')
+            add['line_1'] = add_str[0]
+            add['city'] = add_str[1].split(",")[0]
+            try:
+                add['region'] = add_str[1].split(",")[1]
+            except:
+                pass
+            add['country'] = fake.country()
+            return add
+
+
+        index = self.conn.get(self.index_url)
+
+        wards = self.conn.get(index['wards'])['items']
+        ward = self.conn.get(choice(wards)['url'])
+
+        beds = self.conn.get(ward['beds'])['items']
+        bed = self.conn.get(choice(beds)['url'])
+
+        doctors = self.conn.get(index['personnel']['doctors'])['items']
+        doctor = self.conn.get(choice(doctors)['url'])
+
+        #Register a patient
+        patient_post_result = self.conn.post_json(
+            index['patients'],
+            {
+                'name': fake.name(),
+                'hospital_no': '{}'.format(randint(100000, 999999)),
+                'national_id_no': 'A{}'.format(randint(100000, 999999)),
+                'sex': choice(['M','F']),
+                'time_of_birth': datetime.datetime(
+                    randint(1900,1999),
+                    randint(1,12),
+                    randint(1, 25)
+                ).isoformat(),
+                'current_address': fake_address(),
+                'permanent_address': fake_address(),
+                'phone_no': fake.phone_number()
+            }
+        )
+        error = patient_post_result.pop('error', None)
+        if error:
+            print("Could Not Register")
+            print(admission_post_result)
+            return
+
+        patient = self.conn.get(patient_post_result['url'])
+
+        print("Registered {} {} {}".format(
+            patient['national_id_no'],
+            patient['name'],
+            patient['url'])
+        )
+
+        #Admit the patient
+        data = {
+            'bed_id': bed['id'],
+            'personnel_id': doctor['id']
+        }
+        for field in admission_fields:
+            data[field] = fake.paragraph()
+        admission_post_result = self.conn.post_json(
+            patient['admissions'],
+            data
+        )
+        error = admission_post_result.pop('error', None)
+        if error:
+            print("Could Not Admit")
+            print(admission_post_result)
+            return
+
+        admission = self.conn.get(admission_post_result['url'])
+        print("Admitted {}".format(admission['url']))
+
+        #Add Problems to Admission
+        problems_list = []
+        for i in range(randint(1, problems_count)):
+            problems_list.append({
+                'start_time': datetime.datetime.now().isoformat(),
+                'icd10class_code': choice(["A","B","C"]) + "0" + str(randint(1,9))
+            })
+        problem_post_result = self.conn.post_json(
+            admission['problems_url'],
+            problems_list
+        )
+        if isinstance(problem_post_result, dict):
+            error = problem_post_result.pop('error', None)
+            if error:
+                print("Could not add problems to admission")
+                print(problem_post_result)
+
+        #TODO Add Subencounters and Notes
+
+        #TODO Add Prescription
+
+        #Discharge the patient
+        discharge_result = self.conn.post_json(
+            admission['discharge'],
+            {}
+        )
+        error = discharge_result.pop('error', None)
+        if error:
+            print("Could not discharge")
+            print(discharge_result)
+        print("Discharged")
+        print("")
+
+
+
+
     def admittest(self):
+        for i in range(2000):
+            self.register_and_admit_random_patient()
+        
+        """
         ward_index = 1
         bed_index = 2
         doctor_index = 1
@@ -774,6 +937,19 @@ class ClientApp:
             {}
         )
         print(result)
+
+        problems = self.conn.get(active_admission['problems_url'])
+
+        result = self.conn.post_json(
+            active_admission['problems_url'],
+            [
+                {   
+                    'icd10_class_code': choice(["A","B","C"]) + "0" + str(randint(1,9))
+                }
+            ]
+        )
+        print(result)
+        """
 
 
 

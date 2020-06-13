@@ -28,6 +28,11 @@ class Problem(SerializerMixin, ValidatorMixin, db.Model):
         'comment'
     ]
 
+    required_attrs = [
+        'start_time',
+        'icd10class_code'
+    ]
+
     def url(self):
         return url_for('api.get_patient_problem',patient_id=self.patient_id, problem_id=self.id, _external=True)
 
