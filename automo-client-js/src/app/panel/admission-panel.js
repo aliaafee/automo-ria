@@ -7,10 +7,33 @@ const BedField = require('../form/bed-field');
 const PrescriptionField = require('../form/prescription-field');
 const DoctorField = require('../form/doctor-field');
 const ProblemsField = require('../form/problems-field');
+const Button = require('../../controls/button')
 
 module.exports = class AdmissionPanel extends Control {
     constructor (options) {
         super(options);
+
+        this.data = {}
+
+        this.summary = new Button(
+            'Discharge Summary',
+            (event) => {
+                console.log("yo")
+                console.log(this.data)
+                connection.get_blob(
+                    this.data.discharge_summary,
+                    (blob) => {
+                        //console.log(blob)
+                        var file = window.URL.createObjectURL(blob);
+                        window.open(file);
+                        window.print()
+                    },
+                    () => {
+                        console.log('failed')
+                    }
+                )
+            }
+        )
 
         this.form = new Form()
 
@@ -227,6 +250,7 @@ module.exports = class AdmissionPanel extends Control {
     }
 
     setData(data) {
+        this.data = data
         this.form.setValue(data);
         this.element.style.display = 'flex';
     }
@@ -234,6 +258,9 @@ module.exports = class AdmissionPanel extends Control {
     createElement() {
         super.createElement();
         this.element.style.flexGrow = 1;
+        this.element.style.flexDirection = 'column'
+
+        this.element.appendChild(this.summary.createElement())
 
         this.element.appendChild(this.form.createElement())
         this.form.element.style.flexGrow = 1;

@@ -107,6 +107,62 @@ module.exports = class Connection {
     }
 
 
+    _get_blob(url, on_success, on_failed, on_finally, refetchTokenOnFail = true) {
+        let headers = this.user.getAuthorizationHeaders();
+
+        fetch(url, { method: 'GET', headers: headers })
+            .then(status)
+            .then(response => response.blob())
+            .then(blob => {
+                this.logger.log_success(`GET ${url}`)
+                on_success(blob);
+                on_finally != null ? on_finally() : false;
+            })
+            .catch(error => {
+                if (refetchTokenOnFail ? (error.status == 401) : false) {
+                    this.user.getToken(
+                        () => {
+                            this._get(url, on_success, on_failed, on_finally, false)
+                        },
+                        (getTokenError) => {
+                            this.logger.log_error(`GET ${url} failed. ${getTokenError.message}`);
+                            on_failed(getTokenError);
+                            on_finally != null ? on_finally() : false;
+                        }
+                    );
+                } else {
+                    this.logger.log_error(`GET ${url} failed. ${error.message}.`)
+                    on_failed(error);
+                    on_finally != null ? on_finally() : false;
+                }
+            })
+    }
+
+
+    get_blob(url, on_success, on_failed, on_finally) {
+        this.logger.log_spinner(`GET ${url}...`)
+        if (this.user == null) {
+            on_failed(new Error("User not logged in"));
+            on_finally != null ? on_finally() : false;
+            return;
+        }
+        if (!this.user.tokenValid()) {
+            this.user.getToken(
+                () => {
+                    this._get(url, on_success, on_failed, on_finally)
+                },
+                (error) => {
+                    this.logger.log_error(`GET ${url} failed. Failed to renew token.`)
+                    on_failed(error)
+                    on_finally != null ? on_finally() : false;
+                }
+            );
+            return;
+        }
+        this._get_blob(url, on_success, on_failed, on_finally);
+    }
+
+
     post(url, post_data, on_success, on_failed, on_finally) {
         this.logger.log_spinner(`POST ${url}...`)
         if (this.user == null) {

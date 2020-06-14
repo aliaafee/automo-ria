@@ -1010,7 +1010,7 @@ class ClientApp:
                     print("Could not add child encounter")
                     print(encounter_post_result)
 
-            #TODO Add Prescription
+            #Add Prescription
             meds = []
             for i in range(randint(1, precription_count)):
                 meds.append({

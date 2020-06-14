@@ -133,7 +133,7 @@ def get_patient_admission(patient_id, admission_id):
 
     if admission is not None:
         if admission.end_time is not None:
-            additional_data['discharge-summary'] = url_for(
+            additional_data['discharge_summary'] = url_for(
                 'api.get_patient_admission_discharge_summary',
                 patient_id=patient_id, admission_id=admission_id,
                 _external = True
