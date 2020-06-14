@@ -16,6 +16,32 @@ from .investigation import Investigation,\
                            OtherReport,\
                            CompleteBloodCount,\
                            RenalFunctionTest,\
-                           LiverFunctionTest
+                           LiverFunctionTest,\
+                           OtherTest
 from .progress import Progress
 from .otherencounter import OtherEncounter
+
+
+
+ENCOUNTER_MODELS = [
+    Measurements, 
+    VitalSigns, 
+    VitalSignsExtended, 
+    SurgicalProcedure, 
+    Investigation, 
+    Imaging,
+    Endoscopy,
+    Histopathology,
+    OtherReport,
+    CompleteBloodCount,
+    RenalFunctionTest,
+    LiverFunctionTest,
+    OtherTest
+]
+
+ENCOUNTER_MODEL_TYPES = {}
+
+for encounter in ENCOUNTER_MODELS:
+    ENCOUNTER_MODEL_TYPES[
+        encounter.__mapper_args__['polymorphic_identity']
+    ] = encounter 

@@ -32,6 +32,10 @@ class Encounter(SerializerMixin, ValidatorMixin, db.Model):
         'problems'
     ]
 
+    required_attrs = [
+        'start_time'
+    ]
+
     def url(self):
         return url_for('api.get_patient_encounter', patient_id=self.patient_id, encounter_id=self.id, _external=True)
 

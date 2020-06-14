@@ -134,7 +134,7 @@ def get_patient_admission(patient_id, admission_id):
     if admission is not None:
         if admission.end_time is not None:
             additional_data['discharge-summary'] = url_for(
-                'api.post_patient_admission_discharge_summary',
+                'api.get_patient_admission_discharge_summary',
                 patient_id=patient_id, admission_id=admission_id,
                 _external = True
             )
@@ -146,8 +146,12 @@ def get_patient_admission(patient_id, admission_id):
                 _external=True
             )
 
+    """
     child_encounter_types = [
+        'measurements',
         'vitalsigns',
+        'vitalsignsextended',
+        'surgicalprocedure',
         'imaging',
         'endoscopy',
         'histopathology',
@@ -157,9 +161,10 @@ def get_patient_admission(patient_id, admission_id):
         'liverfunctiontest',
         'othertest'
     ]
+    """
 
     encounters = {};
-    for child_encounter_type in child_encounter_types:
+    for child_encounter_type in md.encounters.ENCOUNTER_MODEL_TYPES.keys():
         encounters[child_encounter_type] = url_for(
             'api.get_patient_admission_encounters',
             patient_id=patient_id, admission_id=admission_id,
@@ -174,6 +179,9 @@ def get_patient_admission(patient_id, admission_id):
     )
 
     additional_data['encounters'] = encounters
+
+
+
     additional_data['problems_url'] = url_for(
         'api.get_patient_admission_problems',
         patient_id=patient_id, admission_id=admission_id,
@@ -250,28 +258,8 @@ def post_patient_admission(patient_id, admission_id):
     return post_one_query_result(query)
 
 
-@api.route("patients/<int:patient_id>/admissions/<int:admission_id>/encounters/")
-def get_patient_admission_encounters(patient_id, admission_id):
-    query = md.Encounter.query\
-        .filter(md.Encounter.patient_id == patient_id)\
-        .filter(md.Encounter.parent_id == admission_id)
-
-    encounter_type = request.args.get('type', '')
-    if encounter_type:
-        query = query.filter(md.Encounter.type == encounter_type)
-
-    return get_query_result(
-        query,
-        'api.get_patient_admission_encounters',
-        api_route_values={ 
-            'patient_id' : patient_id,
-            'admission_id' : admission_id
-        }
-    )
-
-
 @api.route("patients/<int:patient_id>/admissions/<int:admission_id>/discharge-summary.pdf")
-def post_patient_admission_discharge_summary(patient_id, admission_id):
+def get_patient_admission_discharge_summary(patient_id, admission_id):
     query = md.Admission.query\
         .filter(md.Admission.patient_id == patient_id)\
         .filter(md.Admission.id == admission_id)\

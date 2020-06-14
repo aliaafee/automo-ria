@@ -64,6 +64,9 @@ def post_patient_admission_problems(patient_id, admission_id):
         return errors.resource_not_found('Admission Not Found in Patient')
 
     problems_data = request.get_json()
+
+    if not isinstance(problems_data, list):
+        return errors.unprocessable('Expected a list of problems')
     
     processed_problems = []
     try:

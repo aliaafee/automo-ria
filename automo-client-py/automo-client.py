@@ -177,6 +177,7 @@ class Connection:
             data = json.loads(r.text)
         except json.JSONDecodeError:
             print("Get: JSON decode error")
+            print(data)
             return None
         
         return data
@@ -702,6 +703,43 @@ class ClientApp:
                     'start_time': 'lol'
                 },
                 {'error': 'unprocessable', 'invalid_fields': {'bed_id': 'Bed w0 - 2 is already occupied'}}
+            ),
+            (
+                "{}patients/3/admissions/1/encounters/".format(self.index_url),
+                {
+                    
+                },
+                {'error': 'resource not found', 'message': 'Admission not found'}
+            ),
+            (
+                "{}patients/1/admissions/1/encounters/".format(self.index_url),
+                [],
+                {'error': 'unprocessable', 'message': 'Unexpected data format'}
+            ),
+            (
+                "{}patients/1/admissions/1/encounters/".format(self.index_url),
+                {
+                    
+                },
+                {'error': 'unprocessable', 'invalid_fields': {'type': 'Encounter type not set'}}
+            )
+            ,
+            (
+                "{}patients/1/admissions/1/encounters/".format(self.index_url),
+                {
+                    'type': 'vitalsigns'
+                },
+                {'error': 'unprocessable', 'invalid_fields': {'start_time': 'Required'}}
+            )
+            ,
+            (
+                "{}patients/1/admissions/1/encounters/".format(self.index_url),
+                {
+                    'type': 'vitalsigns',
+                    'start_time': datetime.datetime.now().isoformat(),
+                    'pulse_rate': randint(60,120)
+                },
+                {}
             )
         ]
 
@@ -739,6 +777,7 @@ class ClientApp:
 
     def register_and_admit_random_patient(self):
         problems_count = 5
+        encounters_count = 5
 
         def fake_address():
             add = {}
@@ -751,6 +790,22 @@ class ClientApp:
                 pass
             add['country'] = fake.country()
             return add
+
+        def random_encounter():
+            types = ['vitalsigns', 'measurements']
+            result = {
+                'type': choice(types),
+                'start_time': datetime.datetime.now().isoformat()
+            }
+            if result['type'] == 'vitalsigns':
+                result['pulse_rate'] = randint(60, 100)
+                result['diastolic_bp'] = randint(50, 60)
+                result['systolic_bp'] =  result['diastolic_bp'] + randint(0, 60)
+            elif result['type'] == 'measurements':
+                result['weight'] = randint(30, 100)
+                result['height'] = 1 + (random() * 0.9)
+            
+            return result
 
 
         index = self.conn.get(self.index_url)
@@ -833,7 +888,16 @@ class ClientApp:
                 print("Could not add problems to admission")
                 print(problem_post_result)
 
-        #TODO Add Subencounters and Notes
+        #Add Subencounters
+        for i in range(randint(1, encounters_count)):
+            encounter_post_result = self.conn.post_json(
+                admission['encounters']['all_encounters'],
+                random_encounter()
+            )
+            error = encounter_post_result.pop('error', None)
+            if error:
+                print("Could not add child encounter")
+                print(encounter_post_result)
 
         #TODO Add Prescription
 
@@ -853,7 +917,7 @@ class ClientApp:
 
 
     def admittest(self):
-        for i in range(2000):
+        for i in range(2):
             self.register_and_admit_random_patient()
         
         """
