@@ -146,23 +146,6 @@ def get_patient_admission(patient_id, admission_id):
                 _external=True
             )
 
-    """
-    child_encounter_types = [
-        'measurements',
-        'vitalsigns',
-        'vitalsignsextended',
-        'surgicalprocedure',
-        'imaging',
-        'endoscopy',
-        'histopathology',
-        'otherreport',
-        'completebloodcount',
-        'renalfunctiontest',
-        'liverfunctiontest',
-        'othertest'
-    ]
-    """
-
     encounters = {};
     for child_encounter_type in md.encounters.ENCOUNTER_MODEL_TYPES.keys():
         encounters[child_encounter_type] = url_for(
@@ -172,22 +155,19 @@ def get_patient_admission(patient_id, admission_id):
             _external = True
         )
 
-    encounters['all_encounters'] = url_for(
+    additional_data['encounters'] = encounters
+
+    additional_data['encounters_url'] = url_for(
         'api.get_patient_admission_encounters',
         patient_id=patient_id, admission_id=admission_id,
         _external = True
     )
-
-    additional_data['encounters'] = encounters
-
-
 
     additional_data['problems_url'] = url_for(
         'api.get_patient_admission_problems',
         patient_id=patient_id, admission_id=admission_id,
         _external = True
     )
-
 
     return get_one_query_result(
         query, 

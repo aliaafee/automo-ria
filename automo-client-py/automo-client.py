@@ -938,8 +938,8 @@ class ClientApp:
             #Add Subencounters
             for i in range(randint(1, encounters_count)):
                 encounter_post_result = self.conn.post_json(
-                    admission['encounters']['all_encounters'],
-                    random_encounter(i)
+                    admission['encounters_url'],
+                    random_encounter()
                 )
                 error = encounter_post_result.pop('error', None)
                 if error:
@@ -958,7 +958,6 @@ class ClientApp:
                 print("Could not discharge")
                 print(discharge_result)
             print("Discharged")
-            print("")
             return admission
 
 
@@ -985,6 +984,7 @@ class ClientApp:
         if error:
             print("Could Not Register")
             print(admission_post_result)
+            print("")
             return
 
         patient = self.conn.get(patient_post_result['url'])
@@ -1005,8 +1005,10 @@ class ClientApp:
 
             doctors = self.conn.get(index['personnel']['doctors'])['items']
             doctor = self.conn.get(choice(doctors)['url']) 
-            
+
             admit(patient, bed, doctor)
+
+        print("")
 
 
 
