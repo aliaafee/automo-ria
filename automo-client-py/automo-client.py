@@ -777,7 +777,19 @@ class ClientApp:
 
     def register_and_admit_random_patient(self):
         problems_count = 5
+        admissions_count = 5
         encounters_count = 5
+
+        index = self.conn.get(self.index_url)
+
+        wards = self.conn.get(index['wards'])['items']
+        ward = self.conn.get(choice(wards)['url'])
+
+        beds = self.conn.get(ward['beds'])['items']
+        bed = self.conn.get(choice(beds)['url'])
+
+        doctors = self.conn.get(index['personnel']['doctors'])['items']
+        doctor = self.conn.get(choice(doctors)['url'])
 
         def fake_address():
             add = {}
@@ -791,50 +803,182 @@ class ClientApp:
             add['country'] = fake.country()
             return add
 
-        def random_encounter():
-            types = ['vitalsigns', 'measurements']
+        def random_encounter(i=None):
+            types = [
+                'measurements',
+                'vitalsigns',
+                'vitalsignsextended',
+                'surgicalprocedure',
+                'imaging',
+                'endoscopy',
+                'histopathology',
+                'otherreport',
+                'completebloodcount',
+                'renalfunctiontest',
+                'liverfunctiontest',
+                'othertest'
+            ]
             result = {
-                'type': choice(types),
-                'start_time': datetime.datetime.now().isoformat()
+                'type': types[i] if i else choice(types),
+                'start_time': datetime.datetime.now().isoformat(),
+                'end_time': datetime.datetime.now().isoformat(),
+                'personnel_id': doctor['id']
             }
-            if result['type'] == 'vitalsigns':
+            if result['type'] == 'measurements':
+                result['weight'] = float(randint(30, 100)) + 0.5
+                result['height'] = 1.0 + (random() * 0.9)
+            elif result['type'] == 'vitalsigns':
                 result['pulse_rate'] = randint(60, 100)
+                result['respiratory_rate'] = randint(12, 24)
                 result['diastolic_bp'] = randint(50, 60)
                 result['systolic_bp'] =  result['diastolic_bp'] + randint(0, 60)
-            elif result['type'] == 'measurements':
-                result['weight'] = randint(30, 100)
-                result['height'] = 1 + (random() * 0.9)
-            
+                result['temperature'] = float(randint(36,39)) + random()
+            elif result['type'] == 'vitalsignsextended':
+                result['pulse_rate'] = randint(60, 100)
+                result['respiratory_rate'] = randint(12, 24)
+                result['diastolic_bp'] = randint(50, 60)
+                result['systolic_bp'] =  result['diastolic_bp'] + randint(0, 60)
+                result['temperature'] = float(randint(36,39)) + random()
+                result['cvp'] = float(randint(5, 20))
+                result['diastolic_ibp'] = randint(50, 60)
+                result['systolic_ibp'] = result['diastolic_ibp'] + randint(0, 60)
+            elif result['type'] == 'surgicalprocedure':
+                result['assistant'] = "Dr. {}".format(fake.name())
+                result['anesthetist'] = "Dr. {}".format(fake.name())
+                result['nurse'] = "S/N. {}".format(fake.name())
+                result['emergency'] = choice([True, False])
+                result['preoperative_diagnosis'] = fake.paragraph()
+                result['postoperative_diagnosis'] = fake.paragraph()
+                result['procedure_name'] = fake.paragraph()
+                result['findings'] = fake.paragraph()
+                result['steps'] = fake.paragraph()
+            elif result['type'] == 'imaging':
+                result['site'] = fake.paragraph()
+                result['imaging_type'] = fake.paragraph()
+                result['report'] = fake.paragraph()
+                result['impression'] = fake.paragraph()
+                result['radiologist'] = "Dr. {}".format(fake.name())
+            elif result['type'] == 'endoscopy':
+                result['site'] = fake.paragraph()
+                result['report'] = fake.paragraph()
+                result['impression'] = fake.paragraph()
+                result['endoscopist'] = "Dr. {}".format(fake.name())
+            elif result['type'] == 'endoscopy':
+                result['site'] = fake.paragraph()
+                result['report'] = fake.paragraph()
+                result['impression'] = fake.paragraph()
+                result['pathologist'] = "Dr. {}".format(fake.name())
+            elif result['type'] == 'otherreport':
+                result['name'] = fake.paragraph()
+                result['report'] = fake.paragraph()
+                result['impression'] = fake.paragraph()
+                result['reported_by'] = "Dr. {}".format(fake.name())
+            elif result['type'] == 'completebloodcount':
+                result['hemoglobin'] = random() * 100
+                result['tlc'] = random() * 100
+                result['plt'] = random() * 100
+                result['dlc_n'] = random() * 100
+                result['dlc_l'] = random() * 100
+                result['dlc_m'] = random() * 100
+                result['dlc_e'] = random() * 100
+            elif result['type'] == 'renalfunctiontest':
+                result['urea'] = random() * 100
+                result['creatinine'] = random() * 100
+            elif result['type'] == 'liverfunctiontest':
+                result['t_bil'] = random() * 100
+                result['d_bil'] = random() * 100
+                result['alt'] = random() * 100
+                result['ast'] = random() * 100
+                result['alp'] = random() * 100
+            elif result['type'] == 'othertest':
+                result['name'] = choice(['Spam', 'Cheez', 'Donuts', 'Calrity'])
+                result['value'] = str(random() * 100)
+                result['unit'] = choice(['cm/L', 'eggs/banana', 'tomatoes/m^3'])
+
             return result
 
+        def admit(patient, bed, doctor):
+            data = {
+                'bed_id': bed['id'],
+                'personnel_id': doctor['id']
+            }
+            for field in admission_fields:
+                data[field] = fake.paragraph()
+            admission_post_result = self.conn.post_json(
+                patient['admissions'],
+                data
+            )
+            error = admission_post_result.pop('error', None)
+            if error:
+                print("Could Not Admit")
+                print(admission_post_result)
+                return
 
-        index = self.conn.get(self.index_url)
+            admission = self.conn.get(admission_post_result['url'])
+            print("Admitted {}".format(admission['url']))
 
-        wards = self.conn.get(index['wards'])['items']
-        ward = self.conn.get(choice(wards)['url'])
+            #Add Problems to Admission
+            problems_list = []
+            for i in range(randint(1, problems_count)):
+                problems_list.append({
+                    'start_time': datetime.datetime.now().isoformat(),
+                    'icd10class_code': choice(["A","B","C"]) + "0" + str(randint(1,9)),
+                    'comment': fake.paragraph()
+                })
+            problem_post_result = self.conn.post_json(
+                admission['problems_url'],
+                problems_list
+            )
+            if isinstance(problem_post_result, dict):
+                error = problem_post_result.pop('error', None)
+                if error:
+                    print("Could not add problems to admission")
+                    print(problem_post_result)
 
-        beds = self.conn.get(ward['beds'])['items']
-        bed = self.conn.get(choice(beds)['url'])
+            #Add Subencounters
+            for i in range(randint(1, encounters_count)):
+                encounter_post_result = self.conn.post_json(
+                    admission['encounters']['all_encounters'],
+                    random_encounter(i)
+                )
+                error = encounter_post_result.pop('error', None)
+                if error:
+                    print("Could not add child encounter")
+                    print(encounter_post_result)
 
-        doctors = self.conn.get(index['personnel']['doctors'])['items']
-        doctor = self.conn.get(choice(doctors)['url'])
+            #TODO Add Prescription
+
+            #Discharge the patient
+            discharge_result = self.conn.post_json(
+                admission['discharge'],
+                {}
+            )
+            error = discharge_result.pop('error', None)
+            if error:
+                print("Could not discharge")
+                print(discharge_result)
+            print("Discharged")
+            print("")
+            return admission
+
 
         #Register a patient
         patient_post_result = self.conn.post_json(
             index['patients'],
             {
-                'name': fake.name(),
                 'hospital_no': '{}'.format(randint(100000, 999999)),
                 'national_id_no': 'A{}'.format(randint(100000, 999999)),
-                'sex': choice(['M','F']),
+                'name': fake.name(),
                 'time_of_birth': datetime.datetime(
                     randint(1900,1999),
                     randint(1,12),
                     randint(1, 25)
                 ).isoformat(),
-                'current_address': fake_address(),
+                'sex': choice(['M','F']),
+                'allergies': fake.paragraph(),
+                'phone_no': fake.phone_number(),
                 'permanent_address': fake_address(),
-                'phone_no': fake.phone_number()
+                'current_address': fake_address(),
             }
         )
         error = patient_post_result.pop('error', None)
@@ -852,66 +996,17 @@ class ClientApp:
         )
 
         #Admit the patient
-        data = {
-            'bed_id': bed['id'],
-            'personnel_id': doctor['id']
-        }
-        for field in admission_fields:
-            data[field] = fake.paragraph()
-        admission_post_result = self.conn.post_json(
-            patient['admissions'],
-            data
-        )
-        error = admission_post_result.pop('error', None)
-        if error:
-            print("Could Not Admit")
-            print(admission_post_result)
-            return
+        for i in range(randint(2, admissions_count)):
+            wards = self.conn.get(index['wards'])['items']
+            ward = self.conn.get(choice(wards)['url'])
 
-        admission = self.conn.get(admission_post_result['url'])
-        print("Admitted {}".format(admission['url']))
+            beds = self.conn.get(ward['beds'])['items']
+            bed = self.conn.get(choice(beds)['url'])
 
-        #Add Problems to Admission
-        problems_list = []
-        for i in range(randint(1, problems_count)):
-            problems_list.append({
-                'start_time': datetime.datetime.now().isoformat(),
-                'icd10class_code': choice(["A","B","C"]) + "0" + str(randint(1,9))
-            })
-        problem_post_result = self.conn.post_json(
-            admission['problems_url'],
-            problems_list
-        )
-        if isinstance(problem_post_result, dict):
-            error = problem_post_result.pop('error', None)
-            if error:
-                print("Could not add problems to admission")
-                print(problem_post_result)
-
-        #Add Subencounters
-        for i in range(randint(1, encounters_count)):
-            encounter_post_result = self.conn.post_json(
-                admission['encounters']['all_encounters'],
-                random_encounter()
-            )
-            error = encounter_post_result.pop('error', None)
-            if error:
-                print("Could not add child encounter")
-                print(encounter_post_result)
-
-        #TODO Add Prescription
-
-        #Discharge the patient
-        discharge_result = self.conn.post_json(
-            admission['discharge'],
-            {}
-        )
-        error = discharge_result.pop('error', None)
-        if error:
-            print("Could not discharge")
-            print(discharge_result)
-        print("Discharged")
-        print("")
+            doctors = self.conn.get(index['personnel']['doctors'])['items']
+            doctor = self.conn.get(choice(doctors)['url']) 
+            
+            admit(patient, bed, doctor)
 
 
 

@@ -11,6 +11,15 @@ class Investigation(Encounter):
         'polymorphic_identity':'investigation',
     }
 
+    serialized_attrs = [
+        'id',
+        'label',
+        'type',
+        'start_time',
+        'end_time',
+        'personnel_id',
+    ]
+
     label = "Investigation"
 
     def set_record_time(self, record_time):
@@ -36,6 +45,20 @@ class Imaging(Investigation):
         'polymorphic_identity':'imaging'
     }
 
+    serialized_attrs = [
+        'id',
+        'label',
+        'type',
+        'start_time',
+        'end_time',
+        'personnel_id',
+        'site',
+        'imaging_type',
+        'report',
+        'impression',
+        'radiologist'
+    ]
+
     label = "Imaging"
 
     site = db.Column(db.String(255))
@@ -53,6 +76,19 @@ class Endoscopy(Investigation):
         'polymorphic_identity':'endoscopy'
     }
 
+    serialized_attrs = [
+        'id',
+        'label',
+        'type',
+        'start_time',
+        'end_time',
+        'personnel_id',
+        'site',
+        'report',
+        'impression',
+        'endoscopist'
+    ]
+
     label = "Endoscopy"
 
     site = db.Column(db.String(255))
@@ -68,6 +104,19 @@ class Histopathology(Investigation):
     __mapper_args__ = {
         'polymorphic_identity':'histopathology'
     }
+
+    serialized_attrs = [
+        'id',
+        'label',
+        'type',
+        'start_time',
+        'end_time',
+        'personnel_id',
+        'site',
+        'report',
+        'impression',
+        'pathologist'
+    ]
 
     label = "Histopathology"
 
@@ -86,6 +135,19 @@ class OtherReport(Investigation):
     __mapper_args__ = {
         'polymorphic_identity':'otherreport'
     }
+
+    serialized_attrs = [
+        'id',
+        'label',
+        'type',
+        'start_time',
+        'end_time',
+        'personnel_id',
+        'name',
+        'report',
+        'impression',
+        'reported_by'
+    ]
 
     label = "Other Report"
 
@@ -112,6 +174,22 @@ class CompleteBloodCount(Investigation):
         'polymorphic_identity':'completebloodcount'
     }
 
+    serialized_attrs = [
+        'id',
+        'label',
+        'type',
+        'start_time',
+        'end_time',
+        'personnel_id',
+        'tlc',
+        'plt', 
+        'dlc_n',
+        'dlc_l',
+        'dlc_m',
+        'dlc_e'
+    ]
+
+
     label = "Complete Blood Count"
 
     hemoglobin = db.Column(db.Float)
@@ -135,6 +213,17 @@ class RenalFunctionTest(Investigation):
         'polymorphic_identity':'renalfunctiontest'
     }
 
+    serialized_attrs = [
+        'id',
+        'label',
+        'type',
+        'start_time',
+        'end_time',
+        'personnel_id',
+        'urea',
+        'creatinine'
+    ]
+
     label = "Renal Function Test"
 
     urea = db.Column(db.Float)
@@ -155,6 +244,20 @@ class LiverFunctionTest(Investigation):
     __mapper_args__ = {
         'polymorphic_identity':'liverfunctiontest'
     }
+
+    serialized_attrs = [
+        'id',
+        'label',
+        'type',
+        'start_time',
+        'end_time',
+        'personnel_id',
+        't_bil',
+        'd_bil',
+        'alt',
+        'ast',
+        'alp'
+    ]
 
     label = "Liver Function Test"
 
@@ -177,6 +280,18 @@ class OtherTest(Investigation):
     __mapper_args__ = {
         'polymorphic_identity':'othertest'
     }
+
+    serialized_attrs = [
+        'id',
+        'label',
+        'type',
+        'start_time',
+        'end_time',
+        'personnel_id',
+        'name',
+        'value',
+        'unit'
+    ]
 
     label = "Other Test"
 
