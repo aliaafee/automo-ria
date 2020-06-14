@@ -169,6 +169,12 @@ def get_patient_admission(patient_id, admission_id):
         _external = True
     )
 
+    additional_data['prescription_url'] = url_for(
+        'api.get_patient_admission_prescription',
+        patient_id=patient_id, admission_id=admission_id,
+        _external = True
+    )
+
     return get_one_query_result(
         query, 
         additional_data=additional_data,

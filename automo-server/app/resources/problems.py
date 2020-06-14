@@ -65,8 +65,12 @@ def post_patient_admission_problems(patient_id, admission_id):
 
     problems_data = request.get_json()
 
+    if not problems_data:
+        return errors.unprocessable('Expected a list of problems')
+
     if not isinstance(problems_data, list):
         return errors.unprocessable('Expected a list of problems')
+
     
     processed_problems = []
     try:
@@ -112,4 +116,3 @@ def post_patient_admission_problems(patient_id, admission_id):
         result.append(problem.get_serialized())
 
     return jsonify(result)
-

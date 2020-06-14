@@ -28,6 +28,22 @@ admission_fields = [
     'follow_up'
 ]
 
+drugs = [
+    'T. PANTOPRAZOLE 40mg',
+    'T. PARACETAMOL 500mg',
+    'T. CEFIXIME 200mg',
+    'T. PERINORM 10mg',
+    'T. IBUPROFEN 400mg',
+    'T. DICLOFENAC 75mg'
+]
+
+orders = [
+    'PO BD x 10 days',
+    'PO TDS x 11 days',
+    'PO BD x 25 days',
+    'PO QID x 10 days'
+]
+
 #For testing only
 requests.packages.urllib3.disable_warnings(requests.urllib3.exceptions.SubjectAltNameWarning)
 
@@ -741,6 +757,53 @@ class ClientApp:
                 },
                 {}
             )
+            ,
+            (
+                "{}patients/1/admissions/1/prescription/".format(self.index_url),
+                {
+                    
+                },
+                {'error': 'unprocessable', 'message': 'Expected a list of medication orders'}
+            )
+            ,
+            (
+                "{}patients/1/admissions/1/prescription/".format(self.index_url),
+                [
+
+                ],
+                {'error': 'unprocessable', 'message': 'Expected a list of medication orders'}
+            )
+            ,
+            (
+                "{}patients/1/admissions/1/prescription/".format(self.index_url),
+                [
+                    {
+                        'drug_order': 'OD x 10 days'
+                    }
+                ],
+                {'error': 'unprocessable', 'invalid_fields': [{'drug_id': 'Both drug_id and drug_str cannot be empty/invalid', 'drug_str': 'Both drug_id and drug_str cannot be empty/invalid'}]}
+            )
+            ,
+            (
+                "{}patients/1/admissions/1/prescription/".format(self.index_url),
+                [
+                    {
+                        'drug_id': 999999,
+                        'drug_order': 'OD x 10 days'
+                    }
+                ],
+                {'error': 'unprocessable', 'invalid_fields': [{'drug_id': 'Both drug_id and drug_str cannot be empty/invalid', 'drug_str': 'Both drug_id and drug_str cannot be empty/invalid'}]}
+            )
+            ,
+            (
+                "{}patients/1/admissions/1/prescription/".format(self.index_url),
+                [
+                    {
+                        'drug_str': 'T PANTOPRAZOLE 40mg'
+                    }
+                ],
+                {'error': 'unprocessable', 'invalid_fields': [{'drug_order': 'Required'}]}
+            )
         ]
 
         failed = 0
@@ -779,6 +842,7 @@ class ClientApp:
         problems_count = 5
         admissions_count = 5
         encounters_count = 5
+        precription_count = 5
 
         index = self.conn.get(self.index_url)
 
@@ -947,6 +1011,21 @@ class ClientApp:
                     print(encounter_post_result)
 
             #TODO Add Prescription
+            meds = []
+            for i in range(randint(1, precription_count)):
+                meds.append({
+                    'drug_str': choice(drugs),
+                    'drug_order': choice(orders)
+                })
+            presc_post_result = self.conn.post_json(
+                admission['prescription_url'],
+                meds
+            )
+            if isinstance(presc_post_result, dict):
+                error = presc_post_result.pop('error', None)
+                if error:
+                    print("Could not add medications to admission")
+                    print(presc_post_result)
 
             #Discharge the patient
             discharge_result = self.conn.post_json(

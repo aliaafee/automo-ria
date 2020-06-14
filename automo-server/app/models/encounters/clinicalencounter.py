@@ -60,6 +60,7 @@ class ClinicalEncounter(Encounter):
           it will be added."""
         new_presc = self._create_new_prescription(drug, drug_str, drug_order)
         self.prescription.append(new_presc)
+        return new_presc
 
     def _create_new_prescription(self, drug, drug_str, drug_order, active=True):
         if drug is None:
