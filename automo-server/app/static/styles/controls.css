@@ -126,6 +126,20 @@ button:hover {
     background-color: #343a40d3;
 }
 
+.splitter-column {
+    flex-direction: column;
+    height: 100%;
+}
+
+.splitter-row {
+    flex-direction: row;
+    width: 100%;
+}
+
+.resizer:hover {
+    background-color: rgba(0, 0, 0, 0.048);
+}
+
 .scrolled {
     
 }
@@ -155,6 +169,7 @@ button:hover {
     background-color: white;
     border: 1px solid var(--border);
     border-radius: var(--border-radius);
+    display: flex;
 }
 
 .list-box ul {
@@ -343,9 +358,7 @@ button:hover {
     text-align: center;
 }
 
-.resizer:hover {
-    background-color: rgba(0, 0, 0, 0.048);
-}
+
 
 .tile {
     
@@ -439,4 +452,24 @@ button:hover {
     margin: 0;
     font-style: italic;
     color: grey;
+}
+
+
+
+@media only screen and (max-width: 768px) {
+    .splitter-row .pane1 {
+        display: none !important;
+        width: 100% !important;
+    }
+    .splitter-row .pane2 {
+        display: none !important;
+        width: 100% !important;
+    }
+    .splitter-row .active-pane {
+        display: flex !important;
+        height: 100%;
+    }
+    .resizer {
+        display: none !important;
+    }
 }

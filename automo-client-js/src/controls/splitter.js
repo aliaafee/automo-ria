@@ -47,18 +47,30 @@ module.exports = class Spitter extends Control {
         }
     }
 
+    setPane1Active() {
+        if (!this.pane1.element || !this.pane2.element) {
+            return
+        }
+        this.pane1.element.classList.add('active-pane');
+        this.pane2.element.classList.remove('active-pane');
+    }
+
+    setPane2Active() {
+        if (!this.pane1.element || !this.pane2.element) {
+            return
+        }
+        this.pane2.element.classList.add('active-pane');
+        this.pane1.element.classList.remove('active-pane');
+    }
+
 
     _setElementHeight(element, height) {
         element.style.height = height;
-        element.style.minHeight = height;
-        element.style.maxHeight = height;
     }
 
 
     _setElementWidth(element, width) {
         element.style.width = width;
-        element.style.minWidth = width;
-        element.style.maxWidth = width;
     }
 
 
@@ -125,16 +137,14 @@ module.exports = class Spitter extends Control {
             this.resizerElement.style.height = (this.resizerSize) + 'px';
             this.resizerElement.style.marginTop = '-' + (this.resizerSize / 2) + 'px';
             this.resizerElement.style.marginBottom = '-' + (this.resizerSize / 2) + 'px';
-            this.resizerElement.style.width = '100%';
             this.resizerElement.style.cursor = 'ns-resize'
         } else {
             this.resizerElement.style.width = (this.resizerSize) +'px';
             this.resizerElement.style.marginLeft = '-' + (this.resizerSize / 2) +'px';
             this.resizerElement.style.marginRight = '-' + (this.resizerSize / 2) +'px';
-            this.resizerElement.style.height = '100%';
             this.resizerElement.style.cursor = 'ew-resize'
         }
-        //this.resizerElement.style.backgroundColor = 'red';
+
         this.resizerElement.addEventListener('mousedown', this._resizeMouseDown);
 
         return this.resizerElement;
@@ -144,16 +154,14 @@ module.exports = class Spitter extends Control {
     createElement() {
         super.createElement();
 
-        this.element.style.flexGrow = '1';
-
         if (this.options.direction == 'column') {
-            this.element.style.flexDirection = 'column';
-            this.element.style.width = '100%'
+            this.element.className = "splitter-column"
         } else {
-            this.element.style.height = '100%'
+            this.element.className = "splitter-row"
         }
 
         this.element.appendChild(this.pane1.createElement());
+        this.pane1.element.classList.add("pane1");
 
         if (this.options.pane1Size != null || this.options.pane2Size != null) {
             if (this.options.resizable == true) {
@@ -161,7 +169,8 @@ module.exports = class Spitter extends Control {
             }
         }
         
-        this.element.appendChild(this.pane2.createElement());
+        this.element.appendChild(this.pane2.createElement())
+        this.pane2.element.classList.add("pane2");
 
         if (this.options.pane1Size != null) {            
             if (this.options.direction == 'column') {
@@ -195,11 +204,7 @@ module.exports = class Spitter extends Control {
             }
         }
 
-        this.pane1.element.style.flexDirection = 'column'
-        this.pane2.element.style.flexDirection = 'column'
-
-        this.pane1.element.style.boxSizing = 'border-box';
-        this.pane2.element.style.boxSizing = 'border-box';
+        this.setPane1Active();
 
         return this.element;
     }

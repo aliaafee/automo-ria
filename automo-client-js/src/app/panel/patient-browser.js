@@ -15,6 +15,7 @@ class PatientList extends Control {
         super(options);
 
         this.onSelectPatient = null;
+        this.onSearchStarted = null;
 
         this.searchBox = new TextBox({
             placeholder: 'Search'
@@ -56,6 +57,9 @@ class PatientList extends Control {
     }
 
     _search() {
+        if (this.onSearchStarted) {
+            this.onSearchStarted();
+        }
         this.resultList.setResourceUrl(
             connection.resource_index.patients + '?' + querystring.stringify(
                 {
@@ -77,13 +81,11 @@ class PatientList extends Control {
     createElement() {
         super.createElement();
 
-        this.element.className = 'patient-list';
+        this.element.id = 'patient-list'
 
         this.element.appendChild(this.searchBox.createElement());
 
         this.element.appendChild(this.resultList.createElement());
-
-        this.element.style.display = 'flex';
         
         this.searchBox.element.addEventListener('keyup', (ev) => {
             this._search();
@@ -102,8 +104,7 @@ module.exports = class PatientBrowser extends Splitter {
         var patientList = new PatientList();
 
         options.pane1Size = '260px';
-        //options.pane2Size = '260px';
-        //options.direction = 'column';
+        
         options.resizable = true;
 
         super(
@@ -114,6 +115,7 @@ module.exports = class PatientBrowser extends Splitter {
 
         patientList.onSelectPatient = (patient) => {
             patientList.lock();
+            this.setPane2Active();
             patientPanel.setPatient(
                 patient, 
                 () => {
@@ -125,9 +127,16 @@ module.exports = class PatientBrowser extends Splitter {
                 }
             );
         }
+        patientList.onSearchStarted = () => {
+            this.setPane1Active()
+        }
     }
 
     createElement() {
-        return super.createElement()
+        super.createElement()
+
+        this.element.id = 'patient-browser'
+
+        return this.element
     }
 };

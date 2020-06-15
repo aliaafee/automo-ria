@@ -212,8 +212,8 @@ module.exports = class PatientPanel extends Scrolled {
         this.patient = patient;
 
         this._idNumberElement.innerHTML = "NIC No.: " + patient.national_id_no;
-        this._hospNumberElement.innerHTML = ", Hospital No.: " +patient.hospital_no;
-        this._phoneNumberElement.innerHTML = ", Phone No.: " +patient.phone_no;
+        this._hospNumberElement.innerHTML = "Hospital No.: " +patient.hospital_no;
+        this._phoneNumberElement.innerHTML = "Phone No.: " +patient.phone_no;
         this._nameElement.innerHTML = patient.name;
         this._ageSexElement.innerHTML = patient.age + "/" + patient.sex;
 
@@ -234,7 +234,7 @@ module.exports = class PatientPanel extends Scrolled {
 
     setPatient(patient, onDone, onFailed) {
         this._idNumberElement.innerHTML = "NIC No.: " + patient.national_id_no;
-        this._hospNumberElement.innerHTML = ", Hospital No.: " +patient.hospital_no;
+        this._hospNumberElement.innerHTML = "Hospital No.: " +patient.hospital_no;
         this._phoneNumberElement.innerHTML = "";
         this._nameElement.innerHTML = patient.name;
         this._ageSexElement.innerHTML = patient.age + "/" + patient.sex;
@@ -266,7 +266,7 @@ module.exports = class PatientPanel extends Scrolled {
     createElement() {
         super.createElement();
 
-        this.element.className = 'patient-panel';
+        this.element.id = 'patient-panel';
         this.element.style.flexDirection = 'column';
 
         this._headerElement = document.createElement('div');
@@ -289,7 +289,6 @@ module.exports = class PatientPanel extends Scrolled {
         var numberElement = document.createElement('div');
         numberElement.className = 'number';
         numberElement.style.display = 'flex';
-        numberElement.style.flexDirection = 'row';
         this._headerElement.appendChild(numberElement);
 
         this._idNumberElement = document.createElement('div');

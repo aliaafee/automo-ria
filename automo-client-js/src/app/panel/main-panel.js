@@ -104,7 +104,9 @@ module.exports = class MainPanel extends Control {
             }
             var elem = item.createElement();
             elem.classList.add('side-bar-item');
-            //elem.classList.add('selected')
+            if (item.label == 'P') {
+                elem.classList.add('selected')
+            }
             this._sideBarElement.appendChild(elem)
         })
 
