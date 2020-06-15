@@ -62,7 +62,7 @@ module.exports = class ResourceList extends ListBox {
             },
             () => {
                 this.spinner.hide();
-                this._listElement.style.display = 'flex';
+                this._listElement.style.display = 'block';
             }
         )
     }
@@ -192,8 +192,8 @@ module.exports = class ResourceList extends ListBox {
     createElement() {
         super.createElement();
 
-        this.element.style.flexDirection = 'column';
-        this._listElement.style.flexGrow = 0;
+        //this.element.style.flexDirection = 'column';
+        //this._listElement.style.flexGrow = 0;
 
         this.element.appendChild(this.spinner.createElement());
         this.spinner.hide();

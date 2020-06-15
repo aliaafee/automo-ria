@@ -189,7 +189,7 @@ module.exports = class ResourceAccordion extends Control {
         this.element.className = 'accordion';
 
         this._listElement = document.createElement('ul');
-        this._listElement.style.flexDirection = 'column';
+        //this._listElement.style.flexDirection = 'column';
         this._listElement.className = 'root-list';
         this.element.appendChild(this._listElement);
 

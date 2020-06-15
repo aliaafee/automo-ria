@@ -178,8 +178,10 @@ module.exports = class ListBox extends Scrolled {
         super.createElement();
 
         this.element.classList.add('list-box');
+        this.element.style.display = 'block'
         
         this._listElement =  document.createElement('ul');
+        //this._listElement.style.display = 'block'
         this.element.appendChild(this._listElement);
 
         return this.element;

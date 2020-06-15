@@ -158,11 +158,9 @@ button:hover {
 }
 
 .list-box ul {
-    display: flex;
     flex-direction: column;
     padding: 0;
     margin: unset;
-    flex-grow: 1;
     list-style: none;
 }
 

@@ -1,4 +1,9 @@
 <html>
+    <head>
+        <style>
+            {{ style }}
+        </style>    
+    </head>
     <body>
         <div class="header">
             <div class="header-hospital-name">{{ admission.discharged_bed.ward.hospital.name }}</div>
@@ -31,9 +36,9 @@
             <tr>
                 <td class="label">Ward</td>
                 <td>{{ admission.discharged_bed.name }}</td>
-                <td class="label-wide">Date of Admission</td>
+                <td class="label-wide">Date&nbsp;of&nbsp;Admission</td>
                 <td>{{ admission.start_time|formate_date }}</td>
-                <td class="label-wide">Date of Discharge</td>
+                <td class="label-wide">Date&nbsp;of&nbsp;Discharge</td>
                 <td>{{ admission.end_time|formate_date }}</td>
             </tr>
         </table>

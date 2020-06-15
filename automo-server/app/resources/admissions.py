@@ -133,8 +133,13 @@ def get_patient_admission(patient_id, admission_id):
 
     if admission is not None:
         if admission.end_time is not None:
-            additional_data['discharge_summary'] = url_for(
-                'api.get_patient_admission_discharge_summary',
+            additional_data['discharge_summary_pdf'] = url_for(
+                'api.get_patient_admission_discharge_summary_pdf',
+                patient_id=patient_id, admission_id=admission_id,
+                _external = True
+            )
+            additional_data['discharge_summary_html'] = url_for(
+                'api.get_patient_admission_discharge_summary_html',
                 patient_id=patient_id, admission_id=admission_id,
                 _external = True
             )
@@ -245,7 +250,7 @@ def post_patient_admission(patient_id, admission_id):
 
 
 @api.route("patients/<int:patient_id>/admissions/<int:admission_id>/discharge-summary.pdf")
-def get_patient_admission_discharge_summary(patient_id, admission_id):
+def get_patient_admission_discharge_summary_pdf(patient_id, admission_id):
     query = md.Admission.query\
         .filter(md.Admission.patient_id == patient_id)\
         .filter(md.Admission.id == admission_id)\
@@ -270,4 +275,25 @@ def get_patient_admission_discharge_summary(patient_id, admission_id):
                 )
             )
         ]
+    )
+
+
+@api.route("patients/<int:patient_id>/admissions/<int:admission_id>/discharge-summary.html")
+def get_patient_admission_discharge_summary_html(patient_id, admission_id):
+    query = md.Admission.query\
+        .filter(md.Admission.patient_id == patient_id)\
+        .filter(md.Admission.id == admission_id)\
+        .filter(md.Admission.end_time != None)
+
+    admission = query.first()
+
+    if admission is None:
+        return errors.resource_not_found("Item with not found.")
+
+    return render_template(
+        'admission/discharge-summary.html',
+        admission=admission,
+        style=render_template(
+            'admission/discharge-summary.css'
+        )
     )

@@ -18,15 +18,12 @@ module.exports = class AdmissionPanel extends Control {
         this.summary = new Button(
             'Discharge Summary',
             (event) => {
-                console.log("yo")
-                console.log(this.data)
                 connection.get_blob(
-                    this.data.discharge_summary,
+                    this.data.discharge_summary_pdf,
                     (blob) => {
                         //console.log(blob)
                         var file = window.URL.createObjectURL(blob);
                         window.open(file);
-                        window.print()
                     },
                     () => {
                         console.log('failed')
@@ -34,6 +31,25 @@ module.exports = class AdmissionPanel extends Control {
                 )
             }
         )
+
+        /*
+        this.summary_html = new Button(
+            'Discharge Summary Html',
+            (event) => {
+                connection.get_blob(
+                    this.data.discharge_summary_html,
+                    (blob) => {
+                        //console.log(blob)
+                        var file = window.URL.createObjectURL(blob);
+                        window.open(file);
+                    },
+                    () => {
+                        console.log('failed')
+                    }
+                )
+            }
+        )
+        */
 
         this.form = new Form()
 
@@ -261,6 +277,7 @@ module.exports = class AdmissionPanel extends Control {
         this.element.style.flexDirection = 'column'
 
         this.element.appendChild(this.summary.createElement())
+        //this.element.appendChild(this.summary_html.createElement())
 
         this.element.appendChild(this.form.createElement())
         this.form.element.style.flexGrow = 1;
