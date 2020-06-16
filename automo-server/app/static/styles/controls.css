@@ -457,6 +457,31 @@ button:hover {
 
 
 @media only screen and (max-width: 768px) {
+    .foreground, .foreground-centered {
+        background-color: var(--light);
+    }
+    .foreground-centered {
+        align-items: unset;
+    }
+
+    .dialog .dialog-body-padded {
+        flex-grow: 0 !important;
+    }
+    
+    .dialog {
+        border: none;
+        border-radius: 0;
+    }
+
+    .dialog-header {
+        border: none;
+    }
+
+    .dialog-footer {
+        border: none;
+    }
+
+
     .splitter-row .pane1 {
         display: none !important;
         width: 100% !important;
