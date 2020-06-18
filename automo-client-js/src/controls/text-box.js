@@ -85,7 +85,7 @@ module.exports = class TextBox extends Control {
         if (this.options.type == 'textarea') {
             this.element = document.createElement('textarea');
             if (this.options.rows != null) {
-                this.element.setAttribute('rows', this.options.rows);
+                this.element.style.height = `${this.options.rows}em`
             }
             if (this.options.resize != true) {
                 this.element.style.resize = 'none'

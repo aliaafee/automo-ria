@@ -38,6 +38,10 @@
     display: flex;
 }
 
+.icd10coder .form {
+    width: 200px;
+}
+
 .icd10coder .category-list {
     border-radius: 0;
     border-top: none;
@@ -310,6 +314,21 @@ button.side-bar-item {
 
     #patient-panel {
         border: none;
+    }
+
+    .icd10coder .form {
+        width: 100%;
+    }
+
+    .icd10coder .form textarea {
+        height: 27px !important;
+        overflow: hidden;
+    }
+
+    .icd10coder .category-list {
+        border-right: none;
+        border-top: solid 1px var(--border);
+        border-bottom: solid 1px var(--border);
     }
 }
 

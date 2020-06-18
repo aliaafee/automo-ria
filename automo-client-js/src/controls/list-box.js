@@ -76,7 +76,7 @@ module.exports = class ListBox extends Scrolled {
         return this._selectedItem;
     }
 
-    setSelection(itemId) {
+    setSelection(itemId, scroll=true) {
         if (itemId == null || itemId == '') {
             this.clearSelection();
             return;
@@ -87,7 +87,19 @@ module.exports = class ListBox extends Scrolled {
         this.clearSelection();
         this._selectedElement = this._listChildElems[itemId];
         this._highlightSelection();
-        this._selectedElement.scrollIntoView();
+        if (scroll) {
+            //this._selectedElement.scrollIntoView();
+            //console.log(this._selectedElement.scrollHeight);
+            //console.log(this._selectedElement.offsetTop);
+            //var pos = this._selectedElement.scrollHeight - this._selectedElement.offsetTop;
+            //this.scrollTo(0)
+
+            //var pos_parent = this.element.offsetTop;
+            //var pos = this._selectedElement.offsetTop - pos_parent;
+            //console.log(pos)
+            //this.scrollTo(pos);
+            this.scrollToElement(this._selectedElement);
+        }
     }
 
     clearSelection() {

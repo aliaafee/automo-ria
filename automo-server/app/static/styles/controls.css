@@ -274,6 +274,7 @@ button:hover {
     justify-content: center;
     align-items: flex-start;
     z-index: 1000;
+    overflow: hidden;
 }
 
 .foreground .dialog {
@@ -460,12 +461,35 @@ button:hover {
     .foreground, .foreground-centered {
         background-color: var(--light);
     }
+
+    .foreground .dialog {
+        margin-top: 0;
+        width: 100% !important;
+        height: 100%;
+    }
+
     .foreground-centered {
         align-items: unset;
     }
 
     .dialog .dialog-body-padded {
         flex-grow: 0 !important;
+    }
+
+    .dialog-header {
+        border: none;
+        height: 60px;
+    }
+
+    .dialog-body {
+        display: flex;
+        flex-direction: column;
+        height: calc(100% - 107px);
+    }
+
+    .dialog-footer {
+        border: none;
+        height: 47px;
     }
     
     .dialog {
@@ -476,11 +500,6 @@ button:hover {
     .dialog-header {
         border: none;
     }
-
-    .dialog-footer {
-        border: none;
-    }
-
 
     .splitter-row .pane1 {
         display: none !important;

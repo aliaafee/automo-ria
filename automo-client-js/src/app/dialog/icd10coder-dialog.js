@@ -317,8 +317,8 @@ module.exports = class Icd10CoderDialog extends Dialog {
 
         this.bodyElement.appendChild(this.form.createElement());
         this.form.element.classList.add('form');
-        this.form.element.style.width = '200px';
-        this.form.element.style.minWidth = '200px';
+        //this.form.element.style.width = '200px';
+        //this.form.element.style.minWidth = '200px';
 
         this.form.hideField('icd10modifier_class');
         this.form.hideField('icd10modifier_extra_class');

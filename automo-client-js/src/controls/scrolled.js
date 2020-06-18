@@ -6,7 +6,13 @@ module.exports = class Scrolled extends Control {
     }
 
     scrollTo(position) {
-        this.element.scrollTo(position);
+        this.element.scrollTo(0, position);
+    }
+
+    scrollToElement(element) {
+        this.scrollTo(0)
+        var pos = element.offsetTop - this.element.offsetTop
+        this.scrollTo(pos)
     }
 
     createElement() {
