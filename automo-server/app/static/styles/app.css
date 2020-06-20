@@ -324,6 +324,12 @@ button.side-bar-item {
         border: none;
     }
 
+    #patient-panel .container {
+        margin-right: 0;
+        margin-left: 0;
+        width: 100%;
+    }
+
     .icd10coder .form {
         width: 100%;
     }
