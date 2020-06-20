@@ -38,9 +38,9 @@ module.exports = class Wizard extends Dialog {
     onNext() {
         var currentPage = this.getCurrentPage()
 
-        if (!currentPage.validate()) {
-            return false
-        }
+        //if (!currentPage.validate()) {
+        //    return false
+        //}
 
         this.gotoNextPage()
     }

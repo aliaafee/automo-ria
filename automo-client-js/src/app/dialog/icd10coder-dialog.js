@@ -108,7 +108,8 @@ module.exports = class Icd10CoderDialog extends Dialog {
             {
                 label: "Comment",
                 type: 'textarea',
-                rows: 5
+                grow: true,
+                maxGrow: 100
             }
         ));
     }

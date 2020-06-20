@@ -10,7 +10,9 @@ module.exports = class TextField extends Field {
             placeholder: options.placeholder,
             type: options.type,
             rows: options.rows,
-            resize: options.resize
+            resize: options.resize,
+            grow: options.grow,
+            maxGrow: options.maxGrow
         });
     }
 

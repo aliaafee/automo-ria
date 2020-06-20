@@ -329,8 +329,7 @@ button.side-bar-item {
     }
 
     .icd10coder .form textarea {
-        height: 27px !important;
-        overflow: hidden;
+        
     }
 
     .icd10coder .category-list {

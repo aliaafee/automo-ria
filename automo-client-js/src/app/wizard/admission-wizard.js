@@ -132,7 +132,8 @@ class AdmissionNotes extends WizardForm {
                 label: 'Chief Complaints',
                 type: 'textarea',
                 required: true,
-                labelTop: true
+                labelTop: true,
+                grow: true
             }
         ))
 
@@ -142,7 +143,8 @@ class AdmissionNotes extends WizardForm {
                 label: 'History',
                 type: 'textarea',
                 require: true,
-                labelTop: true
+                labelTop: true,
+                grow: true
             }
         ))
 
@@ -151,7 +153,8 @@ class AdmissionNotes extends WizardForm {
             {
                 label: 'Past History',
                 type: 'textarea',
-                labelTop: true
+                labelTop: true,
+                grow: true
             }
         ))
 
@@ -160,7 +163,8 @@ class AdmissionNotes extends WizardForm {
             {
                 label: 'General Inspection',
                 type: 'textarea',
-                labelTop: true
+                labelTop: true,
+                grow: true
             }
         ))
 
@@ -169,7 +173,8 @@ class AdmissionNotes extends WizardForm {
             {
                 label: 'Head',
                 type: 'textarea',
-                labelTop: true
+                labelTop: true,
+                grow: true
             }
         ))
 
@@ -178,7 +183,8 @@ class AdmissionNotes extends WizardForm {
             {
                 label: 'Neck',
                 type: 'textarea',
-                labelTop: true
+                labelTop: true,
+                grow: true
             }
         ))
 
@@ -187,7 +193,8 @@ class AdmissionNotes extends WizardForm {
             {
                 label: 'Chest',
                 type: 'textarea',
-                labelTop: true
+                labelTop: true,
+                grow: true
             }
         ))
 
@@ -196,7 +203,8 @@ class AdmissionNotes extends WizardForm {
             {
                 label: 'Abdomen',
                 type: 'textarea',
-                labelTop: true
+                labelTop: true,
+                grow: true
             }
         ))
 
@@ -205,7 +213,8 @@ class AdmissionNotes extends WizardForm {
             {
                 label: 'Genitalia',
                 type: 'textarea',
-                labelTop: true
+                labelTop: true,
+                grow: true
             }
         ))
 
@@ -214,7 +223,8 @@ class AdmissionNotes extends WizardForm {
             {
                 label: 'Pelvin & Rectal',
                 type: 'textarea',
-                labelTop: true
+                labelTop: true,
+                grow: true
             }
         ))
 
@@ -223,7 +233,8 @@ class AdmissionNotes extends WizardForm {
             {
                 label: 'Extremities',
                 type: 'textarea',
-                labelTop: true
+                labelTop: true,
+                grow: true
             }
         ))
 
@@ -232,7 +243,8 @@ class AdmissionNotes extends WizardForm {
             {
                 label: 'Others',
                 type: 'textarea',
-                labelTop: true
+                labelTop: true,
+                grow: true
             }
         ))
     }

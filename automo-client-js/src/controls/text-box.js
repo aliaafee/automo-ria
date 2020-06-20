@@ -8,42 +8,26 @@ module.exports = class TextBox extends Control {
          *  placeholder=""
          *  type=VALID_TYPE or textarea
          *  rows=2
+         *  grow
+         *  maxGrow
          */
         super(options);
-
-        //this._locked = false;
-        //this._lockedValue = null;
-        //this._parentElement = null;
     }
 
     value() {
-        /*
-        if (this._locked) {
-            return this._lockedValue;
-        }*/
-
         return this.element.value;
     }
 
     setValue(value) {
-        /*
-        if (this._locked) {
-            this._lockedValue = value;
-            this.element.innerHTML = value;
-            return;
-        }*/
         this.element.value = value;
+        if (this.options.grow && this.options.type == 'textarea') {
+            //requestAnimationFrame(() => {
+                this._fitToContents()
+            //})
+        }
     }
 
     isBlank() {
-        /*
-        if (this._locked) {
-            if (this._lockedValue == '') {
-                return true
-            }
-            return false;
-        }*/
-
         if (this.element.value == '') {
             return true;
         }
@@ -52,33 +36,23 @@ module.exports = class TextBox extends Control {
 
     lock() {
         this.element.setAttribute('readonly', '');
-        /*
-        this._locked = true;
-        this._lockedValue = this.value();
-        this._parentElement = this.element.parentElement;
-
-        this._parentElement.removeChild(this.element);
-        this.element = document.createElement('div');
-        this.element.className = 'locked-text-box'
-        this._parentElement.appendChild(this.element);
-
-        this.element.innerHTML = this._lockedValue;*/
     }
 
     unlock() {
         this.element.removeAttribute('readonly');
-        /*
-        if (!this._locked) {
-            return
+    }
+
+    _fitToContents() {
+        this.element.style.overflow = 'hidden'
+        this.element.style.height = '';
+        var height = this.element.scrollHeight + 2
+        if (this.options.maxGrow) {
+            if (height > this.options.maxGrow) {
+                height = this.options.maxGrow
+                this.element.style.overflow = 'auto'
+            }
         }
-
-        this._locked = false;
-
-        this._parentElement.removeChild(this.element);
-        this.element = this.createElement();
-        this._parentElement.appendChild(this.element);
-
-        this.element.value = this._lockedValue;*/
+        this.element.style.height = height + 'px';
     }
 
     createElement() {
@@ -86,9 +60,17 @@ module.exports = class TextBox extends Control {
             this.element = document.createElement('textarea');
             if (this.options.rows != null) {
                 this.element.style.height = `${this.options.rows}em`
+            } else {
+                this.element.rows = 1
             }
+            
             if (this.options.resize != true) {
                 this.element.style.resize = 'none'
+            }
+            if (this.options.grow == true) {
+                this.element.addEventListener('input', (event) => {
+                    this._fitToContents()
+                })
             }
         } else {
             this.element = document.createElement('input');
