@@ -101,8 +101,12 @@ module.exports = class Field extends Control {
         this.element.classList.add('field');
 
         if (this.options.label != null) {
+            var label = this.options.label
+            if (this.options.required == true) {
+                label += " *"
+            }
             this._labelElement = document.createElement('label');
-            this._labelElement.innerHTML = this.options.label;
+            this._labelElement.innerHTML = label;
             this._labelElement.style.width = this.options.labelSize;
             //this.element.appendChild(this._labelElement);
         }

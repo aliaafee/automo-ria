@@ -5,6 +5,7 @@ module.exports = class Select extends Control {
     constructor(idFunction, labelFunction, options) {
         /* Options
          *  placeholder=""
+         *  data = [ {name: a, value: b} ,  ]
          *  
          */
         super(options);
@@ -65,7 +66,7 @@ module.exports = class Select extends Control {
 
         this.element.appendChild(this._createListItem(
             null,
-            `-- ${this.options.placeholder == null ? '' : this.options.placeholder} --`
+            `-- ${this.options.placeholder == null ? '' : `${this.options.placeholder} --`}`
         ));
 
         this._itemIds = []
@@ -85,7 +86,7 @@ module.exports = class Select extends Control {
     }
 
     isBlank() {
-        if (this.element.value == null) {
+        if (this.value() == null) {
             return true;
         }
         return false;
@@ -104,6 +105,10 @@ module.exports = class Select extends Control {
 
         if (this.options.placeholder != null) {
             this.element.setAttribute('placeholder', this.options.placeholder);
+        }
+
+        if (this.options.data) {
+            this.setData(this.options.data)
         }
 
         return this.element

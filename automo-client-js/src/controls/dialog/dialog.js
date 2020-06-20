@@ -5,6 +5,7 @@ module.exports = class Dialog extends Control {
     constructor(options={}) {
         /* Options
          *  centered=false
+         *  title="Title"
          */
         super(options);
 

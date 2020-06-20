@@ -7,6 +7,8 @@ module.exports = class Form extends Control {
          *  labelSize=in css units
          *  labelTop=false
          *  flexDirection='column|row'
+         *  title='Heading title'
+         *  compact=false
          */
         super(options);
 
@@ -44,6 +46,17 @@ module.exports = class Form extends Control {
         return result;
     }
 
+    isBlank() {
+        var blank = true;
+        for (var i = 0; i < this._fieldNames.length; i++) {
+            if (this._fields[i].value()) {
+                blank = false
+                return blank
+            }
+        }
+        return blank;
+    }
+
     getFieldByName(fieldName) {
         return this._fields[this._fieldNames.findIndex((value) => { return value == fieldName;})];
     }
@@ -62,6 +75,19 @@ module.exports = class Form extends Control {
 
     hideField(fieldName) {
         this.getFieldByName(fieldName).hide();
+    }
+
+    isValid() {
+        var isValid = true
+
+        this._fields.forEach((field) => {
+            if (field.isValid() == false) {
+                isValid = false
+                return isValid
+            }
+        });
+
+        return isValid;
     }
 
     validate() {
@@ -97,7 +123,20 @@ module.exports = class Form extends Control {
     createElement() {
         super.createElement();
 
+        this.element.classList.add("form")
+
+        if (this.options.compact) {
+            this.element.classList.add("compact")
+        }
+
         this.element.style.flexDirection = this.options.flexDirection ? this.options.flexDirection : 'column';
+
+        if (this.options.title) {
+            var title = document.createElement('h1')
+            title.innerHTML = this.options.title
+            this.element.appendChild(title)
+        }
+
 
         this._fields.forEach((field) => {
             this.element.appendChild(field.createElement());

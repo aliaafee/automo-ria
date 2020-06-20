@@ -1,3 +1,7 @@
+.icd10coder .dialog {
+    width: 700px;
+}
+
 .icd10coder .category-label {
     display: flex;
 }
@@ -47,8 +51,8 @@
     border-top: none;
     border-left: none;
     border-bottom: none;
-    flex-grow: 1;
     background-color: var(--white);
+    width: calc(100% - 200px);
 }
 
 .icd10coder .category-list li {
@@ -113,8 +117,14 @@
     border-left: solid 1px var(--border);
 }
 
-#patient-panel > .spinner-container{
+#patient-panel .container > .spinner-container{
     padding: 15px;
+}
+
+#patient-panel .container {
+    max-width: 700px;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 #patient-panel .header {
@@ -128,8 +138,6 @@
 #patient-panel .header .number {
     justify-content: space-between;
 }
-
-
 
 #patient-panel .body {
     margin: 0 15px 15px 15px;
@@ -329,6 +337,8 @@ button.side-bar-item {
         border-right: none;
         border-top: solid 1px var(--border);
         border-bottom: solid 1px var(--border);
+        width:  100%;
+        flex-grow: 1;
     }
 }
 

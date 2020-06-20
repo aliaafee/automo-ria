@@ -11,6 +11,7 @@ module.exports = class SelectField extends Field {
             labelFunction,
             {
                 placeholder: options.placeholder,
+                data: options.data
             }
         );
     }

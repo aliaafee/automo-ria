@@ -11,8 +11,6 @@ const SelectField = require('../../controls/form/select-field');
 
 module.exports = class Icd10CoderDialog extends Dialog {
     constructor(options = {}) {
-        options.width = '80%';
-
         super(options);
 
         this.selectedCategory = null;
@@ -33,7 +31,7 @@ module.exports = class Icd10CoderDialog extends Dialog {
             },
             {
                 placeholder: 'Search ICD-10 Code',
-                popupHeight: '200px',
+                popupHeight: '40%',
                 cache: true
             }
         )
@@ -60,7 +58,6 @@ module.exports = class Icd10CoderDialog extends Dialog {
             },
             {
                 cache: true,
-                height: '300px',
                 onLink: (ev) => {
                     ev.preventDefault();
                     var query = ev.target.getAttribute('href');

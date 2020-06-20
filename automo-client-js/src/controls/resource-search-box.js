@@ -29,7 +29,12 @@ module.exports = class ResourceSearchBox extends Control {
             placeholder: options.placeholder
         })
 
-        this._popup = new Popup(this._textBox);
+        this._popup = new Popup(
+            this._textBox,
+            {
+                height: options.popupHeight
+            }
+        );
 
         this._listBox = new ResourceList(
             idFunction,
@@ -38,7 +43,7 @@ module.exports = class ResourceSearchBox extends Control {
                 this._onSelectResult(result);
             },
             {
-                height: options.popupHeight,
+                /*height: options.popupHeight,*/
                 cache: options.cache
             }
         )

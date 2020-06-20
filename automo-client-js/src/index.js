@@ -4,6 +4,7 @@ const LoginDialog = require("./app/dialog/login-dialog");
 const PatientBrowser = require('./app/panel/patient-browser');
 const Icd10CoderDialog = require('./app/dialog/icd10coder-dialog');
 const MainPanel = require('./app/panel/main-panel');
+const AdmissionWizard = require('./app/wizard/admission-wizard')
 
 const DATEFORMAT = 'D MMM YYYY';
 
@@ -12,6 +13,11 @@ connection = new Connection(logger);
 
 icd10Coder = new Icd10CoderDialog();
 dlgLogin = new LoginDialog();
+admitWizard = new AdmissionWizard(
+    {
+        'title': 'New Admission'
+    }
+);
 
 tryLogin = () =>{    
     //dlgLogin.form.setValue({

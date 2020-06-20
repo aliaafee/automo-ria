@@ -35,7 +35,16 @@ module.exports = class MainPanel extends Control {
             new Button('P')
         )
         this.addSidebarItem(
-            new Button('A')
+            new Button('A', (event) => {
+                admitWizard.show(
+                    (value) => {
+                        console.log(value)
+                    },
+                    () => {
+                        console.log("Cancelled")
+                    }
+                )
+            })
         )
         this.addSidebarItem(
             new Button('I', (event) => {
