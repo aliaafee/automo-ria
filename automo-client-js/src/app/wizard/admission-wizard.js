@@ -133,7 +133,16 @@ class AdmissionTimeBedDoctor extends WizardForm {
             {
                 label: 'Admitting Consultant',
                 required: true,
+                placeholder: 'Admitting Consultant'
+            }
+        ))
 
+        this.form.addField(new BedField(
+            'bed',
+            {
+                label: 'Bed',
+                required: true,
+                labelTop: true,
             }
         ))
 
@@ -154,23 +163,19 @@ class AdmissionTimeBedDoctor extends WizardForm {
                 labelTop: true,
             }
         ))
-
-        this.form.addField(new BedField(
-            'bed',
-            {
-                label: 'Bed',
-                required: true,
-                labelTop: true,
-            }
-        ))
     }
 
     show() {
         super.show()
 
+        /*
         this.form.getFieldByName('personnel').setResourceUrl(
             connection.resource_index.personnel.doctors
         )
+
+        this.form.getFieldByName('bed').setWardResourceUrl(
+            connection.resource_index.wards
+        )*/
     }
 }
 

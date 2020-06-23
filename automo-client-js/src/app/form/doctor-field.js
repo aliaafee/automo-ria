@@ -5,8 +5,6 @@ module.exports = class DoctorField extends Field {
     constructor(name, options={}) {
         super(name, options);
 
-        //this._data = null;
-
         this._searchBox = new ResourceSearchBox(
             (item) => {
                 return item.id
@@ -15,18 +13,19 @@ module.exports = class DoctorField extends Field {
                 return item.name
             },
             (item) => {
-                this._data = item
+                this._value = item
             },
             {
                 placeholder: this.options.placeholder,
                 displaySelected: true,
-                displayNull: true
+                displayNull: true,
+                resourceIndex: ['personnel','doctors']
             }
         )
     }
 
     _displayData() {
-        this._displayElement.innerHTML = this._data.name;
+        this._displayElement.innerHTML = this._value.name;
     }
 
     value() {

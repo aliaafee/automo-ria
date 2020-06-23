@@ -42,7 +42,13 @@ module.exports = class Wizard extends Dialog {
         //    return false
         //}
 
+        console.log(currentPage.value())
+
         this.gotoNextPage()
+    }
+
+    onBack() {
+        this.gotoPreviousPage()
     }
 
     addPage(page) {
@@ -50,6 +56,7 @@ module.exports = class Wizard extends Dialog {
     }
 
     gotoPage(page) {
+
         for (var i = 0; i < this.pages.length; i++) {
             if (i == page) {
                 this.pages[i].show()
@@ -57,15 +64,37 @@ module.exports = class Wizard extends Dialog {
                 this.pages[i].hide()
             }
         }
+
+        console.log(this._currentPage)
+
         this._currentPage = page
+        if (this._currentPage == 0) {
+            this.btnBack.hide()
+        } else {
+            this.btnBack.show()
+        }
+
+        if (this._currentPage == this.pages.length - 1) {
+            this.btnNext.show()
+        } else {
+            this.btnNext.show()
+        }
     }
 
     gotoNextPage() {
-        if (this._currentPage > this.pages.length) {
+        if (this._currentPage >= this.pages.length - 1) {
             return 
         }
 
         this.gotoPage(this._currentPage + 1)
+    }
+
+    gotoPreviousPage() {
+        if (this._currentPage < 1) {
+            return 
+        }
+
+        this.gotoPage(this._currentPage - 1)
     }
 
     getCurrentPage() {

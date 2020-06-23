@@ -33,6 +33,14 @@ module.exports = class Connection {
         )
     }
 
+    resourceFromPath(pathList) {
+        var result = this.resource_index
+        pathList.forEach((key) => {
+            result = result[key]
+        })
+        return result
+    }
+
 
     logout(on_success, on_failed) {
         this.user = null;

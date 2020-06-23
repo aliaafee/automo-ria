@@ -95,10 +95,13 @@ module.exports = class ResourceSearchBox extends Control {
 
         this._showPopup();
 
+        if (this.options.resourceIndex) {
+            this.resourceUrl = connection.resourceFromPath(this.options.resourceIndex)
+        }
+
         var parts = url.parse(this.resourceUrl, true);
         parts.query.q = query
         delete parts.search;
-        console.log(url.format(parts));
 
         this._listBox.setResourceUrl(
             url.format(parts)
@@ -133,13 +136,12 @@ module.exports = class ResourceSearchBox extends Control {
     _displaySelected() {
         
         if (this.options.displaySelected == true) {
-            console.log(this._selelctedItem)
             var value = this._selelctedItem;
             if (value) {
                 this._textBox.setValue(this.labelFunction(this._selelctedItem))
                 return
             }
-            this._textBox.setValue('--')
+            this._textBox.setValue('')
         }
     }
 
