@@ -1,4 +1,5 @@
 //const SearchBox = require("./search-box");
+const url = require("url");
 const querystring = require('querystring');
 
 const Control = require("./control");
@@ -18,12 +19,16 @@ module.exports = class ResourceSearchBox extends Control {
          *  placeholder
          *  popupHeight
          *  cache
+         *  displaySelected
+         *  displayNull
          */
         super(options);
         this.idFunction = idFunction;
         this.labelFunction = labelFunction;
         this.onSelectResult = onSelectResult;
         this.resourceUrl = "";
+
+        this._selelctedItem = null;
 
         this._textBox = new TextBox({
             placeholder: options.placeholder
@@ -44,9 +49,34 @@ module.exports = class ResourceSearchBox extends Control {
             },
             {
                 /*height: options.popupHeight,*/
-                cache: options.cache
+                cache: options.cache,
+                displayNull: options.displayNull
             }
         )
+    }
+
+    value() {
+        return this._selelctedItem;
+    }
+
+    setValue(value) {
+        this._selelctedItem = value;
+        this._displaySelected();
+    }
+
+    isBlank() {
+        if (this._selelctedItem == null) {
+            return true;
+        }
+        return false;
+    }
+
+    lock() {
+        this._textBox.lock()
+    }
+
+    unlock() {
+        this._textBox.unlock()
     }
 
     setResourceUrl(url) {
@@ -57,17 +87,27 @@ module.exports = class ResourceSearchBox extends Control {
         var query = this._textBox.value();
 
         if  (query == "") {
-            this._hidePopup();
-            return;
+            if (this.options.displaySelected == null) {
+                this._hidePopup();
+                return;
+            }
         }
 
         this._showPopup();
+
+        var parts = url.parse(this.resourceUrl, true);
+        parts.query.q = query
+        delete parts.search;
+        console.log(url.format(parts));
+
         this._listBox.setResourceUrl(
+            url.format(parts)
+            /*
             this.resourceUrl + '?' + querystring.stringify(
                 {
                     'q': query
                 }
-            )
+            )*/
         )
     }
 
@@ -85,7 +125,22 @@ module.exports = class ResourceSearchBox extends Control {
 
     _onSelectResult(result) {
         this._hidePopup();
-        this.onSelectResult(result);
+        this._selelctedItem = result;
+        this._displaySelected();
+        this.onSelectResult(this._selelctedItem);
+    }
+
+    _displaySelected() {
+        
+        if (this.options.displaySelected == true) {
+            console.log(this._selelctedItem)
+            var value = this._selelctedItem;
+            if (value) {
+                this._textBox.setValue(this.labelFunction(this._selelctedItem))
+                return
+            }
+            this._textBox.setValue('--')
+        }
     }
 
     createElement() {
@@ -113,17 +168,29 @@ module.exports = class ResourceSearchBox extends Control {
                 this._selectUp();
             } else if (ev.code == 'ArrowDown') {
                 this._selectDown();
-            } else {
-                this._search();
             }
         });
 
+        this._textBox.element.addEventListener('input', (event) => {
+            this._search();
+        })
+
         this._textBox.element.addEventListener('focusin', (ev) => {
+            if (this._textBox.isLocked()) {
+                return
+            }
+
+            if (this.options.displaySelected) {
+                if (this._selelctedItem == null) {
+                    this._textBox.setValue("")
+                }
+            }
             this._search();
         })
 
         var blurEvent = (ev) => {
             this._hidePopup();
+            this._displaySelected();
         };
 
         this._textBox.element.addEventListener('blur', blurEvent)
@@ -135,6 +202,8 @@ module.exports = class ResourceSearchBox extends Control {
         this._popup.element.addEventListener('mouseleave', (ev) => {
             this._textBox.element.addEventListener('blur', blurEvent)
         })
+
+        this._displaySelected();
 
         return this.element;
     }

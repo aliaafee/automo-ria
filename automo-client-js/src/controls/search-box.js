@@ -105,6 +105,7 @@ module.exports = class SearchBox extends Control {
 
         this._textBox.element.addEventListener('focusin', (ev) => {
             this._search();
+            this._textBox.select();
         })
 
         var blurEvent = (ev) => {

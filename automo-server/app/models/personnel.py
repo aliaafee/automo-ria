@@ -55,6 +55,7 @@ class Doctor(Personnel):
     serialized_attrs = [
         'id',
         'name',
+        'complete_name',
         'record_card_no',
         'pmr_no',
         'department',

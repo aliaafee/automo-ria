@@ -42,6 +42,13 @@ module.exports = class TextBox extends Control {
         this.element.removeAttribute('readonly');
     }
 
+    isLocked() {
+        if (this.element.hasAttribute('readonly')) {
+            return true
+        }
+        return false
+    }
+
     _fitToContents() {
         this.element.style.overflow = 'hidden'
         this.element.style.height = '';
@@ -53,6 +60,18 @@ module.exports = class TextBox extends Control {
             }
         }
         this.element.style.height = height + 'px';
+    }
+
+    select() {
+        try
+        {
+          txtCustomer.selectionStart = 0;
+          txtCustomer.selectionEnd = txtCustomer.value.length;
+        }
+        catch (error)
+        {
+          txtCustomer.select();
+        }
     }
 
     createElement() {

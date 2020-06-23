@@ -68,7 +68,12 @@ module.exports = class ListBox extends Scrolled {
         this._selectedItem = null;
         var selectedItemId = this._selectedElement.getAttribute('item-id');
 
-        this._selectedItem = this._listDataItems[selectedItemId];
+        if (selectedItemId == null) {
+            this._selectedItem = null
+        } else {
+            this._selectedItem = this._listDataItems[selectedItemId];
+        }
+        
         this.onSelectItem(this._selectedItem);
     }
 

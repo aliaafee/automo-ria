@@ -4,9 +4,11 @@ const WizardForm = require('../../controls/wizard/wizard-form')
 
 const TextField = require('../../controls/form/text-field')
 const DateField = require('../../controls/form/date-field')
+const DateTimeField = require('../../controls/form/date-time-field')
 const SelectField = require('../../controls/form/select-field')
 const AddressField = require('../form/address-field')
-
+const BedField = require("../form/bed-field")
+const DoctorField = require("../form/doctor-field")
 
 class NewPatient extends WizardForm {
     constructor(options = {}) {
@@ -116,6 +118,58 @@ class NewPatient extends WizardForm {
                     label: "Current Address"
                 }
             )
+        )
+    }
+}
+
+
+class AdmissionTimeBedDoctor extends WizardForm {
+    constructor(options = {}) {
+        options.title = "Admission Notes"
+        super(options)
+
+        this.form.addField(new DoctorField(
+            'personnel',
+            {
+                label: 'Admitting Consultant',
+                required: true,
+
+            }
+        ))
+
+        this.form.addField(new DateTimeField(
+            'start_time',
+            {
+                label: 'Time of Admission',
+                required: true,
+                labelTop: true,
+            }
+        ))
+
+        this.form.addField(new DateTimeField(
+            'end_time',
+            {
+                label: 'Time of Discharge',
+                required: true,
+                labelTop: true,
+            }
+        ))
+
+        this.form.addField(new BedField(
+            'bed',
+            {
+                label: 'Bed',
+                required: true,
+                labelTop: true,
+            }
+        ))
+    }
+
+    show() {
+        super.show()
+
+        this.form.getFieldByName('personnel').setResourceUrl(
+            connection.resource_index.personnel.doctors
         )
     }
 }
@@ -257,6 +311,10 @@ module.exports = class AdmissionWizard extends Wizard {
 
         this.addPage(
             new NewPatient()
+        )
+
+        this.addPage(
+            new AdmissionTimeBedDoctor()
         )
 
         this.addPage(

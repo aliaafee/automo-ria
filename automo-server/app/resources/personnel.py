@@ -10,9 +10,14 @@ def get_personnel():
     query = md.Personnel.query
 
     personnel_type = request.args.get('type', None)
-
     if personnel_type:
         query = query.filter_by(type=personnel_type)
+
+    str_search = request.args.get('q', None)
+    if str_search:
+        query = query.filter(
+            md.Personnel.name.like("%{}%".format(str_search))
+        )
 
     return get_query_result(
         query,

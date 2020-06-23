@@ -244,6 +244,10 @@ button:hover {
     display: none;
 }
 
+.field .search-box {
+    flex-grow: 1;
+}
+
 .invalid .invalid-feedback {
     display: unset;
 }

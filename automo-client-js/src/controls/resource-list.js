@@ -8,6 +8,7 @@ module.exports = class ResourceList extends ListBox {
          * onResultClicked(result) { do something using result }
          * autoLoadNext = false
          * cache = false
+         * displayNull
          * 
          */
         super(idFunction, labelFunction, onSelectItem, options);
@@ -164,10 +165,21 @@ module.exports = class ResourceList extends ListBox {
                 this._onLoadNextClicked(event) 
             } )
             this._listElement.appendChild(this._nextElement);
+        }
+    }
 
-            //requestAnimationFrame(() => {
-            //    setTimeout(() => {this._autoLoadNext();}, 2000) 
-            //})
+    _createNullElement(label="--") {
+        this._nullElement = document.createElement('li')
+        this._nullElement.setAttribute('item-id', '');
+        this._nullElement.innerHTML = label
+        this._nullElement.addEventListener('click', this._onItemClicked)
+        this._listElement.prepend(this._nullElement)
+    }
+
+    setData(data) {
+        super.setData(data)
+        if (this.options.displayNull) {
+            this._createNullElement()
         }
     }
 
