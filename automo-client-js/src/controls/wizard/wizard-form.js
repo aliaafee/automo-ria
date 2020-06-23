@@ -7,7 +7,6 @@ module.exports = class WizardForm extends WizardPage {
 
         this.form = new Form(
             {
-                title: options.title,
                 labelTop: true,
             }
         )

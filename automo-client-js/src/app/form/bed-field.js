@@ -23,7 +23,8 @@ module.exports = class BedField extends Field {
             {
                 placeholder: 'Bed',
                 displaySelected: true,
-                displayNull: true
+                displayNull: true,
+                popupHeight: '20%'
             }
         )
 
@@ -48,10 +49,18 @@ module.exports = class BedField extends Field {
                 placeholder: 'Ward',
                 displaySelected: true,
                 displayNull: true,
-                resourceIndex: ['wards']
+                resourceIndex: ['wards'],
+                popupHeight: '20%'
             }
         )
 
+    }
+
+    isBlank() {
+        if (this._value == null) {
+            return true
+        }
+        return false
     }
 
     value() {
@@ -90,6 +99,7 @@ module.exports = class BedField extends Field {
         //this._displayElement.className = 'locked-text-box';
         //this._placeholderElement.appendChild(this._displayElement);
 
+        this._placeholderElement.classList.add('input-group-row')
         this._placeholderElement.appendChild(this._wardSearchBox.createElement())
         this._placeholderElement.appendChild(this._bedSearchBox.createElement())
 

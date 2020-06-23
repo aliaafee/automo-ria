@@ -100,6 +100,38 @@ select:disabled {
 div.locked-text-box {
     padding: 5px;
 }
+.input-group-row input,
+.button-group-row button {
+    border-radius: 0;
+    margin-right: 0;
+    margin-left: 0;
+    
+}
+
+.input-group-row input:focus {
+    box-shadow: inset 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.input-group-row > input:last-child,
+.input-group-row > div:last-child input,
+.button-group-row > button:last-child {
+    border-top-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+
+.input-group-row > input:first-child,
+.input-group-row > div:first-child input,
+.button-group-row > button:first-child {
+    border-top-left-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
+}
+
+/*
+.input-group-row input:only-child,
+.input-group-row div:only-child input,
+.button-group-row button:only-child {
+    border-radius: var(--border-radius);
+}*/
 
 button {
     font-family: inherit;
@@ -114,17 +146,32 @@ button {
     cursor: pointer;
 }
 
+button.primary {
+    background-color: var(--primary);
+}
+
 
 button:focus {
     outline: none;
-    background-color: #343a40d3;
     /*
+    background-color: #343a40d3;
+    
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);*/
+}
+
+button:disabled {
+    background-color: var(--gray);
+    color: var(--gray-dark);
 }
 
 button:hover {
     background-color: #343a40d3;
 }
+
+.dialog-footer button {
+    flex-grow: 0.2
+}
+
 
 .splitter-column {
     flex-direction: column;
@@ -253,7 +300,8 @@ button:hover {
 }
 
 .invalid input,
-.invalid select {
+.invalid select,
+.invalid textarea {
     /* border-color: var(--red);*/
     box-shadow: 0 0 0 0.2rem rgba(255, 8, 0, 0.25);
 }
@@ -275,16 +323,15 @@ button:hover {
 }
 
 .compact .field:first-child input {
+    border-top: solid 1px var(--border);
     border-top-right-radius: var(--border-radius);
     border-top-left-radius: var(--border-radius);
 }
 
 .compact .field input {
     border-bottom: none;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
+    border-top: none;
+    border-radius: 0;
 }
 
 .compact .field:last-child input {

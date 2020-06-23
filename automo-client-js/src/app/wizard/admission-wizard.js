@@ -123,17 +123,16 @@ class NewPatient extends WizardForm {
 }
 
 
-class AdmissionTimeBedDoctor extends WizardForm {
+class AdmissionDetails extends WizardForm {
     constructor(options = {}) {
-        options.title = "Admission Notes"
+        options.title = "Admission Details"
         super(options)
 
         this.form.addField(new DoctorField(
             'personnel',
             {
                 label: 'Admitting Consultant',
-                required: true,
-                placeholder: 'Admitting Consultant'
+                required: true
             }
         ))
 
@@ -167,15 +166,14 @@ class AdmissionTimeBedDoctor extends WizardForm {
 
     show() {
         super.show()
+    }
+}
 
-        /*
-        this.form.getFieldByName('personnel').setResourceUrl(
-            connection.resource_index.personnel.doctors
-        )
 
-        this.form.getFieldByName('bed').setWardResourceUrl(
-            connection.resource_index.wards
-        )*/
+class Problems extends WizardPage {
+    constructor(options = {}) {
+        options.title = "Diagnosis"
+        super(options)
     }
 }
 
@@ -211,6 +209,16 @@ class AdmissionNotes extends WizardForm {
             'past_history',
             {
                 label: 'Past History',
+                type: 'textarea',
+                labelTop: true,
+                grow: true
+            }
+        ))
+
+        this.form.addField(new TextField(
+            'vita_signs',
+            {
+                label: 'Vital Signs',
                 type: 'textarea',
                 labelTop: true,
                 grow: true
@@ -310,6 +318,66 @@ class AdmissionNotes extends WizardForm {
 }
 
 
+class Investigations extends WizardPage {
+    constructor(options = {}) {
+        options.title = "Investigations"
+        super(options)
+    }
+}
+
+class ProceduresReports extends WizardPage {
+    constructor(options = {}) {
+        options.title = "Procedures/ Reports/ Other Notes"
+        super(options)
+    }
+}
+
+class DischargeNotes extends WizardForm {
+    constructor(options = {}) {
+        options.title = "Discharge Notes"
+        super(options)
+
+        this.form.addField(new TextField(
+            'hospital_course',
+            {
+                label: 'Summary of Hospital Course',
+                type: 'textarea',
+                required: true,
+                labelTop: true,
+                grow: true
+            }
+        ))
+
+        this.form.addField(new TextField(
+            'discharge_advice',
+            {
+                label: 'Discharge Advice',
+                type: 'textarea',
+                require: true,
+                labelTop: true,
+                grow: true
+            }
+        ))
+
+        this.form.addField(new TextField(
+            'follow_up',
+            {
+                label: 'Follow Up',
+                type: 'textarea',
+                labelTop: true,
+                grow: true
+            }
+        ))
+    }
+}
+
+class Prescription extends WizardPage {
+    constructor(options = {}) {
+        options.title = "Discharge Prescription"
+        super(options)
+    }
+}
+
 module.exports = class AdmissionWizard extends Wizard {
     constructor(options) {
         super(options)
@@ -319,12 +387,31 @@ module.exports = class AdmissionWizard extends Wizard {
         )
 
         this.addPage(
-            new AdmissionTimeBedDoctor()
+            new AdmissionDetails()
+        )
+
+        this.addPage(
+            new Problems()
         )
 
         this.addPage(
             new AdmissionNotes()
         )
-    }
 
+        this.addPage(
+            new Investigations()
+        )
+
+        this.addPage(
+            new ProceduresReports()
+        )
+
+        this.addPage(
+            new DischargeNotes()
+        )
+
+        this.addPage(
+            new Prescription()
+        )
+    }
 }

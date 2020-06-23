@@ -6,6 +6,7 @@ module.exports = class Dialog extends Control {
         /* Options
          *  centered=false
          *  title="Title"
+         *  groupButtons=false
          */
         super(options);
 
@@ -89,6 +90,9 @@ module.exports = class Dialog extends Control {
 
         this.footerElement = document.createElement('div');
         this.footerElement.className = 'dialog-footer';
+        if (this.options.groupButtons) {
+            this.footerElement.classList.add('button-group-row')
+        }
         this._dialogElement.appendChild(this.footerElement);
 
         super.hide();

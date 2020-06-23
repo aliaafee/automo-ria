@@ -48,6 +48,14 @@ module.exports = class Control {
         this.element.style.display = "none";
     }
 
+    lock() {
+
+    }
+
+    unlock() {
+        
+    }
+
     show(display = 'flex') {
         this.element.style.display = display;
         this.element.style.visibility = '';

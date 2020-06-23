@@ -19,13 +19,21 @@ module.exports = class DoctorField extends Field {
                 placeholder: this.options.placeholder,
                 displaySelected: true,
                 displayNull: true,
-                resourceIndex: ['personnel','doctors']
+                resourceIndex: ['personnel','doctors'],
+                popupHeight: '20%'
             }
         )
     }
 
     _displayData() {
         this._displayElement.innerHTML = this._value.name;
+    }
+
+    isBlank() {
+        if (this._value == null) {
+            return true
+        }
+        return false
     }
 
     value() {

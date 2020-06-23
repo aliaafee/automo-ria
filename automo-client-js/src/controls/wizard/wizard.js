@@ -7,6 +7,7 @@ module.exports = class Wizard extends Dialog {
         /* Options
          *  
          */
+        options.groupButtons = true;
         super(options);
 
         this.pages = []
@@ -31,6 +32,9 @@ module.exports = class Wizard extends Dialog {
             'Save',
             (event) => {
                 this.onSave(event)
+            },
+            {
+                style: 'primary'
             }
         )
     }
@@ -41,6 +45,7 @@ module.exports = class Wizard extends Dialog {
         //if (!currentPage.validate()) {
         //    return false
         //}
+        currentPage.validate()
 
         console.log(currentPage.value())
 
@@ -56,28 +61,28 @@ module.exports = class Wizard extends Dialog {
     }
 
     gotoPage(page) {
-
         for (var i = 0; i < this.pages.length; i++) {
-            if (i == page) {
-                this.pages[i].show()
-            } else {
-                this.pages[i].hide()
-            }
+            this.pages[i].hide()
         }
 
-        console.log(this._currentPage)
-
         this._currentPage = page
+        this.pages[this._currentPage].show()
+
+        console.log(this._currentPage)
+        console.log(this.pages.length)
+
         if (this._currentPage == 0) {
-            this.btnBack.hide()
+            this.btnBack.lock()
         } else {
-            this.btnBack.show()
+            this.btnBack.unlock()
         }
 
         if (this._currentPage == this.pages.length - 1) {
-            this.btnNext.show()
+            this.btnNext.lock()
+            this.btnSave.unlock()
         } else {
-            this.btnNext.show()
+            this.btnNext.unlock()
+            this.btnSave.lock()
         }
     }
 
