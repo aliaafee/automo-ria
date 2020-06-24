@@ -34,7 +34,7 @@ module.exports = class ResourceAccordion extends Control {
 
     _showSpinner() {
         var element = document.createElement('li');
-        element.classList = 'root-item spinner-item';
+        element.classList = 'spinner-item';
         this._listElement.appendChild(element);
 
         element.appendChild(this.spinner.createElement())

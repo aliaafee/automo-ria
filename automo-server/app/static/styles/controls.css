@@ -259,7 +259,7 @@ button:hover {
 }
 
 .list-box div.spinner-container {
-    padding: 5px;;
+    /*padding: 5px;*/
 }
 
 
@@ -380,19 +380,34 @@ button:hover {
     margin-top: 0;
 }
 
+.spinner-container {
+    width: 100%;
+}
+
 
 .spinner {
-    border: 3px solid rgba(0, 0, 0, 0.2);
-    border-top: 3px solid var(--gray-dark);
-    border-radius: 50%;
-    width: 12px;
-    height: 12px;
-    animation: spin 1s linear infinite;
+    /*border: 3px solid rgba(0, 0, 0, 0.2);
+    border-top: 3px solid var(--gray-dark);*/
+    /*border-radius: 50%;*/
+    /*width: 12px;
+    height: 12px;*/
+    background: linear-gradient(270deg, var(--primary), var(--light));
+    background-size: 400% 400%;
+    width: 100%;
+    height: 5px;
+    animation: spin 2s linear infinite;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        background-position:0% 50%
+    }
+    50% {
+        background-position:100% 50%
+    }
+    100% {
+        background-position:0% 50%
+    }
 }
 
 
@@ -419,11 +434,12 @@ button:hover {
 }
 
 .dialog-header .spinner-container {
+    /*
     padding-top: 15px;
     padding-bottom: 15px;
     padding-right: 5px;
     padding-left: 5px;
-    align-items: center;
+    align-items: center;*/
 }
 
 .dialog-close {
@@ -459,6 +475,10 @@ button:hover {
 .dialog-body {
     height: calc(100% - 107px);
     overflow: hidden;
+}
+
+.dialog-body > .form {
+    margin: 15px;
 }
 
 .dialog-footer {
@@ -523,7 +543,9 @@ button:hover {
 }
 
 .accordion ul li.spinner-item {
-    padding: 5px 15px 5px 15px;
+    /*
+    padding: 5px 15px 5px 15px;*/
+    padding-bottom: 5px;
 }
 
 .accordion ul li.root-item:last-child {

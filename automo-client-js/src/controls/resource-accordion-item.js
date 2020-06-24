@@ -21,7 +21,7 @@ module.exports = class ResourceAccordionItem extends Control {
     }
 
     _showSpinner() {
-        this.bodyElement.appendChild(this.spinner.createElement());
+        this.element.insertBefore(this.spinner.createElement(), this.bodyElement)
     }
 
     _hideSpinner() {

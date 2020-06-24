@@ -269,6 +269,9 @@ module.exports = class PatientPanel extends Scrolled {
         this.element.id = 'patient-panel';
         this.element.style.display = 'block';
 
+        this.element.appendChild(this.spinner.createElement());
+        this.spinner.hide();
+
         this._container = document.createElement('div');
         this._container.className = 'container';
         this.element.appendChild(this._container)
@@ -309,8 +312,7 @@ module.exports = class PatientPanel extends Scrolled {
         this._bodyElement.style.flexDirection = 'column';
         this._container.appendChild(this._bodyElement);
 
-        this._container.appendChild(this.spinner.createElement());
-        this.spinner.hide();
+        
 
         this._bodyElement.appendChild(this.currentAdmissionTile.createElement());
         this._bodyElement.appendChild(this.admissionsTile.createElement());
