@@ -220,7 +220,7 @@ class AdmissionNotes extends WizardForm {
         ))
 
         this.form.addField(new VitalSignsField(
-            'vita_signs',
+            'vitalsigns',
             {
                 label: 'Vital Signs',
                 type: 'textarea',
@@ -318,6 +318,10 @@ class AdmissionNotes extends WizardForm {
                 grow: true
             }
         ))
+    }
+
+    show() {
+        super.show()
     }
 }
 

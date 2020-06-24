@@ -61,8 +61,10 @@ module.exports = class VitalSignsField extends Field {
 
     setValue(value) {
         if (value != null) {
-            value['blood_pressure']['systolic_bp'] = value['systolic_bp']
-            value['blood_pressure']['diastolic_bp'] = value['diastolic_bp']
+            value['blood_pressure'] = {
+                'systolic_bp': value['systolic_bp'],
+                'diastolic_bp': value['diastolic_bp']
+            }
 
             delete(value['systolic_bp'])
             delete(value['diastolic_bp'])
