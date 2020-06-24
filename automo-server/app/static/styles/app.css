@@ -1,3 +1,7 @@
+#login-dialog .form {
+    padding: 15px;
+}
+
 .icd10coder .dialog {
     width: 700px;
 }
@@ -336,6 +340,14 @@ button.side-bar-item {
 
     .icd10coder .form textarea {
         
+    }
+
+    .icd10coder .dialog-header {
+        border: none;
+    }
+
+    .icd10coder .dialog-footer {
+        border: none;
     }
 
     .icd10coder .category-list {

@@ -332,6 +332,7 @@ button:hover {
     border-bottom: none;
     border-top: none;
     border-radius: 0;
+    min-height: 100%;
 }
 
 .compact .field:last-child input {
@@ -477,8 +478,8 @@ button:hover {
     overflow: hidden;
 }
 
-.dialog-body > .form {
-    margin: 15px;
+.dialog-body .form {
+    /*margin: 15px;*/
 }
 
 .dialog-footer {
@@ -619,12 +620,17 @@ button:hover {
 
     .foreground .dialog {
         margin-top: 0;
-        width: 100% !important;
-        height: 100%;
     }
 
     .foreground-centered {
         align-items: unset;
+    }
+
+    .dialog {
+        border: none;
+        border-radius: 0;
+        width: 100% !important;
+        height: 100% !important;
     }
 
     .dialog .dialog-body-padded {
@@ -632,7 +638,7 @@ button:hover {
     }
 
     .dialog-header {
-        border: none;
+        /*border: none;*/
         height: 60px;
     }
 
@@ -643,18 +649,11 @@ button:hover {
     }
 
     .dialog-footer {
-        border: none;
+        /*border: none;*/
         height: 47px;
     }
     
-    .dialog {
-        border: none;
-        border-radius: 0;
-    }
-
-    .dialog-header {
-        border: none;
-    }
+    
 
     .splitter-row .pane1 {
         display: none !important;

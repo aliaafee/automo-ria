@@ -68,9 +68,6 @@ module.exports = class Wizard extends Dialog {
         this._currentPage = page
         this.pages[this._currentPage].show()
 
-        console.log(this._currentPage)
-        console.log(this.pages.length)
-
         if (this._currentPage == 0) {
             this.btnBack.lock()
         } else {

@@ -88,6 +88,8 @@ module.exports = class LoginDialog extends FormDialog {
     createElement() {
         super.createElement();
 
+        this.element.id = 'login-dialog';
+
         this.bodyElement.className = 'dialog-body'
 
         this.bodyElement.prepend(this.spinner.createElement());

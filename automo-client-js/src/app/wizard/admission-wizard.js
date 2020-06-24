@@ -9,6 +9,7 @@ const SelectField = require('../../controls/form/select-field')
 const AddressField = require('../form/address-field')
 const BedField = require("../form/bed-field")
 const DoctorField = require("../form/doctor-field")
+const VitalSignsField = require("../form/vitalsigns-field")
 
 class NewPatient extends WizardForm {
     constructor(options = {}) {
@@ -86,7 +87,10 @@ class NewPatient extends WizardForm {
             new TextField(
                 'allergies',
                 {
-                    label: "Allergies"
+                    label: "Allergies",
+                    type: 'textarea',
+                    labelTop: true,
+                    grow: true
                 }
             )
         )
@@ -215,7 +219,7 @@ class AdmissionNotes extends WizardForm {
             }
         ))
 
-        this.form.addField(new TextField(
+        this.form.addField(new VitalSignsField(
             'vita_signs',
             {
                 label: 'Vital Signs',
