@@ -1,17 +1,36 @@
 const Field = require("../../controls/form/field")
+const Button = require("../../controls/button")
 
 module.exports = class ProblemsField extends Field {
     constructor(name, options={}) {
         super(name, options);
 
         this._data = [];
+
+        this.btnAddProblem = new Button(
+            'Add',
+            (event) => {
+                icd10Coder.show(
+                    (value) => {
+                        this._data.push(value)
+                        console.log(value)
+                        this.displayData()
+                    },
+                    () => {
+                        console.log('Cancelled');
+                    }
+                )
+            }
+        )
     }
 
     _clearDisplay() {
-
+        while (this._listElement.firstChild) {
+            this._listElement.firstChild.remove();
+        }
     }
 
-    _displayData() {
+    displayData() {
         this._clearDisplay();
 
         if (this._data == [] || this._data == null) {
@@ -57,7 +76,17 @@ module.exports = class ProblemsField extends Field {
         }
 
         this._data = data;
-        this._displayData();
+        this.displayData();
+    }
+
+    lock() {
+        super.lock()
+        this.btnAddProblem.hide()
+    }
+
+    unlock() {
+        super.lock()
+        this.btnAddProblem.show()
     }
 
     createElement() {
@@ -65,6 +94,8 @@ module.exports = class ProblemsField extends Field {
 
         this._listElement = document.createElement('ol');
         this._placeholderElement.appendChild(this._listElement);
+
+        this._placeholderElement.appendChild(this.btnAddProblem.createElement())
 
         return this.element;
     }

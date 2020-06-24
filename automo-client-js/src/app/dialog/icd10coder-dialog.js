@@ -183,6 +183,7 @@ module.exports = class Icd10CoderDialog extends Dialog {
         if (this.selectedBlockCode != null) {
             if (this.selectedBlockCode == this.selectedCategory.parent_block_code) {
                 this.categoryList.setSelection(this.selectedCategory.code);
+                this.selectedCategory = this.categoryList.value()
                 onDone();
                 return
             }
@@ -194,6 +195,7 @@ module.exports = class Icd10CoderDialog extends Dialog {
             requestAnimationFrame(() => {
                 //Extra time needed to allow the DOM to update before we can scroll to it
                 this.categoryList.setSelection(this.selectedCategory.code);
+                this.selectedCategory = this.categoryList.value()
                 onDone()
             }) 
         })

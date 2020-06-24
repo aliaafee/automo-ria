@@ -24,8 +24,9 @@ module.exports = class BPField extends TextField {
     setValue(value) {
         var value_str = null
 
-        if (value.systolic_bp != null && value.diastolic_bp != null)
+        if (value.systolic_bp != null && value.diastolic_bp != null) {
             value_str = `${value.systolic_bp}/${value.diastolic_bp}`
+        }
 
         super.setValue(value_str)
     }

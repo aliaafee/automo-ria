@@ -10,6 +10,7 @@ const AddressField = require('../form/address-field')
 const BedField = require("../form/bed-field")
 const DoctorField = require("../form/doctor-field")
 const VitalSignsField = require("../form/vitalsigns-field")
+const ProblemsField = require("../form/problems-field")
 
 class NewPatient extends WizardForm {
     constructor(options = {}) {
@@ -174,10 +175,14 @@ class AdmissionDetails extends WizardForm {
 }
 
 
-class Problems extends WizardPage {
+class Problems extends WizardForm {
     constructor(options = {}) {
         options.title = "Diagnosis"
         super(options)
+
+        this.form.addField(new ProblemsField(
+            'problems'
+        ))
     }
 }
 

@@ -86,10 +86,10 @@ module.exports = class ListBox extends Scrolled {
             this.clearSelection();
             return;
         }
+        this.clearSelection();
 
         this._selectedItem = this._listDataItems[itemId]
-
-        this.clearSelection();
+        
         this._selectedElement = this._listChildElems[itemId];
         this._highlightSelection();
         if (scroll) {
