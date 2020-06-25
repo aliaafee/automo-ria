@@ -21,6 +21,33 @@ module.exports = class BPField extends TextField {
         }
     }
 
+    isValid() {
+        if (!super.isValid()) {
+            console.log("invalid1")
+            return false
+        }
+
+        var value_string = super.value()
+
+        if (!value_string) {
+            return true
+        }
+
+        var parts = value_string.split('/')
+
+        if (parts.length != 2) {
+            console.log("invalid2")
+            return false
+        }
+
+        if (isNaN(parseFloat(parts[0])) || isNaN(parseFloat(parts[1]))) {
+            console.log("invalid3")
+            return false
+        }
+
+        return true
+    }
+
     setValue(value) {
         var value_str = null
 

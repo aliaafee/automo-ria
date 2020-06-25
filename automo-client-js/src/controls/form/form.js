@@ -49,7 +49,7 @@ module.exports = class Form extends Control {
     isBlank() {
         var blank = true;
         for (var i = 0; i < this._fieldNames.length; i++) {
-            if (this._fields[i].value()) {
+            if (!this._fields[i].isBlank()) {
                 blank = false
                 return blank
             }

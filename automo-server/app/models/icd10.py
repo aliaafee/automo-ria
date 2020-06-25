@@ -51,7 +51,8 @@ class Icd10Class(SerializerMixin, db.Model):
 
     serialized_attrs = [
         'code',
-        'preferred'
+        'preferred_plain',
+        'preferred_long'
     ]
 
     code = db.Column(db.String(10), primary_key=True)

@@ -6,16 +6,19 @@
     width: 700px;
 }
 
-.icd10coder .category-label {
+.icd10coder .category-label,
+.problems-field .category-label {
     display: flex;
 }
 
-.icd10coder .category-label .code {
+.icd10coder .category-label .code,
+.problems-field .category-label .code {
     min-width: 50px;
     font-weight: bold;
 }
 
-.icd10coder .category-label .text {
+.icd10coder .category-label .text,
+.problems-field .category-label .text {
     flex-grow: 1;
 }
 
@@ -34,11 +37,13 @@
     margin-top: 5px;
 }
 
-.icd10coder .category-label .preferred {
+.icd10coder .category-label .preferred,
+.problems-field .category-label .preferred {
     font-weight: bold;
 }
 
-.icd10coder .category-label .preferred-long {
+.icd10coder .category-label .preferred-long,
+.problems-field .category-label .preferred-long {
     padding-left: 10px;
 }
 
@@ -187,6 +192,58 @@ li.admission-item .root-item-head div.duration {
 li.admission-item .root-item-head div.doctor {
     font-weight: bold;
     min-width: 30%;
+}
+
+.field-buttons button {
+    margin: 0;
+}
+
+.problems-field ol {
+    flex-direction: column;
+    padding: 0;
+    margin: unset;
+    list-style: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.problems-field li {
+    padding: 5px 10px 5px 10px;
+    border-right: solid 1px var(--border);
+    border-left: solid 1px var(--border);
+    min-height: 27px;
+    border-bottom: solid 1px var(--border);
+    display: flex;
+}
+
+.problems-field li .category-label {
+    flex-grow: 1;
+}
+
+.problems-field li button {
+    margin-right: 0;
+}
+
+.problems-field li:only-child {
+    border-radius: var(--border-radius);
+    border-top: solid 1px var(--border);
+    
+}
+
+.problems-field li:first-child {
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+    border-top: solid 1px var(--border);
+}
+
+.problems-field li:last-child {
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+    
+}
+
+.problems-field.locked li button {
+    display: none;
 }
 
 .main-panel {

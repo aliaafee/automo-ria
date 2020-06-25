@@ -88,11 +88,13 @@ module.exports = class Field extends Control {
         if (this.value() == null) {
             this.element.style.display = 'none';
         }
+        this.element.classList.add('locked')
     }
 
     unlock() {
         this._locked = false;
         this.element.style.display = 'flex';
+        this.element.classList.remove('locked')
     }
 
     createElement() {
@@ -128,6 +130,7 @@ module.exports = class Field extends Control {
         }
 
         this._placeholderElement = document.createElement('div');
+        this._placeholderElement.className = "field-input-placeholder"
         this._placeholderElement.style.display = 'flex';
         this._placeholderElement.style.flexGrow = 1;
         content.appendChild(this._placeholderElement);

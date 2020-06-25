@@ -181,7 +181,9 @@ class Problems extends WizardForm {
         super(options)
 
         this.form.addField(new ProblemsField(
-            'problems'
+            'problems',
+            {
+            }
         ))
     }
 }
