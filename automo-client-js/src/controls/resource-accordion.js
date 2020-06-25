@@ -96,6 +96,7 @@ module.exports = class ResourceAccordion extends Control {
     }
 
     _clear() {
+        
         for (var key in this._listChildren) {
             this._listElement.removeChild(this._listChildren[key].element);
         }
@@ -108,6 +109,12 @@ module.exports = class ResourceAccordion extends Control {
             this._listElement.removeChild(this._failedElement)
             this._failedElement = null;
         }
+        /*while (this._listElement.firstChild) {
+            this._listElement.firstChild.remove();
+        }
+
+        this._nextElement = null;
+        this._failedElement = null;*/
         
         this._data = null;
         this._listChildren = {};

@@ -666,6 +666,7 @@ button:hover {
     .splitter-row .active-pane {
         display: flex !important;
         height: 100%;
+        flex-direction: column;
     }
     .resizer {
         display: none !important;
