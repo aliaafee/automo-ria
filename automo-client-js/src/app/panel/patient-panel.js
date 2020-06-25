@@ -247,11 +247,11 @@ module.exports = class PatientPanel extends Scrolled {
         connection.get(
             patient.url,
             patient => {
-                this.spinner.hide();
+                this.spinner.hideSoft();
                 this._setPatient(patient, onDone)
             },
             (error) => {
-                this.spinner.hide();
+                this.spinner.hideSoft();
                 console.log(error);
                 this._errorElement.innerHTML = 'Failed to Load'
                 this._errorElement.style.display = 'flex'
@@ -270,7 +270,7 @@ module.exports = class PatientPanel extends Scrolled {
         this.element.style.display = 'block';
 
         this.element.appendChild(this.spinner.createElement());
-        this.spinner.hide();
+        this.spinner.hideSoft();
 
         this._container = document.createElement('div');
         this._container.className = 'container';

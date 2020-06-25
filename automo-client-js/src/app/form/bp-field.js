@@ -23,7 +23,6 @@ module.exports = class BPField extends TextField {
 
     isValid() {
         if (!super.isValid()) {
-            console.log("invalid1")
             return false
         }
 
@@ -36,12 +35,10 @@ module.exports = class BPField extends TextField {
         var parts = value_string.split('/')
 
         if (parts.length != 2) {
-            console.log("invalid2")
             return false
         }
 
         if (isNaN(parseFloat(parts[0])) || isNaN(parseFloat(parts[1]))) {
-            console.log("invalid3")
             return false
         }
 

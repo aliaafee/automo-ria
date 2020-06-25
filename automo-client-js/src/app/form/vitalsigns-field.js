@@ -75,7 +75,6 @@ module.exports = class VitalSignsField extends Field {
     }
 
     isBlank() {
-        console.log("checking blank")
         return this.form.isBlank();
     }
 
@@ -93,9 +92,7 @@ module.exports = class VitalSignsField extends Field {
         if (this.options.required == true) {
             return this.form.validate()
         }
-        console.log("Here1")
         if (!this.isBlank()) {
-            console.log("Here2")
             return this.form.validate()
         }
         this.form._fields.forEach((field) => {
