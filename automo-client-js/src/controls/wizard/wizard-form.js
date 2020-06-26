@@ -2,14 +2,19 @@ const WizardPage = require('./wizard-page')
 const Form = require('../../controls/form/form')
 
 module.exports = class WizardForm extends WizardPage {
-    constructor(options) {
+    constructor(form, options) {
         super(options)
 
-        this.form = new Form(
-            {
-                labelTop: true,
-            }
-        )
+        if (!form) {
+            this.form = new Form(
+                {
+                    labelTop: true,
+                }
+            )
+            return
+        }
+
+        this.form = form
     }
 
     validate() {
