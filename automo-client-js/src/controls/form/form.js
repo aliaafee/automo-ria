@@ -102,22 +102,36 @@ module.exports = class Form extends Control {
         return isValid;
     }
 
+    clear() {
+        this._fields.forEach((field) => {
+            field.setValue(null)
+        })
+    }
+
     lock() {
         this._fields.forEach((field) => {
             field.lock();
         });
+        this.clearValidation()
     }
 
     unlock() {
         this._fields.forEach((field) => {
             field.unlock();
         });
+        this.clearValidation()
     }
 
     clearValidation() {
         this._fields.forEach((field) => {
             field.markValid();
         });
+    }
+
+    markInvalidFields(invalid_fields) {
+        for (const [field_name, message] of Object.entries(invalid_fields)) {
+            this.getFieldByName(field_name).markInvalid(message)
+        }
     }
 
     createElement() {

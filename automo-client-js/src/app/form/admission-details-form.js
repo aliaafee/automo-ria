@@ -13,12 +13,12 @@ module.exports = class AdmissionDetailsForm extends Form {
             'personnel',
             {
                 label: 'Admitting Consultant',
-                required: true
+                required: false
             }
         ))
 
         this.addField(new BedField(
-            'bed',
+            'discharged_bed',
             {
                 label: 'Bed',
                 required: true,

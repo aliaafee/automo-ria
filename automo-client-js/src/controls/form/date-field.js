@@ -12,14 +12,14 @@ module.exports = class DateField extends TextField {
     }
 
     value() {
-        var datetime = moment(super.value());
+        var datetime = moment(super.value()).toDate();
         return datetime;
     }
 
     setValue(value) {
         super.setValue(value);
         this._value = moment(value);
-        this._textBox.setValue(this._value.format('YYYY-MM-DD'));
+        this._textBox.setValue(this._value.toISOString());
     }
 
     lock() {
@@ -33,7 +33,7 @@ module.exports = class DateField extends TextField {
     unlock() {
         this._locked = false;
         this.element.style.display = 'flex';
-        this._textBox.unlock
+        this._textBox.unlock();
     }
     
 

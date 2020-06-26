@@ -43,7 +43,8 @@ module.exports = class TextField extends Field {
     lock() {
         super.lock();
         //this._textBox.lock();
-        this._textBox.element.style.display = 'none';
+        //this._textBox.element.style.display = 'none';
+        this._textBox.hide()
         this._lockedView.style.display = 'flex';
         this._lockedView.innerHTML = this.displayValue();
     }
@@ -51,7 +52,8 @@ module.exports = class TextField extends Field {
     unlock() {
         super.unlock();
         //this._textBox.unlock();
-        this._textBox.element.style.display = 'flex';
+        //this._textBox.element.style.display = 'flex';
+        this._textBox.show()
         this._lockedView.style.display = 'none';
     }
 

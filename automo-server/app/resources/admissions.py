@@ -180,6 +180,8 @@ def get_patient_admission(patient_id, admission_id):
         _external = True
     )
 
+    additional_data['initial_vitalsigns'] = None
+
     return get_one_query_result(
         query, 
         additional_data=additional_data,
@@ -220,20 +222,21 @@ def post_patient_admission(patient_id, admission_id):
         .filter(md.Admission.patient_id == patient_id)\
         .filter(md.Admission.id == admission_id)
 
-    end_admission = request.args.get('end', False, type=bool)
-    if end_admission:
-        admission = query.first()
-
-        if admission is None:
+    admission = query.first()
+    if admission is None:
             return errors.resource_not_found('Admission not found')
 
-        data = request.get_json()
+    data = request.get_json()
+    all_field_names = list(data.keys()).copy()
+
+    end_admission = request.args.get('end', False, type=bool)
+    if end_admission:
 
         try:
             admission.end()
             if 'end_time' in data:
-                result = admission.validate_and_update_field('end_time', data['end_time'])
-                if result:
+                invalid_fields = admission.validate_and_update_field('end_time', data['end_time'])
+                if invalid_fields:
                     db.session.rollback()
                     return errors.invalid_fields({'end_time': 'End time not valid'})
             db.session.commit()
@@ -246,7 +249,47 @@ def post_patient_admission(patient_id, admission_id):
 
         return admission.get_serialized()
 
-    return post_one_query_result(query)
+    try:
+        initial_vitalsigns = data.pop('initial_vitalsigns', None)
+        personnel = data.pop('personnel', None)
+        discharged_bed = data.pop('discharged_bed', None)
+
+        invalid_fields = admission.validate_and_update(data)
+
+        if personnel:
+            personnel_id = personnel.pop('id')
+            new_personnel = md.Personnel.query.get(personnel_id)
+            if new_personnel:
+                admission.personnel = new_personnel
+            else:
+                invalid_fields['personnel'] = 'Personnel not found'
+        
+        if discharged_bed:
+            bed_id = discharged_bed.pop('id')
+            new_bed = md.Bed.query.get(bed_id)
+            if new_bed:
+                admission.discharged_bed = new_bed
+            else:
+                invalid_fields['discharged_bed'] = 'Bed not found'
+
+        if initial_vitalsigns:
+            print("updating initial vital sign")
+            #TODO: find the first vital sign and updae it
+
+        if invalid_fields:
+            db.session.rollback()
+            return errors.invalid_fields(invalid_fields)
+
+
+        db.session.commit()
+    except ValueError as e:
+    #except Exception as e:
+        db.session.rollback()
+        return errors.unprocessable("Databse Error: {}".format(e))
+
+    return admission.get_serialized(all_field_names)
+
+    #return post_one_query_result(query)
 
 
 @api.route("patients/<int:patient_id>/admissions/<int:admission_id>/discharge-summary.pdf")

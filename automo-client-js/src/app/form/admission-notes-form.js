@@ -41,7 +41,7 @@ module.exports = class AdmissionNotesForm extends Form {
         ))
 
         this.addField(new VitalSignsField(
-            'vitalsigns',
+            'initial_vitalsigns',
             {
                 label: 'Vital Signs',
                 type: 'textarea',
@@ -49,7 +49,7 @@ module.exports = class AdmissionNotesForm extends Form {
                 grow: true
             }
         ))
-
+        /*
         this.addField(new TextField(
             'mental_state',
             {
@@ -59,7 +59,7 @@ module.exports = class AdmissionNotesForm extends Form {
                 grow: true
             }
         ))
-
+            */
         this.addField(new TextField(
             'general_inspection',
             {

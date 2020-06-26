@@ -8,6 +8,9 @@ const PrescriptionField = require('../form/prescription-field');
 const DoctorField = require('../form/doctor-field');
 const ProblemsField = require('../form/problems-field');
 const Button = require('../../controls/button')
+const ResourcePanel = require('../../controls/panel/resource-panel');
+const AdmissionDetailsForm = require('../form/admission-details-form');
+const AdmissionNotesForm = require('../form/admission-notes-form');
 
 module.exports = class AdmissionPanel extends Control {
     constructor (options) {
@@ -51,6 +54,21 @@ module.exports = class AdmissionPanel extends Control {
         )
         */
 
+        this.admissionDetails = new ResourcePanel(
+            new AdmissionDetailsForm(),
+            {
+                title: 'Admission Details'
+            }
+        )
+
+        this.admissionNotes = new ResourcePanel(
+            new AdmissionNotesForm(),
+            {
+                title: 'Admission Details'
+            }
+        )
+
+        /*
         this.form = new Form()
 
         this.form.addField(new DateField(
@@ -261,13 +279,15 @@ module.exports = class AdmissionPanel extends Control {
                 labelTop: true
             }
         ))
-
+        */
         
     }
 
     setData(data) {
         this.data = data
-        this.form.setValue(data);
+        //this.form.setValue(data);
+        this.admissionDetails.setValue(data);
+        this.admissionNotes.setValue(data)
         this.element.style.display = 'flex';
     }
 
@@ -279,10 +299,11 @@ module.exports = class AdmissionPanel extends Control {
         this.element.appendChild(this.summary.createElement())
         //this.element.appendChild(this.summary_html.createElement())
 
-        this.element.appendChild(this.form.createElement())
-        this.form.element.style.flexGrow = 1;
+        this.element.appendChild(this.admissionDetails.createElement())
+        this.element.appendChild(this.admissionNotes.createElement())
+        //this.form.element.style.flexGrow = 1;
 
-        this.form.lock();
+        //this.form.lock();
         this.element.style.display = 'none';
 
         return this.element

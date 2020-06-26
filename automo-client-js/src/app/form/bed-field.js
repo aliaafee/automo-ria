@@ -37,6 +37,7 @@ module.exports = class BedField extends Field {
                 return item.name
             },
             (item) => {
+                this._value = null
                 this._bedSearchBox.setValue(null)
                 if (item == null) {
                     this._bedSearchBox.lock()
@@ -74,6 +75,7 @@ module.exports = class BedField extends Field {
             this._wardSearchBox.setValue(null)
         } else {
             this._wardSearchBox.setValue(value.ward)
+            this._bedSearchBox.setResourceUrl(value.ward.url + "/beds/")
         }
         super.setValue(value)
     }

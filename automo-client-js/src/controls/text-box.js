@@ -40,6 +40,16 @@ module.exports = class TextBox extends Control {
 
     unlock() {
         this.element.removeAttribute('readonly');
+        this._fitToContents()
+    }
+
+    show() {
+        super.show()
+        requestAnimationFrame(
+            () => {
+                this._fitToContents()
+            }
+        )
     }
 
     isLocked() {
@@ -50,6 +60,10 @@ module.exports = class TextBox extends Control {
     }
 
     _fitToContents() {
+        if (this.element.style.display == 'none') {
+            return
+        }
+
         this.element.style.overflow = 'hidden'
         this.element.style.height = '';
         var height = this.element.scrollHeight + 2

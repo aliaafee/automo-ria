@@ -75,8 +75,15 @@ module.exports = class Field extends Control {
         return isValid;
     }
 
-    markInvalid() {
+    markInvalid(message) {
         this.element.classList.add('invalid');
+        if (message) {
+            if (!this._invalidElement) {
+                this._createInvalidElement(message)
+            } else {
+                this._invalidElement.innerHTML = message
+            }
+        }
     }
 
     markValid() {
@@ -97,6 +104,21 @@ module.exports = class Field extends Control {
         this.element.classList.remove('locked')
     }
 
+    _createInvalidElement(message) {
+        var displayMessage = ""
+        if (message) {
+            displayMessage += message
+        }
+        if (this.options.invalidFeedback) {
+            displayMessage += this.options.invalidFeedback
+        }
+
+        this._invalidElement = document.createElement('div');
+        this._invalidElement.className = 'invalid-feedback';
+        this._invalidElement.innerHTML = displayMessage;
+        this._content.appendChild(this._invalidElement);
+    }
+
     createElement() {
         super.createElement()
 
@@ -113,40 +135,37 @@ module.exports = class Field extends Control {
             //this.element.appendChild(this._labelElement);
         }
         
-        var content = document.createElement('div');
-        content.style.display = 'flex';
-        content.style.flexDirection = 'column';
-        content.style.flexGrow = 1;
+        this._content = document.createElement('div');
+        this._content.style.display = 'flex';
+        this._content.style.flexDirection = 'column';
+        this._content.style.flexGrow = 1;
         //this.element.appendChild(content);
 
         if (this.options.label == null) {
-            this.element.appendChild(content);
+            this.element.appendChild(this._content);
         } else if (this.options.labelTop == true) {
-            content.appendChild(this._labelElement);
-            this.element.appendChild(content);
+            this._content.appendChild(this._labelElement);
+            this.element.appendChild(this._content);
         } else {
             this.element.appendChild(this._labelElement);
-            this.element.appendChild(content);
+            this.element.appendChild(this._content);
         }
 
         this._placeholderElement = document.createElement('div');
         this._placeholderElement.className = "field-input-placeholder"
         this._placeholderElement.style.display = 'flex';
         this._placeholderElement.style.flexGrow = 1;
-        content.appendChild(this._placeholderElement);
+        this._content.appendChild(this._placeholderElement);
 
         if (this.options.helpText != null) {
             this._helpElement = document.createElement('div');
             this._helpElement.className = 'help-text';
             this._helpElement.innerHTML = this.options.helpText;
-            content.appendChild(this._helpElement);
+            this._content.appendChild(this._helpElement);
         }
 
         if (this.options.invalidFeedback != null) {
-            this._invalidElement = document.createElement('div');
-            this._invalidElement.className = 'invalid-feedback';
-            this._invalidElement.innerHTML = this.options.invalidFeedback;
-            content.appendChild(this._invalidElement);
+            this._createInvalidElement()
         }
         
         return this.element

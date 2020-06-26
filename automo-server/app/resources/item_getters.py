@@ -68,7 +68,7 @@ def post_one_query_result(query):
         result = item.validate_and_update(data)
         
         if result:
-            db.session.rollback
+            db.session.rollback()
             return errors.invalid_fields(result)
 
         db.session.commit()

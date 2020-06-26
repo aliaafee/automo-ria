@@ -30,7 +30,7 @@ module.exports = class DoctorField extends Field {
     }
 
     isBlank() {
-        if (this._value == null) {
+        if (this.value() == null) {
             return true
         }
         return false
@@ -43,7 +43,7 @@ module.exports = class DoctorField extends Field {
 
     setValue(data) {
         super.setValue(data);
-        //this._data = data;
+        this._data = data;
         this._searchBox.setValue(data);
         //this._displayData();
     }

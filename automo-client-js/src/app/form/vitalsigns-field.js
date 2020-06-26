@@ -60,7 +60,12 @@ module.exports = class VitalSignsField extends Field {
     }
 
     setValue(value) {
-        if (value != null) {
+        if (!value) {
+            this.form.clear()
+            return
+        }
+
+        if (value['systolic_bp'] || value['diastolic_bp']) {
             value['blood_pressure'] = {
                 'systolic_bp': value['systolic_bp'],
                 'diastolic_bp': value['diastolic_bp']
