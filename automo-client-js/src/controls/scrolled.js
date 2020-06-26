@@ -18,8 +18,6 @@ module.exports = class Scrolled extends Control {
     createElement() {
         super.createElement();
 
-        this.element.style.overflowX = 'none';
-        this.element.style.overflowY = 'auto';
         this.element.classList.add('scrolled');
 
         return this.element;

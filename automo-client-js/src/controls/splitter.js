@@ -199,8 +199,8 @@ module.exports = class Spitter extends Control {
                     )
                 }
             } else {
-                this.pane1.element.style.flexGrow = 1;
-                this.pane2.element.style.flexGrow = 1;
+                //this.pane1.element.style.flexGrow = 1;
+                //this.pane2.element.style.flexGrow = 1;
             }
         }
 

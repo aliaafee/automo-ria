@@ -310,7 +310,7 @@ module.exports = class Icd10CoderDialog extends Dialog {
         this.element.classList.add('icd10coder');
 
         this.headerElement.appendChild(this.searchBox.createElement());
-        this.searchBox.element.style.flexGrow = 1;
+        //this.searchBox.element.style.flexGrow = 1;
 
         this.bodyElement.appendChild(this.categoryList.createElement());
         this.categoryList.element.classList.add('category-list');

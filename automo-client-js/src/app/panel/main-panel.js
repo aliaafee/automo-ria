@@ -136,14 +136,14 @@ module.exports = class MainPanel extends Control {
 
         var bodyElem = document.createElement('div');
         bodyElem.className = 'main-panel-body';
-        bodyElem.style.display = 'flex';
+        //bodyElem.style.display = 'flex';
         this.element.appendChild(bodyElem);
 
         bodyElem.appendChild(this._createSideBarElement())
 
         this._mainElement = document.createElement('div')
         this._mainElement.className = 'main-content';
-        this._mainElement.style.display = 'flex';
+        //this._mainElement.style.display = 'flex';
         bodyElem.appendChild(this._mainElement)
 
         //this._menuBarElement.innerHTML = `<div class="menu-bar-spacer"></div><div class="menu-bar-item">Dr Ali Aafee</div><div class="menu-bar-item">Logout</div>`;

@@ -60,6 +60,10 @@ module.exports = class TextBox extends Control {
     }
 
     _fitToContents() {
+        if (!this.options.grow) {
+            return
+        }
+        
         if (this.element.style.display == 'none') {
             return
         }

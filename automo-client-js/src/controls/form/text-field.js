@@ -69,7 +69,7 @@ module.exports = class TextField extends Field {
         this._lockedView.style.display = 'none';
         this._placeholderElement.appendChild(this._lockedView)
 
-        this._textBox.element.style.flexGrow = 1;
+        //this._textBox.element.style.flexGrow = 1;
 
         return this.element;
     }

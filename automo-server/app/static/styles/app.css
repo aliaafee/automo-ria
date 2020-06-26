@@ -82,6 +82,7 @@
 }
 
 #patient-list {
+    display: flex;
     background-color: var(--light);
     flex-direction: column;
 }
@@ -142,14 +143,24 @@
     background-color: var(--gray);
     border-radius: var(--border-radius);
     color: var(--light);
+    flex-direction: column;
+    display: flex;
+}
+
+#patient-panel .header .details {
+    display: flex;
+    align-items: baseline;
 }
 
 #patient-panel .header .number {
+    display: flex;
     justify-content: space-between;
 }
 
 #patient-panel .body {
     margin: 0 15px 15px 15px;
+    display: flex;
+    flex-direction: column;
 }
 
 #patient-panel .error {
@@ -260,6 +271,7 @@ li.admission-item .root-item-head div.doctor {
 }
 
 .main-panel-body {
+    display: flex;
     flex-direction: row;
     max-height: calc(100% - 30px);
     height: calc(100% - 30px);
@@ -293,6 +305,7 @@ button.menu-bar-item {
 
 .main-content {
     width: calc(100% - 40px);
+    display: flex;
 }
 
 .side-bar-item {

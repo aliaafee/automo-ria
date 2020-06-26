@@ -130,7 +130,7 @@ module.exports = class VitalSignsField extends Field {
         super.createElement()
 
         this._placeholderElement.appendChild(this.form.createElement())
-        this.form.element.style.flexGrow = 1
+        //this.form.element.style.flexGrow = 1
 
         return this.element
     }

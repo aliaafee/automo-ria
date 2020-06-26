@@ -29,7 +29,8 @@ module.exports = class WizardPage extends Control {
         super.createElement()
 
         this.element.classList.add('wizard-page')
-        this.element.style.display = 'block'
+        this.element.classList.add('scrolled')
+        //this.element.style.display = 'block'
 
         if (this.options.title) {
             var title = document.createElement('h1')

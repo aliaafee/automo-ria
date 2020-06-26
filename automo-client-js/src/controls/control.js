@@ -6,6 +6,8 @@ module.exports = class Control {
          */
         this.element = null;
         this.options = options;
+
+        this._display = null
     }
 
     focus() {
@@ -30,7 +32,7 @@ module.exports = class Control {
         this.element = document.createElement('div');
 
         //Add styles
-        this.element.style.display = "flex";
+        //this.element.style.display = "flex";
         this.element.style.userSelect = "none";
         this.element.style.width = this.options.width;
         this.element.style.height = this.options.height;
@@ -45,6 +47,7 @@ module.exports = class Control {
     }
 
     hide() {
+        this._display = this.element.style.display
         this.element.style.display = "none";
     }
 
@@ -56,8 +59,16 @@ module.exports = class Control {
         
     }
 
-    show(display = 'flex') {
-        this.element.style.display = display;
+    show() {
+        if (this._display) {
+            if (this._display != 'none') {
+                this.element.style.display = this._display;
+            }
+            this.element.style.display = ''
+        } else {
+            this.element.style.display = '';
+        }
+        
         this.element.style.visibility = '';
     }
 }

@@ -31,10 +31,10 @@ module.exports = class Field extends Control {
     setValue(value) {
         if (this._locked) {
             if (!value) {
-                this.element.style.display = 'none';
+                this.hide()
                 return
             }
-            this.element.style.display = 'flex';
+            this.show()
         }
     }
 
@@ -92,8 +92,8 @@ module.exports = class Field extends Control {
 
     lock() {
         this._locked = true;
-        if (this.value() == null) {
-            this.element.style.display = 'none';
+        if (this.isBlank()) {
+            this.hide()
         }
         this.element.classList.add('locked')
     }
@@ -136,9 +136,10 @@ module.exports = class Field extends Control {
         }
         
         this._content = document.createElement('div');
-        this._content.style.display = 'flex';
-        this._content.style.flexDirection = 'column';
-        this._content.style.flexGrow = 1;
+        this._content.className = 'content';
+        //this._content.style.display = 'flex';
+        //this._content.style.flexDirection = 'column';
+        //this._content.style.flexGrow = 1;
         //this.element.appendChild(content);
 
         if (this.options.label == null) {
@@ -152,9 +153,9 @@ module.exports = class Field extends Control {
         }
 
         this._placeholderElement = document.createElement('div');
-        this._placeholderElement.className = "field-input-placeholder"
-        this._placeholderElement.style.display = 'flex';
-        this._placeholderElement.style.flexGrow = 1;
+        this._placeholderElement.className = "input-placeholder"
+        //this._placeholderElement.style.display = 'flex';
+        //this._placeholderElement.style.flexGrow = 1;
         this._content.appendChild(this._placeholderElement);
 
         if (this.options.helpText != null) {

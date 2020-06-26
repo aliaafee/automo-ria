@@ -153,7 +153,7 @@ module.exports = class ResourceSearchBox extends Control {
         this.element.appendChild(
             this._textBox.createElement()
         );
-        this._textBox.element.style.flexGrow = 1;
+        //this._textBox.element.style.flexGrow = 1;
 
         this.element.appendChild(
             this._popup.createElement()
@@ -163,7 +163,7 @@ module.exports = class ResourceSearchBox extends Control {
             this._listBox.createElement()
         );
 
-        this._listBox.element.style.flexGrow = 1;
+        //this._listBox.element.style.flexGrow = 1;
 
         this._textBox.element.addEventListener('keyup', (ev) => {
             if (ev.code == 'ArrowUp') {

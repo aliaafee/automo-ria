@@ -74,8 +74,9 @@ module.exports = class Dialog extends Control {
         this._dialogElement.appendChild(header);
         
         this.headerElement = document.createElement('div');
-        this.headerElement.style.display = 'flex';
-        this.headerElement.style.flexGrow = 1;
+        //this.headerElement.style.display = 'flex';
+        this.headerElement.className = 'dialog-header-content';
+        //this.headerElement.style.flexGrow = 1;
         header.appendChild(this.headerElement);
 
         this._closeElement = document.createElement('div');
@@ -85,7 +86,7 @@ module.exports = class Dialog extends Control {
 
         this.bodyElement = document.createElement('div');
         this.bodyElement.className = 'dialog-body';
-        this.bodyElement.style.flexGrow = 1;
+        //this.bodyElement.style.flexGrow = 1;
         this._dialogElement.appendChild(this.bodyElement);
 
         this.footerElement = document.createElement('div');

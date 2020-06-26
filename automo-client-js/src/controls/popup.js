@@ -31,7 +31,7 @@ module.exports = class Popup extends Control {
         super.createElement();
 
         this.element.className = 'popup';
-        this.element.style.position = 'absolute';
+        //this.element.style.position = 'absolute';
         this.element.style.width = this.options.width;
         this.element.style.maxHeight = this.options.height;
 

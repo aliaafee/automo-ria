@@ -217,8 +217,8 @@ module.exports = class PatientPanel extends Scrolled {
         this._nameElement.innerHTML = patient.name;
         this._ageSexElement.innerHTML = patient.age + "/" + patient.sex;
 
-        this._headerElement.style.display = 'flex';
-        this._bodyElement.style.display = 'flex';
+        this._headerElement.style.display = '';
+        this._bodyElement.style.display = '';
 
         var processes = 2;
         var setPatientDone = () => {
@@ -239,7 +239,7 @@ module.exports = class PatientPanel extends Scrolled {
         this._nameElement.innerHTML = patient.name;
         this._ageSexElement.innerHTML = patient.age + "/" + patient.sex;
         
-        this._headerElement.style.display = 'flex';
+        this._headerElement.style.display = '';
         this._bodyElement.style.display = 'none';
         this._errorElement.style.display = 'none';
 
@@ -254,7 +254,7 @@ module.exports = class PatientPanel extends Scrolled {
                 this.spinner.hideSoft();
                 console.log(error);
                 this._errorElement.innerHTML = 'Failed to Load'
-                this._errorElement.style.display = 'flex'
+                this._errorElement.style.display = ''
                 onFailed();
             },
             () => {
@@ -267,7 +267,7 @@ module.exports = class PatientPanel extends Scrolled {
         super.createElement();
 
         this.element.id = 'patient-panel';
-        this.element.style.display = 'block';
+        //this.element.style.display = 'block';
 
         this.element.appendChild(this.spinner.createElement());
         this.spinner.hideSoft();
@@ -278,13 +278,13 @@ module.exports = class PatientPanel extends Scrolled {
 
         this._headerElement = document.createElement('div');
         this._headerElement.className = 'header';
-        this._headerElement.style.flexDirection = 'column';
         this._container.appendChild(this._headerElement);
 
         var detailsElement = document.createElement('div')
-        detailsElement.style.display = 'flex';
-        detailsElement.style.flexDirection = 'row';
-        detailsElement.style.alignItems = 'baseline';
+        detailsElement.className = 'details'
+        //detailsElement.style.display = 'flex';
+        //detailsElement.style.flexDirection = 'row';
+        //detailsElement.style.alignItems = 'baseline';
         this._headerElement.appendChild(detailsElement);
 
         this._nameElement = document.createElement('h1');
@@ -295,7 +295,7 @@ module.exports = class PatientPanel extends Scrolled {
 
         var numberElement = document.createElement('div');
         numberElement.className = 'number';
-        numberElement.style.display = 'flex';
+        //numberElement.style.display = 'flex';
         this._headerElement.appendChild(numberElement);
 
         this._idNumberElement = document.createElement('div');
@@ -309,10 +309,8 @@ module.exports = class PatientPanel extends Scrolled {
 
         this._bodyElement = document.createElement('div');
         this._bodyElement.className = 'body';
-        this._bodyElement.style.flexDirection = 'column';
+        //this._bodyElement.style.flexDirection = 'column';
         this._container.appendChild(this._bodyElement);
-
-        
 
         this._bodyElement.appendChild(this.currentAdmissionTile.createElement());
         this._bodyElement.appendChild(this.admissionsTile.createElement());

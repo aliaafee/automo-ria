@@ -9,7 +9,16 @@ module.exports = class FloatField extends TextField {
 
     value() {
         var value = super.value();
-        return +value;
+        return value;
+    }
+
+    setValue(value) {
+        console.log("Setting value")
+        if (!value) {
+            super.setValue("")
+            return
+        }
+        super.setValue(value)
     }
 
     isValid() {

@@ -293,8 +293,8 @@ module.exports = class AdmissionPanel extends Control {
 
     createElement() {
         super.createElement();
-        this.element.style.flexGrow = 1;
-        this.element.style.flexDirection = 'column'
+        //this.element.style.flexGrow = 1;
+        //this.element.style.flexDirection = 'column'
 
         this.element.appendChild(this.summary.createElement())
         //this.element.appendChild(this.summary_html.createElement())

@@ -54,6 +54,10 @@ class ClinicalEncounter(Encounter):
 
     written_by = db.Column(db.String(255))
 
+    @property
+    def initial_vitalsigns(self):
+        return None
+
     def prescribe_drug(self, drug, drug_str, drug_order, active=True):
         """Precribe medication. Drug can be passed as an object, or object can be None
           and a string name of Drug can be passed. If this string name not found in drug list

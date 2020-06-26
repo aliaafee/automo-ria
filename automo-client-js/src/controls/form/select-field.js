@@ -55,7 +55,7 @@ module.exports = class SelectField extends Field {
             this._select.createElement()
         );
 
-        this._select.element.style.flexGrow = 1;
+        //this._select.element.style.flexGrow = 1;
 
         return this.element;
     }
