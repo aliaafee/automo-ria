@@ -13,7 +13,7 @@ module.exports = class AdmissionDetailsForm extends Form {
             'personnel',
             {
                 label: 'Admitting Consultant',
-                required: false
+                required: true
             }
         ))
 

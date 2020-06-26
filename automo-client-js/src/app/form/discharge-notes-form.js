@@ -23,7 +23,7 @@ module.exports = class DischargeNotesForm extends Form {
             {
                 label: 'Discharge Advice',
                 type: 'textarea',
-                require: true,
+                required: true,
                 labelTop: true,
                 grow: true
             }
@@ -34,6 +34,7 @@ module.exports = class DischargeNotesForm extends Form {
             {
                 label: 'Follow Up',
                 type: 'textarea',
+                required: true,
                 labelTop: true,
                 grow: true
             }
