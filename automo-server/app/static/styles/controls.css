@@ -288,6 +288,7 @@ button:hover {
 
 .field {
     margin-bottom: 5px;
+    display: flex;
 }
 
 .field .content {
