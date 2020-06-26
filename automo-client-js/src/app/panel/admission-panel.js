@@ -288,14 +288,14 @@ module.exports = class AdmissionPanel extends Control {
         //this.form.setValue(data);
         this.admissionDetails.setValue(data);
         this.admissionNotes.setValue(data)
-        this.element.style.display = 'flex';
+        this.show()
     }
 
     createElement() {
         super.createElement();
         //this.element.style.flexGrow = 1;
         //this.element.style.flexDirection = 'column'
-
+        this.element.classList.add('admission-panel')
         this.element.appendChild(this.summary.createElement())
         //this.element.appendChild(this.summary_html.createElement())
 
