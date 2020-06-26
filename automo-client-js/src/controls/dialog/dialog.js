@@ -1,3 +1,4 @@
+const createFocusTrap = require("focus-trap")
 const Control = require("../control");
 
 
@@ -30,11 +31,15 @@ module.exports = class Dialog extends Control {
         this.onCancel = onCancel;
 
         document.body.appendChild(this.createElement());
+        
         super.show();
+        this.focusTrap.activate()
     }
 
     hide() {
         super.hide();
+        this.focusTrap.deactivate()
+
         document.body.removeChild(this.element);
     }
 
@@ -51,6 +56,8 @@ module.exports = class Dialog extends Control {
 
     createElement() {
         this.element = document.createElement('div');
+
+        this.focusTrap = createFocusTrap(this.element);
 
         if (this.options.centered == true){
             this.element.className = 'foreground-centered';
