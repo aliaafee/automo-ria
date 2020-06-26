@@ -137,7 +137,7 @@
     margin-left: auto;
 }
 
-#patient-panel .header {
+#patient-panel .patient-banner {
     padding: 15px;
     margin: 15px;
     background-color: var(--gray);
@@ -147,12 +147,12 @@
     display: flex;
 }
 
-#patient-panel .header .details {
+#patient-panel .patient-banner .details {
     display: flex;
     align-items: baseline;
 }
 
-#patient-panel .header .number {
+#patient-panel .patient-banner .number {
     display: flex;
     justify-content: space-between;
 }
@@ -169,13 +169,13 @@
     color: grey;
 }
 
-#patient-panel .header h1 {
+#patient-panel .patient-banner h1 {
     margin: 0 0 10px 0;
     padding-right: 15px;
     color: var(--light);
 }
 
-#patient-panel .header span {
+#patient-panel .patient-banner .details span {
     font-size: larger;
 }
 
@@ -430,7 +430,7 @@ button.side-bar-item {
 }
 
 @media only screen and (max-width: 576px) {
-    #patient-panel .header .number {
+    #patient-panel .patient-banner .number {
         flex-direction: column;
     }
 }

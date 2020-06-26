@@ -9,33 +9,6 @@ const AdmissionPanel = require('./admission-panel');
 const Spinner = require('../../controls/spinner');
 
 
-/*
-class ProblemsTile extends Tile {
-    constructor(options={}) {
-        super('Diagnosis', options);
-
-        this.resourceList = new ResourceAccordion(
-            (item) => {
-                return item.id;
-            },
-            ResourceAccordionItem
-        );
-    }
-
-    setPatient(patient, onDone) {
-        this.resourceList.setResourceUrl(patient.problems, onDone);
-    }
-
-    createElement() {
-        super.createElement();
-
-        this._tileBodyElement.appendChild(this.resourceList.createElement());
-
-        return this.element
-    }
-}*/
-
-
 class AdmissionItem extends ResourceAccordionItem {
     constructor(itemData, options={}) {
         super(itemData, options);
@@ -157,31 +130,68 @@ class AdmissionsTile extends Tile {
     }
 }
 
-/*
-class CurrentAdmissionTile extends AdmissionsTile {
-    constructor(label ,options={}) {
-        super(label, options);
+class PatientBanner extends Control {
+    constructor(options={}) {
+        super(options)
 
-        this.resourceList = new ResourceAccordion(
-            (item) => {
-                return item.id;
-            },
-            AdmissionsItem
-        );
+        this._fieldElements = {}
     }
 
-    setPatient(patient, onDone) {
-        this.resourceList.setResourceUrl(patient.admissions_active, onDone);
+    setValue(data) {
+        for (const [key, elem] of Object.entries(this._fieldElements)) {
+            if (data[key]) {
+                elem.innerHTML = data[key]
+            }
+        }
     }
 
     createElement() {
-        super.createElement();
+        super.createElement()
 
-        this._tileBodyElement.appendChild(this.resourceList.createElement());
+        this.element.className = 'patient-banner'
+
+        var detailsElement = document.createElement('div');
+        detailsElement.className = 'details'
+        this.element.appendChild(detailsElement)
+
+        this._fieldElements['name'] = document.createElement('h1');
+        detailsElement.appendChild(this._fieldElements['name']);
+
+        this._fieldElements['age'] = document.createElement('span');
+        detailsElement.appendChild(this._fieldElements['age']);
+
+        var slash = document.createTextNode(' / ')
+        detailsElement.appendChild(slash)
+
+        this._fieldElements['sex'] = document.createElement('span');
+        detailsElement.appendChild(this._fieldElements['sex']);
+
+        var numberElement = document.createElement('div');
+        numberElement.className = 'number';
+        this.element.appendChild(numberElement);
+
+        var col1 = document.createElement('div')
+        col1.innerHTML = "NIC No.: "
+        numberElement.appendChild(col1)
+        var col2 = document.createElement('div')
+        col2.innerHTML = "Hosp No.: "
+        numberElement.appendChild(col2)
+        var col3 = document.createElement('div')
+        col3.innerHTML = "Phone No.: "
+        numberElement.appendChild(col3)
+
+        this._fieldElements['national_id_no'] = document.createElement('span');
+        col1.appendChild(this._fieldElements['national_id_no']);
+
+        this._fieldElements['hospital_no'] = document.createElement('span');
+        col2.appendChild(this._fieldElements['hospital_no'])
+
+        this._fieldElements['phone_no'] = document.createElement('span');
+        col3.appendChild(this._fieldElements['phone_no']);
 
         return this.element
     }
-}*/
+}
 
 
 module.exports = class PatientPanel extends Scrolled {
@@ -189,6 +199,8 @@ module.exports = class PatientPanel extends Scrolled {
         super(options)
 
         this.patient = null;
+
+        this.patientBanner = new PatientBanner();
 
         this.currentAdmissionTile = new AdmissionsTile(
             'Current Admission',
@@ -211,13 +223,9 @@ module.exports = class PatientPanel extends Scrolled {
     _setPatient(patient, onDone) {
         this.patient = patient;
 
-        this._idNumberElement.innerHTML = "NIC No.: " + patient.national_id_no;
-        this._hospNumberElement.innerHTML = "Hospital No.: " +patient.hospital_no;
-        this._phoneNumberElement.innerHTML = "Phone No.: " +patient.phone_no;
-        this._nameElement.innerHTML = patient.name;
-        this._ageSexElement.innerHTML = patient.age + "/" + patient.sex;
+        this.patientBanner.setValue(this.patient)
+        this.patientBanner.show()
 
-        this._headerElement.style.display = '';
         this._bodyElement.style.display = '';
 
         var processes = 2;
@@ -233,13 +241,9 @@ module.exports = class PatientPanel extends Scrolled {
     }
 
     setPatient(patient, onDone, onFailed) {
-        this._idNumberElement.innerHTML = "NIC No.: " + patient.national_id_no;
-        this._hospNumberElement.innerHTML = "Hospital No.: " +patient.hospital_no;
-        this._phoneNumberElement.innerHTML = "";
-        this._nameElement.innerHTML = patient.name;
-        this._ageSexElement.innerHTML = patient.age + "/" + patient.sex;
-        
-        this._headerElement.style.display = '';
+        this.patientBanner.setValue(patient)
+        this.patientBanner.show()
+
         this._bodyElement.style.display = 'none';
         this._errorElement.style.display = 'none';
 
@@ -267,7 +271,6 @@ module.exports = class PatientPanel extends Scrolled {
         super.createElement();
 
         this.element.id = 'patient-panel';
-        //this.element.style.display = 'block';
 
         this.element.appendChild(this.spinner.createElement());
         this.spinner.hideSoft();
@@ -276,40 +279,10 @@ module.exports = class PatientPanel extends Scrolled {
         this._container.className = 'container';
         this.element.appendChild(this._container)
 
-        this._headerElement = document.createElement('div');
-        this._headerElement.className = 'header';
-        this._container.appendChild(this._headerElement);
-
-        var detailsElement = document.createElement('div')
-        detailsElement.className = 'details'
-        //detailsElement.style.display = 'flex';
-        //detailsElement.style.flexDirection = 'row';
-        //detailsElement.style.alignItems = 'baseline';
-        this._headerElement.appendChild(detailsElement);
-
-        this._nameElement = document.createElement('h1');
-        detailsElement.appendChild(this._nameElement);
-
-        this._ageSexElement = document.createElement('span');
-        detailsElement.appendChild(this._ageSexElement);
-
-        var numberElement = document.createElement('div');
-        numberElement.className = 'number';
-        //numberElement.style.display = 'flex';
-        this._headerElement.appendChild(numberElement);
-
-        this._idNumberElement = document.createElement('div');
-        numberElement.appendChild(this._idNumberElement);
-
-        this._hospNumberElement = document.createElement('div');
-        numberElement.appendChild(this._hospNumberElement);
-
-        this._phoneNumberElement = document.createElement('div');
-        numberElement.appendChild(this._phoneNumberElement);
+        this._container.appendChild(this.patientBanner.createElement())
 
         this._bodyElement = document.createElement('div');
         this._bodyElement.className = 'body';
-        //this._bodyElement.style.flexDirection = 'column';
         this._container.appendChild(this._bodyElement);
 
         this._bodyElement.appendChild(this.currentAdmissionTile.createElement());
@@ -319,7 +292,7 @@ module.exports = class PatientPanel extends Scrolled {
         this._errorElement.className = 'error';
         this._container.appendChild(this._errorElement);
 
-        this._headerElement.style.display = 'none';
+        this.patientBanner.hide()
         this._bodyElement.style.display = 'none';
         this._errorElement.style.display = 'none';
         
