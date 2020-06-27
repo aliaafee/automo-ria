@@ -4,6 +4,10 @@ const Field = require("./field");
 
 module.exports = class SelectField extends Field {
     constructor(name, idFunction, labelFunction, options = {}) {
+        /*opions
+         *  data=the options to display
+         *  onlyId=value returned/set is only id
+         */
         super(name, options);
 
         this._select = new Select(
@@ -11,7 +15,8 @@ module.exports = class SelectField extends Field {
             labelFunction,
             {
                 placeholder: options.placeholder,
-                data: options.data
+                data: options.data,
+                onlyId: options.onlyId
             }
         );
     }

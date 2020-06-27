@@ -9,6 +9,9 @@ module.exports = class FloatField extends TextField {
 
     value() {
         var value = super.value();
+        if (value == "") {
+            return null
+        }
         return value;
     }
 

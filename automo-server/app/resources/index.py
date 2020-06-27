@@ -11,6 +11,7 @@ from . import errors
 def main():
     result = {
         'patients' : url_for('api.get_patients', _external=True),
+        'admissions' : url_for('api.get_admissions', _external=True),
         'user': url_for('api.user',username=g.current_user.username, _external=True),
         'auth_token': url_for('api.get_token', _external=True),
         'icd10': {

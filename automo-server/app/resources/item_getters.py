@@ -121,3 +121,45 @@ def new_item(model):
     return item.get_serialized(data.keys())
 
 
+
+
+def problems_data_to_problems(data):
+    item_class = md.Problem
+    processed_items = []
+    invalid_items = []
+
+    for item_data in data:
+        item_id = item_data.pop('id', None)
+
+        icd10class_data = item_data.pop('icd10class', None)
+        if icd10class_data:
+            item_data['icd10class_code'] = icd10class_data.pop('code', None)
+
+        icd10modifier_class_data = item_data.pop('icd10modifier_class', None)
+        if icd10modifier_class_data:
+            item_data['icd10modifier_class_code'] = icd10modifier_class_data.pop('code', None)
+
+        icd10modifier_extra_class_data = item_data.pop('icd10modifier_extra_class', None)
+        if icd10modifier_class_data:
+            item_data['icd10modifier_extra_class_code'] = icd10modifier_extra_class_data.pop('code', None)
+
+        if item_id is None:
+            new_item = item_class()
+
+            invalid_fields = new_item.validate_and_insert(item_data)
+            if invalid_fields:
+                invalid_items.append(invalid_fields)
+            else:
+                processed_items.append(new_item)
+
+        else:
+            existing_item = item_class.query.get(item_id)
+            if existing_item is None:
+                invalid_items.append({'id': 'Item not found'})
+            else:
+                processed_items.append(existing_item)
+
+    if invalid_items:
+        raise md.dbexception.FieldValueError('Invalid fields', invalid_items)
+
+    return processed_items

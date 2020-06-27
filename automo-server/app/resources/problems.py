@@ -5,7 +5,7 @@ from .. import db
 
 from . import api
 from . import errors
-from .item_getters import get_query_result, get_one_query_result, post_one_query_result
+from .item_getters import get_query_result, get_one_query_result, post_one_query_result, problems_data_to_problems
 
 
 @api.route("/patients/<int:patient_id>/problems/")
@@ -72,8 +72,9 @@ def post_patient_admission_problems(patient_id, admission_id):
         return errors.unprocessable('Expected a list of problems')
 
     
-    processed_problems = []
+    #processed_problems = []
     try:
+        """
         invalid_problems = []
         for problem_data in problems_data:
             problem_id = problem_data.pop('id', None)
@@ -106,6 +107,18 @@ def post_patient_admission_problems(patient_id, admission_id):
         for processed_problem in processed_problems:
             admission.add_problem(processed_problem)
             db.session.commit()
+        """
+        processed_problems = problems_data_to_problems(problems_data)
+
+        for processed_problem in processed_problems:
+            if processed_problem.patient is None:
+                admission.patient.problems.append(processed_problem)
+            admission.add_problem(processed_problem)
+            db.session.commit()
+
+    except md.dbexception.FieldValueError as e:
+        db.session.rollback()
+        return errors.invalid_fields(e.invalid_fields)
 
     except Exception as e:
         db.session.rollback()

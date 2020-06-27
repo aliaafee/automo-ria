@@ -6,6 +6,7 @@ module.exports = class Select extends Control {
         /* Options
          *  placeholder=""
          *  data = [ {name: a, value: b} ,  ]
+         *  onlyId=value returned/set is only id
          *  
          */
         super(options);
@@ -21,6 +22,9 @@ module.exports = class Select extends Control {
         var selectedId = this.element.value;
         for (var i = 0; i < this._itemIds.length; i++) {
             if (this._itemIds[i] == selectedId) {
+                if (this.options.onlyId) {
+                    return this.idFunction(this.data[i])
+                }
                 return this.data[i];
             }
         }
@@ -28,6 +32,9 @@ module.exports = class Select extends Control {
     }
 
     setValue(value) {
+        if (this.options.onlyId) {
+            this.setSelection(value)
+        }
         this.setSelection(this.idFunction(value));
     }
 

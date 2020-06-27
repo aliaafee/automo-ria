@@ -17,21 +17,21 @@ module.exports = class Wizard extends Dialog {
         this.btnBack = new Button(
             'Back',
             (event) => {
-                this.onBack(event)
+                this._onBack(event)
             }
         )
 
         this.btnNext = new Button(
             'Next',
             (event) => {
-                this.onNext(event)
+                this._onNext(event)
             }
         )
 
         this.btnSave = new Button(
             'Save',
             (event) => {
-                this.onSave(event)
+                this._onSave(event)
             },
             {
                 style: 'primary'
@@ -39,21 +39,49 @@ module.exports = class Wizard extends Dialog {
         )
     }
 
-    onNext() {
+    value() {
+        var result = {}
+        this.pages.forEach((page) => {
+            var page_value = page.value()
+            if (page_value) {
+                result = Object.assign(result,page_value)
+            }
+        })
+        return result
+    }
+
+    _onNext() {
         var currentPage = this.getCurrentPage()
 
-        //if (!currentPage.validate()) {
-        //    return false
-        //}
-        currentPage.validate()
+        if (!currentPage.validate()) {
+            console.log("Invalid input")
+            //return false
+        }
 
         console.log(currentPage.value())
 
         this.gotoNextPage()
     }
 
-    onBack() {
+    _onBack() {
         this.gotoPreviousPage()
+    }
+
+    _onSave() {
+        var currentPage = this.getCurrentPage()
+
+        if (!currentPage.validate()) {
+            console.log("Invalid input")
+            //return false
+        }
+
+        console.log(currentPage.value())
+
+        this.onSave(this.value())
+    }
+
+    onSave(data) {
+        console.log(data)
     }
 
     addPage(page) {

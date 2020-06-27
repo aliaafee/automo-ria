@@ -31,6 +31,7 @@ class SerializerMixin(object):
 
 class ValidatorMixin(object):
     required_attrs = []
+    editable_relationships = []
 
 
     def validate_and_update(self, data):
@@ -71,7 +72,7 @@ class ValidatorMixin(object):
             if (required_attr not in data.keys()):
                 invalid_fields[required_attr] = 'Required'
             else:
-                if data[required_attr] == None:
+                if not data[required_attr]:
                     invalid_fields[required_attr] = 'Cannot be blank'
 
         for name, value in data.items():
@@ -87,9 +88,15 @@ class ValidatorMixin(object):
             return 'Attribute not found'
 
         attr = getattr(self, name)
+        col_class = getattr(self.__class__, name)
+        if not hasattr(col_class, 'property'):
+            return 'Attribut is not a column'
         col_property = getattr(self.__class__, name).property
 
         if isinstance(col_property,sqlalchemy.orm.relationships.RelationshipProperty):
+            if name not in self.editable_relationships:
+                return 'Attribute cannot be set'
+                
             if  col_property.uselist:
                 return 'Attribute is a list, cannot set'
 

@@ -8,7 +8,95 @@ from .. import db
 from . import api
 from . import errors
 from .success import success_response
-from .item_getters import get_query_result, get_one_query_result, post_one_query_result
+from .item_getters import get_query_result, get_one_query_result, post_one_query_result, problems_data_to_problems
+
+
+def get_serialized_admission(admission):
+    additional_data = {}
+
+    if admission.end_time is not None:
+        additional_data['discharge_summary_pdf'] = url_for(
+            'api.get_patient_admission_discharge_summary_pdf',
+            patient_id=admission.patient_id, admission_id=admission.id,
+            _external = True
+        )
+        additional_data['discharge_summary_html'] = url_for(
+            'api.get_patient_admission_discharge_summary_html',
+            patient_id=admission.patient_id, admission_id=admission.id,
+            _external = True
+        )
+    else:
+        additional_data['discharge'] = url_for(
+            'api.post_patient_admission',
+            patient_id=admission.patient_id, admission_id=admission.id,
+            end=True, 
+            _external=True
+        )
+
+    encounters = {};
+    for child_encounter_type in md.encounters.ENCOUNTER_MODEL_TYPES.keys():
+        encounters[child_encounter_type] = url_for(
+            'api.get_patient_admission_encounters',
+            patient_id=admission.patient_id, admission_id=admission.id,
+            type=child_encounter_type,
+            _external = True
+        )
+
+    additional_data['encounters'] = encounters
+
+    additional_data['encounters_url'] = url_for(
+        'api.get_patient_admission_encounters',
+        patient_id=admission.patient_id, admission_id=admission.id,
+        _external = True
+    )
+
+    additional_data['problems_url'] = url_for(
+        'api.get_patient_admission_problems',
+        patient_id=admission.patient_id, admission_id=admission.id,
+        _external = True
+    )
+
+    additional_data['prescription_url'] = url_for(
+        'api.get_patient_admission_prescription',
+        patient_id=admission.patient_id, admission_id=admission.id,
+        _external = True
+    )
+
+    additional_data['initial_vitalsigns'] = None
+
+    fields=[
+        'id',
+        'label',
+        'type',
+        'bed',
+        'discharged_bed',
+        'start_time',
+        'end_time',
+        #'children',
+        'personnel',
+        'problems',
+        'chief_complaints',
+        'history',
+        'past_history',
+        'general_inspection',
+        'exam_head',
+        'exam_neck',
+        'exam_chest',
+        'exam_abdomen',
+        'exam_genitalia',
+        'exam_pelvic_rectal',
+        'exam_extremities',
+        'exam_other',
+        'hospital_course',
+        'discharge_advice',
+        'prescription',
+        'follow_up'
+    ]
+
+    admission_serialized = admission.get_serialized(fields)
+    admission_serialized.update(additional_data)
+
+    return admission_serialized
 
 
 @api.route("/admissions/")
@@ -24,6 +112,81 @@ def get_admissions():
         query,
         'api.get_admission'
     )
+
+
+@api.route("/admissions/", methods=['POST'])
+def new_admission():
+    admission_data = request.get_json()
+
+    patient_data = admission_data.pop('patient', None)
+    if not patient_data:
+        return errors.invalid_fields({'patient': 'Patient is required'})
+
+    try:
+        patient_id = patient_data.pop('id', None)
+        if not patient_id:
+            patient = md.Patient()
+
+            invalid_fields = patient.validate_and_insert(patient_data)
+            if invalid_fields:
+                return errors.invalid_fields({'patient': invalid_fields})
+
+            db.session.add(patient)
+        else:
+            patient = md.Patient.query.get(patient_id)
+
+            if not patient:
+                return errors.invalid_fields({'patient': 'Patient with id {} not found'.format(patient_id)})
+
+        personnel_data = admission_data.pop('personnel', None)
+        if personnel_data:
+            admission_data['personnel_id'] = personnel_data.pop('id', None)
+        
+        discharged_bed_data = admission_data.pop('discharged_bed', None)
+        if discharged_bed_data:
+            admission_data['discharged_bed_id'] = discharged_bed_data.pop('id', None)
+        else:
+            return errors.invalid_fields({'discharged_bed': 'Required'})
+
+        initial_vitalsigns = admission_data.pop('initial_vitalsigns', None)
+        problems_data = admission_data.pop('problems', None)
+        encounters_data = admission_data.pop('encounters', None)
+        prescription_data = admission_data.pop('prescription', None)
+
+        admission = md.Admission()
+        invalid_fields = admission.validate_and_insert(admission_data)
+        if invalid_fields:
+            db.session.rollback()
+            return errors.invalid_fields(invalid_fields)
+
+        patient.encounters.append(admission)
+
+        try:
+            problems = problems_data_to_problems(problems_data)
+        except md.dbexception.FieldValueError as e:
+            db.session.rollback()
+            return errors.invalid_fields({'problems': e.invalid_fields})
+
+        #process encounters and prescription here
+
+        for problem in problems:
+            patient.problems.append(problem)
+            admission.add_problem(problem)
+            db.session.commit()
+
+        #add encounters and prescription
+
+    except md.dbexception.AutoMODatabaseError as e:
+        db.session.rollback()
+        return errors.unprocessable('Database Error: {}'.format(e))
+    #except Exception as e:
+    #    db.session.rollback()
+    #    return errors.unprocessable('Error: {}'.format(e))
+
+    admission_serialized = get_serialized_admission(admission)
+    admission_serialized['patient'] = patient.get_serialized()
+
+    return jsonify(admission_serialized)
 
 
 @api.route("patients/<int:patient_id>/admissions/")
@@ -118,7 +281,9 @@ def new_patient_admission(patient_id):
         db.session.rollback()
         return errors.unprocessable('Error: {}'.format(e))
 
-    return admission.get_serialized()
+    return jsonify(
+        get_serialized_admission(admission)
+    )
 
 
 @api.route("patients/<int:patient_id>/admissions/<int:admission_id>")
@@ -129,6 +294,14 @@ def get_patient_admission(patient_id, admission_id):
 
     admission = query.first()
 
+    if admission is None:
+        return errors.resource_not_found("Item not found.")
+
+    return jsonify(
+        get_serialized_admission(admission)
+    )
+
+    """
     additional_data = {}
 
     if admission is not None:
@@ -214,6 +387,7 @@ def get_patient_admission(patient_id, admission_id):
             'follow_up'
         ]
     )
+    """
 
 
 @api.route("patients/<int:patient_id>/admissions/<int:admission_id>", methods=['POST'])

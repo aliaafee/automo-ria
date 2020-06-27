@@ -30,6 +30,11 @@ class ClinicalEncounter(Encounter):
         'problems'
     ]
 
+    required_attrs = [
+        'start_time',
+        'personnel_id'
+    ]
+
     label = "Clinical Encounter"
 
     chief_complaints = db.Column(db.Text)

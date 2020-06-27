@@ -62,6 +62,7 @@ module.exports = class PatientForm extends Form {
                 {
                     label: "Sex",
                     required: true,
+                    onlyId: true,
                     data:[
                         {
                             id: 'F',

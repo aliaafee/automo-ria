@@ -65,8 +65,6 @@ module.exports = class ResourcePanel extends Control {
             this._data.url,
             this.form.value(),
             (response) => {
-                //console.log(response)
-                //this._errorElem.innerHTML = "Succes"
                 console.log(response)
                 if (response.error) {
                     this._errorElem.innerHTML = response.error

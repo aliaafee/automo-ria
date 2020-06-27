@@ -44,6 +44,10 @@ module.exports = class VitalSignsField extends Field {
     }
 
     value() {
+        if (this.isBlank()) {
+            return null
+        }
+        
         var value = this.form.value();
         
         if (value['blood_pressure'] != null) {

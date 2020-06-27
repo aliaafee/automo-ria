@@ -838,6 +838,194 @@ class ClientApp:
         print("{} Tests Failed".format(failed))
 
 
+    def register_and_admit_random_patient_single_request(self):
+        problems_count = 5
+        admissions_count = 5
+        encounters_count = 5
+        precription_count = 5
+
+        index = self.conn.get(self.index_url)
+
+        wards = self.conn.get(index['wards'])['items']
+        ward = self.conn.get(choice(wards)['url'])
+
+        beds = self.conn.get(ward['beds'])['items']
+        bed = self.conn.get(choice(beds)['url'])
+
+        doctors = self.conn.get(index['personnel']['doctors'])['items']
+        doctor = self.conn.get(choice(doctors)['url'])
+
+        def fake_address():
+            add = {}
+            add_str = fake.address().split('\n')
+            add['line_1'] = add_str[0]
+            add['city'] = add_str[1].split(",")[0]
+            try:
+                add['region'] = add_str[1].split(",")[1]
+            except:
+                pass
+            add['country'] = fake.country()
+            return add
+
+        def random_encounter(i=None):
+            types = [
+                'measurements',
+                'vitalsigns',
+                'vitalsignsextended',
+                'surgicalprocedure',
+                'imaging',
+                'endoscopy',
+                'histopathology',
+                'otherreport',
+                'completebloodcount',
+                'renalfunctiontest',
+                'liverfunctiontest',
+                'othertest'
+            ]
+            result = {
+                'type': types[i] if i else choice(types),
+                'start_time': datetime.datetime.now().isoformat(),
+                'end_time': datetime.datetime.now().isoformat(),
+                'personnel_id': doctor['id']
+            }
+            if result['type'] == 'measurements':
+                result['weight'] = float(randint(30, 100)) + 0.5
+                result['height'] = 1.0 + (random() * 0.9)
+            elif result['type'] == 'vitalsigns':
+                result['pulse_rate'] = randint(60, 100)
+                result['respiratory_rate'] = randint(12, 24)
+                result['diastolic_bp'] = randint(50, 60)
+                result['systolic_bp'] =  result['diastolic_bp'] + randint(0, 60)
+                result['temperature'] = float(randint(36,39)) + random()
+            elif result['type'] == 'vitalsignsextended':
+                result['pulse_rate'] = randint(60, 100)
+                result['respiratory_rate'] = randint(12, 24)
+                result['diastolic_bp'] = randint(50, 60)
+                result['systolic_bp'] =  result['diastolic_bp'] + randint(0, 60)
+                result['temperature'] = float(randint(36,39)) + random()
+                result['cvp'] = float(randint(5, 20))
+                result['diastolic_ibp'] = randint(50, 60)
+                result['systolic_ibp'] = result['diastolic_ibp'] + randint(0, 60)
+            elif result['type'] == 'surgicalprocedure':
+                result['assistant'] = "Dr. {}".format(fake.name())
+                result['anesthetist'] = "Dr. {}".format(fake.name())
+                result['nurse'] = "S/N. {}".format(fake.name())
+                result['emergency'] = choice([True, False])
+                result['preoperative_diagnosis'] = fake.paragraph()
+                result['postoperative_diagnosis'] = fake.paragraph()
+                result['procedure_name'] = fake.paragraph()
+                result['findings'] = fake.paragraph()
+                result['steps'] = fake.paragraph()
+            elif result['type'] == 'imaging':
+                result['site'] = fake.paragraph()
+                result['imaging_type'] = fake.paragraph()
+                result['report'] = fake.paragraph()
+                result['impression'] = fake.paragraph()
+                result['radiologist'] = "Dr. {}".format(fake.name())
+            elif result['type'] == 'endoscopy':
+                result['site'] = fake.paragraph()
+                result['report'] = fake.paragraph()
+                result['impression'] = fake.paragraph()
+                result['endoscopist'] = "Dr. {}".format(fake.name())
+            elif result['type'] == 'endoscopy':
+                result['site'] = fake.paragraph()
+                result['report'] = fake.paragraph()
+                result['impression'] = fake.paragraph()
+                result['pathologist'] = "Dr. {}".format(fake.name())
+            elif result['type'] == 'otherreport':
+                result['name'] = fake.paragraph()
+                result['report'] = fake.paragraph()
+                result['impression'] = fake.paragraph()
+                result['reported_by'] = "Dr. {}".format(fake.name())
+            elif result['type'] == 'completebloodcount':
+                result['hemoglobin'] = random() * 100
+                result['tlc'] = random() * 100
+                result['plt'] = random() * 100
+                result['dlc_n'] = random() * 100
+                result['dlc_l'] = random() * 100
+                result['dlc_m'] = random() * 100
+                result['dlc_e'] = random() * 100
+            elif result['type'] == 'renalfunctiontest':
+                result['urea'] = random() * 100
+                result['creatinine'] = random() * 100
+            elif result['type'] == 'liverfunctiontest':
+                result['t_bil'] = random() * 100
+                result['d_bil'] = random() * 100
+                result['alt'] = random() * 100
+                result['ast'] = random() * 100
+                result['alp'] = random() * 100
+            elif result['type'] == 'othertest':
+                result['name'] = choice(['Spam', 'Cheez', 'Donuts', 'Calrity'])
+                result['value'] = str(random() * 100)
+                result['unit'] = choice(['cm/L', 'eggs/banana', 'tomatoes/m^3'])
+
+            return result
+
+        def make_admission(patient, bed, doctor):
+            data = {
+                'discharged_bed': bed,
+                'personnel': doctor,
+                'patient': patient,
+                'start_time': datetime.datetime.now().isoformat(),
+                'end_time': datetime.datetime.now().isoformat(),
+            }
+            for field in admission_fields:
+                data[field] = fake.paragraph()
+
+            #Add Problems to Admission
+            data['problems'] = []
+            for i in range(randint(1, problems_count)):
+                data['problems'].append({
+                    'start_time': datetime.datetime.now().isoformat(),
+                    'icd10class': {
+                        'code': choice(["A","B","C"]) + "0" + str(randint(1,9))
+                    },
+                    'comment': fake.paragraph()
+                })
+
+            #Add Subencounters
+            data['encounters'] = []
+            for i in range(randint(1, encounters_count)):
+                data['encounters'].append(random_encounter())
+
+            #Add Prescription
+            data['prescription'] = []
+            for i in range(randint(1, precription_count)):
+                data['prescription'].append({
+                    'drug_str': choice(drugs),
+                    'drug_order': choice(orders)
+                })
+
+            return data
+
+
+        patient = {
+            'hospital_no': '{}'.format(randint(100000, 999999)),
+            'national_id_no': 'A{}'.format(randint(100000, 999999)),
+            'name': fake.name(),
+            'time_of_birth': datetime.datetime(
+                randint(1900,1999),
+                randint(1,12),
+                randint(1, 25)
+            ).isoformat(),
+            'sex': choice(['M','F']),
+            'allergies': fake.paragraph(),
+            'phone_no': fake.phone_number(),
+            'permanent_address': fake_address(),
+            'current_address': fake_address(),
+        }
+
+        admission = make_admission(patient, bed, doctor)
+
+        admit_post_result = self.conn.post_json(
+            index['admissions'],
+            admission
+        )
+
+        pprint(admit_post_result)
+
+
+
     def register_and_admit_random_patient(self):
         problems_count = 5
         admissions_count = 5
@@ -986,7 +1174,9 @@ class ClientApp:
             for i in range(randint(1, problems_count)):
                 problems_list.append({
                     'start_time': datetime.datetime.now().isoformat(),
-                    'icd10class_code': choice(["A","B","C"]) + "0" + str(randint(1,9)),
+                    'icd10class': {
+                        'code': choice(["A","B","C"]) + "0" + str(randint(1,9))
+                    },
                     'comment': fake.paragraph()
                 })
             problem_post_result = self.conn.post_json(
@@ -1093,8 +1283,10 @@ class ClientApp:
 
 
     def admittest(self):
-        for i in range(2):
-            self.register_and_admit_random_patient()
+        #for i in range(2):
+        #    self.register_and_admit_random_patient()
+
+        self.register_and_admit_random_patient_single_request()
         
         """
         ward_index = 1

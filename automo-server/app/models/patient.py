@@ -43,6 +43,12 @@ class Patient(SerializerMixin, ValidatorMixin, db.Model):
         'sex'
     ]
 
+    editable_relationships = [
+        'permanent_address',
+        'current_address',
+        'phone_numbers'
+    ]
+
     def url(self):
         return url_for('api.get_patient', patient_id=self.id, _external=True)
 

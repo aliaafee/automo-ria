@@ -87,6 +87,9 @@ module.exports = class AddressField extends Field {
     }
 
     value() {
+        if (this.isBlank()) {
+            return null
+        }
         return this.form.value();
     }
 
