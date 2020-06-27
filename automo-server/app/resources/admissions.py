@@ -186,9 +186,9 @@ def new_admission():
     except md.dbexception.AutoMODatabaseError as e:
         db.session.rollback()
         return errors.unprocessable('Database Error: {}'.format(e))
-    #except Exception as e:
-    #    db.session.rollback()
-    #    return errors.unprocessable('Error: {}'.format(e))
+    except Exception as e:
+        db.session.rollback()
+        return errors.unprocessable('Error: {}'.format(e))
 
     admission_serialized = get_serialized_admission(admission)
     admission_serialized['patient'] = patient.get_serialized()
@@ -343,46 +343,50 @@ def post_patient_admission(patient_id, admission_id):
         return admission.get_serialized()
 
     try:
-        initial_vitalsigns = data.pop('initial_vitalsigns', None)
-        personnel = data.pop('personnel', None)
-        discharged_bed = data.pop('discharged_bed', None)
+        initial_vitalsigns_data = data.pop('initial_vitalsigns', None)
+        personnel_data = data.pop('personnel', None)
+        discharged_bed_data = data.pop('discharged_bed', None)
 
         invalid_fields = admission.validate_and_update(data)
 
-        if personnel:
-            personnel_id = personnel.pop('id')
+        if personnel_data:
+            personnel_id = personnel_data.pop('id')
             new_personnel = md.Personnel.query.get(personnel_id)
             if new_personnel:
                 admission.personnel = new_personnel
             else:
                 invalid_fields['personnel'] = 'Personnel not found'
         
-        if discharged_bed:
-            bed_id = discharged_bed.pop('id')
+        if discharged_bed_data:
+            bed_id = discharged_bed_data.pop('id')
             new_bed = md.Bed.query.get(bed_id)
             if new_bed:
                 admission.discharged_bed = new_bed
             else:
                 invalid_fields['discharged_bed'] = 'Bed not found'
 
-        if initial_vitalsigns:
-            print("updating initial vital sign")
-            #TODO: find the first vital sign and update it, if non found add it
+        if initial_vitalsigns_data:
+            initial_vitalsigns = admission.initial_vitalsigns
+            if initial_vitalsigns:
+                invalid_vitals = initial_vitalsigns.validate_and_update(initial_vitalsigns_data)
+            else:
+                initial_vitalsigns = md.VitalSigns()
+                invalid_vitals = initial_vitalsigns.validate_and_insert(initial_vitalsigns_data)
+                admission.add_child_encounter(initial_vitalsigns)
+            if invalid_vitals:
+                invalid_fields['initial_vitalsigns'] = invalid_vitals
 
         if invalid_fields:
             db.session.rollback()
             return errors.invalid_fields(invalid_fields)
 
-
         db.session.commit()
-    except ValueError as e:
-    #except Exception as e:
+
+    except Exception as e:
         db.session.rollback()
         return errors.unprocessable("Databse Error: {}".format(e))
 
     return admission.get_serialized(all_field_names)
-
-    #return post_one_query_result(query)
 
 
 @api.route("patients/<int:patient_id>/admissions/<int:admission_id>/discharge-summary.pdf")
