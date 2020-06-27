@@ -288,6 +288,10 @@ button.menu-bar-item {
     border-radius: 0;
 }
 
+button.menu-bar-item:focus {
+    box-shadow: unset;
+}
+
 .menu-bar-spacer {
     flex-grow: 1;
     background-color: var(--dark);
@@ -329,6 +333,9 @@ button.side-bar-item {
     border-radius: 0;
 }
 
+button.side-bar-item:focus {
+    box-shadow: unset;
+}
 
 .side-bar-spacer {
     flex-grow: 1;

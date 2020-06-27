@@ -38,6 +38,10 @@ module.exports = class VitalSignsField extends FormField {
 
     value() {    
         var value = super.value();
+
+        if (!value) {
+            return null
+        }
         
         if (value['blood_pressure'] != null) {
             value['diastolic_bp'] = value['blood_pressure']['diastolic_bp']
@@ -47,7 +51,6 @@ module.exports = class VitalSignsField extends FormField {
             value['systolic_bp'] = null
         }
         delete(value['blood_pressure'])
-        
 
         return value
     }
