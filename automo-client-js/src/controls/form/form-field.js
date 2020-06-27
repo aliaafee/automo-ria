@@ -24,8 +24,8 @@ module.exports = class FormField extends Field {
             this.form.clear()
             return
         }
-
-        super.setValue(this.value)
+        
+        super.setValue(value)
         this.form.setValue(value)
     }
 
@@ -45,6 +45,8 @@ module.exports = class FormField extends Field {
 
     validate() {
         var valid = false;
+        this.markValid();
+
         if (this.options.required == true || !this.isBlank()) {
             var valid = this.form.validate()
             if (!valid) {
@@ -52,8 +54,7 @@ module.exports = class FormField extends Field {
             }
             return valid;
         }
-
-        this.markValid();
+        
         this.form._fields.forEach((field) => {
             field.markValid()
         })

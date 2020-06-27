@@ -56,6 +56,7 @@ module.exports = class VitalSignsField extends FormField {
     }
 
     setValue(value) {
+        
         if (!value) {
             this.form.clear()
             return
@@ -70,7 +71,7 @@ module.exports = class VitalSignsField extends FormField {
             delete(value['systolic_bp'])
             delete(value['diastolic_bp'])
         }
-
-        super.setValue(this.value)
+        
+        super.setValue(value)
     }
 }

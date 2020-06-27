@@ -996,6 +996,8 @@ class ClientApp:
                     'drug_order': choice(orders)
                 })
 
+            data['initial_vitalsigns'] = random_encounter(1)
+
             return data
 
 

@@ -45,6 +45,14 @@ module.exports = class BPField extends TextField {
         return true
     }
 
+    displayValue() {
+        var value = this.value();
+        if (!value) {
+            return ""
+        }
+        return `${value.systolic_bp}/${value.diastolic_bp}`
+    }
+
     setValue(value) {
         if (!value) {
             super.setValue(null)

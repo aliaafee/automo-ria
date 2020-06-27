@@ -62,8 +62,6 @@ def get_serialized_admission(admission):
         _external = True
     )
 
-    additional_data['initial_vitalsigns'] = None
-
     fields=[
         'id',
         'label',
@@ -79,6 +77,7 @@ def get_serialized_admission(admission):
         'history',
         'past_history',
         'general_inspection',
+        'initial_vitalsigns',
         'exam_head',
         'exam_neck',
         'exam_chest',
@@ -148,7 +147,7 @@ def new_admission():
         else:
             return errors.invalid_fields({'discharged_bed': 'Required'})
 
-        initial_vitalsigns = admission_data.pop('initial_vitalsigns', None)
+        initial_vitalsigns_data = admission_data.pop('initial_vitalsigns', None)
         problems_data = admission_data.pop('problems', None)
         encounters_data = admission_data.pop('encounters', None)
         prescription_data = admission_data.pop('prescription', None)
@@ -158,8 +157,14 @@ def new_admission():
         if invalid_fields:
             db.session.rollback()
             return errors.invalid_fields(invalid_fields)
-
         patient.encounters.append(admission)
+
+        initial_vitalsigns = md.VitalSigns()
+        invalid_fields = initial_vitalsigns.validate_and_insert(initial_vitalsigns_data)
+        if invalid_fields:
+            db.session.rollback()
+            return errors.invalid_fields({'initial_vitalsigns': invalid_fields })
+        admission.add_child_encounter(initial_vitalsigns)
 
         try:
             problems = problems_data_to_problems(problems_data)
@@ -173,6 +178,8 @@ def new_admission():
             patient.problems.append(problem)
             admission.add_problem(problem)
             db.session.commit()
+
+        db.session.commit()
 
         #add encounters and prescription
 
@@ -301,94 +308,6 @@ def get_patient_admission(patient_id, admission_id):
         get_serialized_admission(admission)
     )
 
-    """
-    additional_data = {}
-
-    if admission is not None:
-        if admission.end_time is not None:
-            additional_data['discharge_summary_pdf'] = url_for(
-                'api.get_patient_admission_discharge_summary_pdf',
-                patient_id=patient_id, admission_id=admission_id,
-                _external = True
-            )
-            additional_data['discharge_summary_html'] = url_for(
-                'api.get_patient_admission_discharge_summary_html',
-                patient_id=patient_id, admission_id=admission_id,
-                _external = True
-            )
-        else:
-            additional_data['discharge'] = url_for(
-                'api.post_patient_admission',
-                patient_id=patient_id, admission_id=admission_id,
-                end=True, 
-                _external=True
-            )
-
-    encounters = {};
-    for child_encounter_type in md.encounters.ENCOUNTER_MODEL_TYPES.keys():
-        encounters[child_encounter_type] = url_for(
-            'api.get_patient_admission_encounters',
-            patient_id=patient_id, admission_id=admission_id,
-            type=child_encounter_type,
-            _external = True
-        )
-
-    additional_data['encounters'] = encounters
-
-    additional_data['encounters_url'] = url_for(
-        'api.get_patient_admission_encounters',
-        patient_id=patient_id, admission_id=admission_id,
-        _external = True
-    )
-
-    additional_data['problems_url'] = url_for(
-        'api.get_patient_admission_problems',
-        patient_id=patient_id, admission_id=admission_id,
-        _external = True
-    )
-
-    additional_data['prescription_url'] = url_for(
-        'api.get_patient_admission_prescription',
-        patient_id=patient_id, admission_id=admission_id,
-        _external = True
-    )
-
-    additional_data['initial_vitalsigns'] = None
-
-    return get_one_query_result(
-        query, 
-        additional_data=additional_data,
-        fields=[
-            'id',
-            'label',
-            'type',
-            'bed',
-            'discharged_bed',
-            'start_time',
-            'end_time',
-            #'children',
-            'personnel',
-            'problems',
-            'chief_complaints',
-            'history',
-            'past_history',
-            'general_inspection',
-            'exam_head',
-            'exam_neck',
-            'exam_chest',
-            'exam_abdomen',
-            'exam_genitalia',
-            'exam_pelvic_rectal',
-            'exam_extremities',
-            'exam_other',
-            'hospital_course',
-            'discharge_advice',
-            'prescription',
-            'follow_up'
-        ]
-    )
-    """
-
 
 @api.route("patients/<int:patient_id>/admissions/<int:admission_id>", methods=['POST'])
 def post_patient_admission(patient_id, admission_id):
@@ -448,7 +367,7 @@ def post_patient_admission(patient_id, admission_id):
 
         if initial_vitalsigns:
             print("updating initial vital sign")
-            #TODO: find the first vital sign and updae it
+            #TODO: find the first vital sign and update it, if non found add it
 
         if invalid_fields:
             db.session.rollback()

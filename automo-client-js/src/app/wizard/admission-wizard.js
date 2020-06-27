@@ -119,6 +119,10 @@ module.exports = class AdmissionWizard extends Wizard {
             this.dischargeNotes.value(),
         )
 
+        if (admission.initial_vitalsigns) {
+            admission.initial_vitalsigns.start_time = admission.start_time
+        }
+
         admission['problems'] = []
         this.problems.value().forEach((problem) => {
             problem.start_time = admission.start_time

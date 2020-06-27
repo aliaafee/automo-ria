@@ -8,6 +8,7 @@ from .. import dbexception
 from ..drug import Drug
 from ..prescription import Prescription
 from .surgicalprocedure import SurgicalProcedure
+from .vitalsigns import VitalSigns
 
 
 class ClinicalEncounter(Encounter):
@@ -61,7 +62,9 @@ class ClinicalEncounter(Encounter):
 
     @property
     def initial_vitalsigns(self):
-        return None
+        query = VitalSigns.query.filter_by(parent_id=self.id).order_by(VitalSigns.id)
+        return query.first()
+        
 
     def prescribe_drug(self, drug, drug_str, drug_order, active=True):
         """Precribe medication. Drug can be passed as an object, or object can be None
