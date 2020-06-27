@@ -300,6 +300,7 @@ button:hover {
 .field .input-placeholder {
     display: flex;
     flex-grow: 1;
+    border-radius: var(--border-radius);
 }
 
 .field select,
@@ -319,6 +320,10 @@ button:hover {
     color: var(--gray);
 }
 
+.compact .field label {
+    padding: 5px 10px 5px 5px;
+}
+
 .field .help-text,
 .field .invalid-feedback {
     padding: 2px 5px 0 5px;
@@ -334,24 +339,27 @@ button:hover {
     flex-grow: 1;
 }
 
-.invalid .invalid-feedback {
+.invalid > .content > .invalid-feedback {
     display: unset;
 }
 
-.invalid input,
-.invalid select,
-.invalid textarea {
-    /* border-color: var(--red);*/
+.invalid > .content > .input-placeholder {
     box-shadow: 0 0 0 0.2rem rgba(255, 8, 0, 0.25);
 }
+
 
 .compact .field {
     margin-bottom: 0;
 }
 
-.compact .invalid input,
-.compact .invalid select {
-    box-shadow: inset 0 0 0 0.2rem rgba(255, 0, 0, 0.25);
+.compact .invalid > .content > .input-placeholder {
+    box-shadow: unset;
+}
+
+.compact .invalid > .content > .input-placeholder input,
+.compact .invalid > .content > .input-placeholder textarea,
+.compact .invalid > .content > .input-placeholder select {
+    background-color: rgba(255, 8, 0, 0.125);
 }
 
 .compact input:focus,

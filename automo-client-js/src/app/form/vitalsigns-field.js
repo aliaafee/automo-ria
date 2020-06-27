@@ -1,18 +1,11 @@
-const Field = require("../../controls/form/field")
-const Form = require("../../controls/form/form")
 const FloatField = require("../../controls/form/float-field")
 const BPField = require("./bp-field")
+const FormField = require("../../controls/form/form-field")
 
-module.exports = class VitalSignsField extends Field {
+module.exports = class VitalSignsField extends FormField {
     constructor(name, options={}) {
         super(name, options);
-
-        this.form = new Form(
-            {
-                labelSize: "25%",
-                compact: true
-            }
-        )
+        this.form.options.labelSize = "25%"
         
         this.form.addField(new FloatField(
             'pulse_rate',
@@ -43,12 +36,8 @@ module.exports = class VitalSignsField extends Field {
         ))
     }
 
-    value() {
-        if (this.isBlank()) {
-            return null
-        }
-        
-        var value = this.form.value();
+    value() {    
+        var value = super.value();
         
         if (value['blood_pressure'] != null) {
             value['diastolic_bp'] = value['blood_pressure']['diastolic_bp']
@@ -80,63 +69,5 @@ module.exports = class VitalSignsField extends Field {
         }
 
         super.setValue(this.value)
-        this.form.setValue(value)
     }
-
-    isBlank() {
-        return this.form.isBlank();
-    }
-
-    isValid() {
-        if (this.options.required == true) {
-            return this.form.isValid()
-        }
-        if (!this.isBlank()) {
-            return this.form.isValid()
-        }
-        return true
-    }
-
-    validate() {
-        if (this.options.required == true) {
-            return this.form.validate()
-        }
-        if (!this.isBlank()) {
-            return this.form.validate()
-        }
-        this.form._fields.forEach((field) => {
-            field.markValid()
-        })
-        return true
-    }
-
-    markInvalid() {
-        return
-    }
-
-    markValid() {
-        return
-    }
-
-    lock() {
-        super.lock()
-
-        this.form.lock()
-    }
-
-    unlock() {
-        super.unlock()
-
-        this.form.unlock()
-    }
-
-    createElement() {
-        super.createElement()
-
-        this._placeholderElement.appendChild(this.form.createElement())
-        //this.form.element.style.flexGrow = 1
-
-        return this.element
-    }
-
 }

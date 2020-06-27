@@ -1,16 +1,9 @@
-const Field = require("../../controls/form/field")
-const Form = require("../../controls/form/form")
 const TextField = require("../../controls/form/text-field")
+const FormField = require("../../controls/form/form-field")
 
-module.exports = class AddressField extends Field {
+module.exports = class AddressField extends FormField {
     constructor(name, options={}) {
         super(name, options);
-
-        this.form = new Form(
-            {
-                compact: true
-            }
-        )
 
         this.form.addField(
             new TextField(
@@ -76,82 +69,5 @@ module.exports = class AddressField extends Field {
                 }
             )
         )
-
-        'line_1',
-        'line_2',
-        'line_3',
-        'city',
-        'region',
-        'country',
-        'phone_no'
     }
-
-    value() {
-        if (this.isBlank()) {
-            return null
-        }
-        return this.form.value();
-    }
-
-    setValue(value) {
-        super.setValue(this.value)
-        this.form.setValue(value)
-    }
-
-    isBlank() {
-        return this.form.isBlank();
-    }
-
-    isValid() {
-        if (this.options.required == true) {
-            return this.form.isValid()
-        }
-        if (!this.isBlank()) {
-            return this.form.isValid()
-        }
-        return true
-    }
-
-    validate() {
-        if (this.options.required == true) {
-            return this.form.validate()
-        }
-        if (!this.isBlank()) {
-            return this.form.validate()
-        }
-        this.form._fields.forEach((field) => {
-            field.markValid()
-        })
-        return true
-    }
-
-    markInvalid() {
-        return
-    }
-
-    markValid() {
-        return
-    }
-
-    lock() {
-        super.lock()
-
-        this.form.lock()
-    }
-
-    unlock() {
-        super.unlock()
-
-        this.form.unlock()
-    }
-
-    createElement() {
-        super.createElement()
-
-        this._placeholderElement.appendChild(this.form.createElement())
-        //this.form.element.style.flexGrow = 1
-
-        return this.element
-    }
-
 }
