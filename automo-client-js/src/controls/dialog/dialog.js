@@ -8,11 +8,12 @@ module.exports = class Dialog extends Control {
          *  centered=false
          *  title="Title"
          *  groupButtons=false
+         *  noCloseButton=false
          */
         super(options);
 
         this.onCancel = null;
-        this.onOk = null;
+        //this.onOk = null;
 
         this.headerElement = null;
         this.bodyElement = null;
@@ -26,8 +27,8 @@ module.exports = class Dialog extends Control {
         return null;
     }
 
-    show(onOk, onCancel) {
-        this.onOk = onOk;
+    //show(onOk, onCancel) {
+    show(onCancel) {
         this.onCancel = onCancel;
 
         document.body.appendChild(this.createElement());
@@ -43,15 +44,25 @@ module.exports = class Dialog extends Control {
         document.body.removeChild(this.element);
     }
 
+    
     _onCancel(ev) {
         this.hide();
         this.onCancel();
     }
 
+    /*
     _onOk(ev) {
         var value = this.value();
         this.hide();
         this.onOk(value);
+    }*/
+
+    setTitle(title) {
+        if (!this._titleElement) {
+            this._titleElement = document.createElement('h1');
+            this.headerElement.appendChild(this._titleElement);
+        }
+        this._titleElement.innerHTML = title;
     }
 
     createElement() {
@@ -86,10 +97,15 @@ module.exports = class Dialog extends Control {
         //this.headerElement.style.flexGrow = 1;
         header.appendChild(this.headerElement);
 
-        this._closeElement = document.createElement('div');
-        this._closeElement.className = 'dialog-close';
-        this._closeElement.innerHTML = '&times;'
-        header.appendChild(this._closeElement);
+        if (!this.options.noCloseButton) {
+            this._closeElement = document.createElement('div');
+            this._closeElement.className = 'dialog-close';
+            this._closeElement.innerHTML = '&times;'
+            this._closeElement.addEventListener('click', (ev) => {
+                this._onCancel();
+            });
+            header.appendChild(this._closeElement);
+        }
 
         this.bodyElement = document.createElement('div');
         this.bodyElement.className = 'dialog-body';
@@ -113,14 +129,8 @@ module.exports = class Dialog extends Control {
             ;
         })
 
-        this._closeElement.addEventListener('click', (ev) => {
-            this._onCancel();
-        });
-
         if (this.options.title != null) {
-            var title = document.createElement('h1');
-            title.innerText = this.options.title;
-            this.headerElement.appendChild(title);
+            this.setTitle(this.options.title)
         }
 
         //this.bodyElement.innerHTML = 'Some shit that is in a dialog is here now';

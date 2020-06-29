@@ -98,6 +98,13 @@ select:disabled {
     -webkit-appearance: none;
 }
 
+.locked input,
+.locked textarea,
+.locked select {
+    background-color: transparent;
+    border-color: transparent;
+}
+
 div.locked-text-box {
     padding: 5px;
 }
@@ -400,7 +407,9 @@ button:hover {
 }
 
 
-.foreground, .foreground-centered {
+.foreground,
+.foreground-centered,
+.foreground-centered-small {
     position: absolute;
     top: 0;
     left: 0;
@@ -417,21 +426,36 @@ button:hover {
 .foreground .dialog {
     margin-top: 40px;
     height: calc(100% - 80px);
+    width: 700px;
 }
 
-.foreground-centered {
+.foreground-centered,
+.foreground-centered-small {
     justify-content: center;
     align-items: center;
 }
 
-.foreground-centered .dialog {
+.foreground-centered .dialog,
+.foreground-centered-small .dialog {
     margin-top: 0;
+}
+
+.foreground-centered-small .dialog {
+    width: 250px;
+    max-height: 100%;
+}
+
+.foreground-centered-small .dialog .dialog-body {
+    overflow-y: auto;
+}
+
+.dialog .message {
+    padding: 15px;
 }
 
 .spinner-container {
     width: 100%;
 }
-
 
 .spinner {
     /*border: 3px solid rgba(0, 0, 0, 0.2);
@@ -528,7 +552,7 @@ button:hover {
 
 .dialog-body {
     height: calc(100% - 107px);
-    overflow: hidden;
+    overflow-y: auto;
 }
 
 .dialog-body .form {
@@ -679,14 +703,18 @@ button:hover {
         align-items: unset;
     }
 
-    .dialog {
+    .foreground .dialog,
+    .foreground-centered .dialog
+     {
         border: none;
         border-radius: 0;
         width: 100% !important;
         height: 100% !important;
     }
 
-    .dialog .dialog-body-padded {
+    .foreground .dialog .dialog-body-padded,
+    .foreground-centered .dialog .dialog-body-padded
+    {
         flex-grow: 0 !important;
     }
 
@@ -705,8 +733,6 @@ button:hover {
         /*border: none;*/
         height: 47px;
     }
-    
-    
 
     .splitter-row .pane1 {
         display: none !important;

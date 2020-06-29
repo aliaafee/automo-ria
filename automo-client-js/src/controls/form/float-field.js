@@ -16,7 +16,6 @@ module.exports = class FloatField extends TextField {
     }
 
     setValue(value) {
-        console.log("Setting value")
         if (!value) {
             super.setValue("")
             return

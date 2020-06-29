@@ -8,13 +8,12 @@ module.exports = class FormDialog extends Dialog {
 
         this.form = form;
 
+        this.onOk = null;
+
         this.btnOk = new Button(
             options.okLabel != null ? options.okLabel : 'Ok',
             (ev) => {
                 this._onOk(ev);
-            },
-            {
-                width: '80px'
             }
         );
 
@@ -22,9 +21,6 @@ module.exports = class FormDialog extends Dialog {
             options.cancelLabel != null ? options.cancelLabel : 'Cancel',
             (ev) => {
                 this._onCancel(ev);
-            },
-            {
-                width: '80px'
             }
         )
     }
@@ -33,12 +29,17 @@ module.exports = class FormDialog extends Dialog {
         return this.form.value();
     }
 
+    show(onOk, onCancel) {
+        this.onOk = onOk
+        super.show(onCancel)
+    }
+
     _onOk(ev) {
         if (this.form.validate() == false) {
             return;
         }
-
-        super._onOk(ev);
+        this.onOk()
+        //super._onOk(ev);
     }
 
     createElement() {

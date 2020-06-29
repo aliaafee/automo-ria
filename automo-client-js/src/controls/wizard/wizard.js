@@ -1,6 +1,7 @@
 //const Control = require("./control");
 const Dialog = require('../dialog/dialog');
 const Button = require('../button')
+const StatusDialog = require('../dialog/status-dialog')
 
 module.exports = class Wizard extends Dialog {
     constructor(options) {
@@ -11,6 +12,8 @@ module.exports = class Wizard extends Dialog {
         super(options);
 
         this.pages = []
+
+        this.afterSave =
 
         this._currentPage = 0
 
@@ -50,12 +53,22 @@ module.exports = class Wizard extends Dialog {
         return result
     }
 
+    show(afterSave, onCancel) {
+        this.afterSave = afterSave
+        super.show(onCancel);
+    }
+
     _onNext() {
         var currentPage = this.getCurrentPage()
 
         if (!currentPage.validate()) {
             console.log("Invalid input")
-            //return false
+            var statusDialog = new StatusDialog()
+            statusDialog.show(
+                'Invalid Fields',
+                'Some fields contain invalid values'
+            )
+            return false
         }
 
         console.log(currentPage.value())
@@ -82,6 +95,7 @@ module.exports = class Wizard extends Dialog {
 
     onSave(data) {
         console.log(data)
+        this.afterSave(data)
     }
 
     addPage(page) {
@@ -94,7 +108,7 @@ module.exports = class Wizard extends Dialog {
         }
 
         this._currentPage = page
-        this.pages[this._currentPage].show()
+        this.pages[this._currentPage].show(this)
 
         if (this._currentPage == 0) {
             this.btnBack.lock()

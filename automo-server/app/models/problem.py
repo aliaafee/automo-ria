@@ -29,8 +29,7 @@ class Problem(SerializerMixin, ValidatorMixin, db.Model):
     ]
 
     required_attrs = [
-        'start_time',
-        'icd10class_code'
+        'start_time'
     ]
 
     def url(self):

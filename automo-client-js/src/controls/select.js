@@ -32,8 +32,13 @@ module.exports = class Select extends Control {
     }
 
     setValue(value) {
+        if (!value) {
+            this.setSelection(null)
+            return
+        }
         if (this.options.onlyId) {
             this.setSelection(value)
+            return
         }
         this.setSelection(this.idFunction(value));
     }

@@ -13,6 +13,9 @@ module.exports = class Icd10CoderDialog extends Dialog {
     constructor(options = {}) {
         super(options);
 
+        this.onOk = null
+        this.onCancel = null
+
         this.selectedCategory = null;
         this.selectedBlockCode = null;
 
@@ -37,9 +40,10 @@ module.exports = class Icd10CoderDialog extends Dialog {
         )
 
         this.btnOk = new Button(
-            options.okLabel != null ? options.okLabel : 'Save',
+            options.okLabel != null ? options.okLabel : 'Add',
             (ev) => {
-                this._onOk(ev);
+                this.onOk(this.value())
+                this.hide()
             },
             {
                 width: '80px'
@@ -115,6 +119,9 @@ module.exports = class Icd10CoderDialog extends Dialog {
     }
 
     show(onOk, onCancel) {
+        this.onOk = onOk
+        this.onCancel = onCancel
+
         this.searchBox.setResourceUrl(connection.resource_index.icd10.categories)
         
         this.selectedCategory = null;
@@ -123,7 +130,7 @@ module.exports = class Icd10CoderDialog extends Dialog {
         this.selectedModifier = null;
         this.selectedModifierExtra = null;
 
-        super.show(onOk, onCancel);
+        super.show(onCancel);
     }
 
     hide() {

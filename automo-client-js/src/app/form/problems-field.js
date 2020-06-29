@@ -31,36 +31,46 @@ module.exports = class ProblemsField extends Field {
     }
 
     _getProblemLabel(problem) {
-        var category = problem.icd10class
+        var code = ""
+        var preferred_plain = ""
         var preferred_long = ""
-        if (category.preferred_long != null) {
-            preferred_long = `<div class="preferred-long">(${category.preferred_long})</div>`
-        }
-
         var modifier = ""
-        if (problem.icd10modifier_class != null) {
-            modifier = `<div class="modifier">${problem.icd10modifier_class.code_short} - ${problem.icd10modifier_class.preferred}</div>`
-        }
-
         var modifier_extra = ""
-        if (problem.icd10modifier_extra_class != null) {
-            modifier_extra = `<div class="modifier-extra">${problem.icd10modifier_extra_class.code_short} - ${problem.icd10modifier_extra_class.preferred}</div>`
-        }
-
         var comment = ""
+
+        if (problem.icd10class) {
+            code = problem.icd10class.code
+            preferred_plain = `<div class="preferred-plain">(${problem.icd10class.preferred_plain})</div>`
+
+            if (problem.icd10class.preferred_long != null) {
+                preferred_long = `<div class="preferred-long">(${problem.icd10class.preferred_long})</div>`
+            }
+    
+            
+            if (problem.icd10modifier_class != null) {
+                modifier = `<div class="modifier">${problem.icd10modifier_class.code_short} - ${problem.icd10modifier_class.preferred}</div>`
+            }
+    
+            
+            if (problem.icd10modifier_extra_class != null) {
+                modifier_extra = `<div class="modifier-extra">${problem.icd10modifier_extra_class.code_short} - ${problem.icd10modifier_extra_class.preferred}</div>`
+            }
+        } else {
+            code = "Uncoded"
+        }
+        
         if (problem.comment != null) {
+            
             comment = `<div class="comment">${problem.comment}</div>`
         }
 
         return `
             <div class="category-label">
-                <div class="code" code="${category.code}">
-                    ${category.code}
+                <div class="code" code="${code}">
+                    ${code}
                 </div>
                 <div class="text">
-                    <div class="preferred">
-                        ${category.preferred_plain}
-                    </div>
+                    ${preferred_plain}
                     ${preferred_long}
                     ${modifier}
                     ${modifier_extra}
@@ -115,15 +125,22 @@ module.exports = class ProblemsField extends Field {
         return this._data;
     }
 
+    isBlank() {
+        if (this.value()) {
+            return false
+        }
+        return true
+    }
+
     setValue(data) {
         if (data) {
-            if (data.length == 0) {
+            if (data.length() == 0) {
                 super.setValue(null);
             } else {
                 super.setValue(data)
             }
         } else {
-            super.setValue(data)
+            super.setValue(null)
         }
 
         this._data = data;
@@ -136,7 +153,7 @@ module.exports = class ProblemsField extends Field {
     }
 
     unlock() {
-        super.lock()
+        super.unlock()
         this.btnAddProblem.show()
     }
 

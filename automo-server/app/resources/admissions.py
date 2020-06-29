@@ -159,20 +159,31 @@ def new_admission():
             return errors.invalid_fields(invalid_fields)
         patient.encounters.append(admission)
 
-        initial_vitalsigns = md.VitalSigns()
-        invalid_fields = initial_vitalsigns.validate_and_insert(initial_vitalsigns_data)
-        if invalid_fields:
-            db.session.rollback()
-            return errors.invalid_fields({'initial_vitalsigns': invalid_fields })
-        admission.add_child_encounter(initial_vitalsigns)
+        if initial_vitalsigns_data:
+            initial_vitalsigns = md.VitalSigns()
+            invalid_fields = initial_vitalsigns.validate_and_insert(initial_vitalsigns_data)
+            if invalid_fields:
+                db.session.rollback()
+                return errors.invalid_fields({'initial_vitalsigns': invalid_fields })
+            admission.add_child_encounter(initial_vitalsigns)
 
-        try:
-            problems = problems_data_to_problems(problems_data)
-        except md.dbexception.FieldValueError as e:
-            db.session.rollback()
-            return errors.invalid_fields({'problems': e.invalid_fields})
+        problems = []
+        if problems_data:
+            try:
+                problems = problems_data_to_problems(problems_data)
+            except md.dbexception.FieldValueError as e:
+                db.session.rollback()
+                return errors.invalid_fields({'problems': e.invalid_fields})
 
-        #process encounters and prescription here
+        encounters = []
+        if encounters_data:
+            #TODO
+            print("Adding encounters")
+
+        prescription = []
+        if prescription_data:
+            #TODO
+            print("Adding prescription")
 
         for problem in problems:
             patient.problems.append(problem)

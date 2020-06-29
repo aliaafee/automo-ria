@@ -10,6 +10,7 @@ module.exports = class ProblemsForm extends Form {
         this.addField(new ProblemsField(
             'problems',
             {
+                required: true
             }
         ))
     }

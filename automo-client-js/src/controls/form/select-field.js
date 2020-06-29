@@ -34,6 +34,7 @@ module.exports = class SelectField extends Field {
     }
 
     setValue(value) {
+        super.setValue(value)
         this._select.setValue(value);
     }
 
@@ -46,10 +47,12 @@ module.exports = class SelectField extends Field {
     }
 
     lock() {
+        super.lock()
         this._select.lock();
     }
 
     unlock() {
+        super.unlock()
         this._select.unlock();
     }
 

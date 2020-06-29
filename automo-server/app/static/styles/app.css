@@ -409,6 +409,7 @@ button.side-bar-item:focus {
         margin-right: 0;
         margin-left: 0;
         width: 100%;
+        max-width: unset;
     }
 
     .icd10coder .form {
