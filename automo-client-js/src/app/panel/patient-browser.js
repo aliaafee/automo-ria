@@ -7,6 +7,7 @@ const TextBox = require('../../controls/text-box');
 const ResourceList = require('../../controls/resource-list');
 const Splitter = require('../../controls/splitter');
 const PatientPanel = require('./patient-panel');
+const Button = require('../../controls/button')
 
 
 
@@ -16,10 +17,20 @@ class PatientList extends Control {
 
         this.onSelectPatient = null;
         this.onSearchStarted = null;
+        this.onDismissSearch = null;
 
         this.searchBox = new TextBox({
             placeholder: 'Search'
         });
+
+        this.btnDismiss = new Button(
+            '&times;',
+            () => {
+                this.searchBox.setValue("")
+                this.onDismissSearch()
+            }
+        )
+
         this.resultList = new ResourceList(
             (item) => {
                 return item.id;
@@ -83,7 +94,13 @@ class PatientList extends Control {
 
         this.element.id = 'patient-list'
 
-        this.element.appendChild(this.searchBox.createElement());
+        var toolbarElement = document.createElement('div')
+        toolbarElement.className = 'toolbar'
+        this.element.appendChild(toolbarElement)
+
+        toolbarElement.appendChild(this.searchBox.createElement());
+
+        toolbarElement.appendChild(this.btnDismiss.createElement());
 
         this.element.appendChild(this.resultList.createElement());
         
@@ -127,8 +144,13 @@ module.exports = class PatientBrowser extends Splitter {
                 }
             );
         }
+
         patientList.onSearchStarted = () => {
             this.setPane1Active()
+        }
+
+        patientList.onDismissSearch = () => {
+            this.setPane2Active()
         }
     }
 

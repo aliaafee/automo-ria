@@ -91,8 +91,18 @@
     flex-direction: column;
 }
 
-#patient-list input {
-    margin: 5px;
+#patient-list .toolbar {
+    display: flex;
+    padding: 5px;
+}
+
+#patient-list .toolbar input {
+    flex: 1 1 auto;
+}
+
+#patient-list .toolbar button {
+    margin-right: 0;
+    display: none;
 }
 
 #patient-list .list-box {
@@ -395,6 +405,10 @@ button.side-bar-item:focus {
 
     #patient-list.active-pane {
         display: flex !important;
+    }
+
+    #patient-list.active-pane .toolbar button {
+        display: unset;
     }
 
     #patient-list .list-box {
