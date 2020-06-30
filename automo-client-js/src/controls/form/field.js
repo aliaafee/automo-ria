@@ -11,6 +11,7 @@ module.exports = class Field extends Control {
          *  invalidFeedback=""
          *  helpText=""
          *  placeholder=""
+         *  narrow=false
          */
         super(options);
         this.name = name;
@@ -123,6 +124,10 @@ module.exports = class Field extends Control {
         super.createElement()
 
         this.element.classList.add('field');
+
+        if (this.options.narrow) {
+            this.element.classList.add('narrow')
+        }
 
         if (this.options.label != null) {
             var label = this.options.label

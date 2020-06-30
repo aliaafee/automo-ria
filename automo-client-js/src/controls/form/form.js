@@ -6,7 +6,7 @@ module.exports = class Form extends Control {
         /*Options
          *  labelSize=in css units
          *  labelTop=false
-         *  flexDirection='column|row'
+         *  //flexDirection='column|row'
          *  title='Heading title'
          *  compact=false
          */
@@ -143,7 +143,7 @@ module.exports = class Form extends Control {
             this.element.classList.add("compact")
         }
 
-        this.element.style.flexDirection = this.options.flexDirection ? this.options.flexDirection : 'column';
+        //this.element.style.flexDirection = this.options.flexDirection ? this.options.flexDirection : 'column';
 
         if (this.options.title) {
             var title = document.createElement('h1')

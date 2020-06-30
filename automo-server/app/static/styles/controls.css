@@ -292,10 +292,32 @@ button:hover {
     /*padding: 5px;*/
 }
 
+.form {
+    display: grid;
+    /*grid-template-columns: calc(50%-10px) calc(50%-10px);*/
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+    align-content: start;
+}
+
+.form.compact {
+    grid-gap: 0;
+}
+
+.form h1 {
+    grid-column: 1 / 3;
+    margin:0;
+    font-size: 10pt;
+}
 
 .field {
-    margin-bottom: 5px;
+    /*margin-bottom: 5px;*/
+    grid-column: 1 / 3;
     display: flex;
+}
+
+.field.narrow {
+    grid-column: span 1;
 }
 
 .field .content {
@@ -684,7 +706,7 @@ button:hover {
     padding: 15px;
 }
 
-.wizard-page h1 {
+.wizard-page > h1 {
     font-size: 12pt;
 }
 
@@ -749,5 +771,12 @@ button:hover {
     }
     .resizer {
         display: none !important;
+    }
+}
+
+
+@media only screen and (max-width: 576px) {
+    .field.narrow {
+        grid-column: 1 / 3;
     }
 }

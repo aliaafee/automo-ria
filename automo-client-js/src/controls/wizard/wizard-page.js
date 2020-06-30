@@ -17,14 +17,6 @@ module.exports = class WizardPage extends Control {
 
     }
 
-    hide() {
-        this.element.style.display = 'none'
-    }
-
-    show() {
-        this.element.style.display = 'block'
-    }
-
     createElement() {
         super.createElement()
 

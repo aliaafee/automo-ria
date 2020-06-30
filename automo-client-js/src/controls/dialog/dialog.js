@@ -18,7 +18,7 @@ module.exports = class Dialog extends Control {
         this.headerElement = null;
         this.bodyElement = null;
         this.footerElement = null;
-
+        this._titleElement = null;
         this._dialogElement = null;
         this._closeElement = null;
     }
@@ -42,6 +42,12 @@ module.exports = class Dialog extends Control {
         this.focusTrap.deactivate()
 
         document.body.removeChild(this.element);
+        this.headerElement = null;
+        this.bodyElement = null;
+        this.footerElement = null;
+        this._titleElement = null;
+        this._dialogElement = null;
+        this._closeElement = null;
     }
 
     
@@ -50,12 +56,6 @@ module.exports = class Dialog extends Control {
         this.onCancel();
     }
 
-    /*
-    _onOk(ev) {
-        var value = this.value();
-        this.hide();
-        this.onOk(value);
-    }*/
 
     setTitle(title) {
         if (!this._titleElement) {
@@ -78,11 +78,11 @@ module.exports = class Dialog extends Control {
 
         this._dialogElement = document.createElement('div');
         this._dialogElement.className = 'dialog';
-        this._dialogElement.style.userSelect = "none";
-        this._dialogElement.style.display = "flex";
-        this._dialogElement.style.flexDirection = "column"
-        this._dialogElement.style.width = this.options.width;
-        this._dialogElement.style.height = this.options.height;
+        //this._dialogElement.style.userSelect = "none";
+        //this._dialogElement.style.display = "flex";
+        //this._dialogElement.style.flexDirection = "column"
+        //this._dialogElement.style.width = this.options.width;
+        //this._dialogElement.style.height = this.options.height;
         this.element.appendChild(this._dialogElement);
 
         var header = document.createElement('div');
@@ -129,7 +129,8 @@ module.exports = class Dialog extends Control {
             ;
         })
 
-        if (this.options.title != null) {
+        console.log(this.options.title)
+        if (this.options.title) {
             this.setTitle(this.options.title)
         }
 

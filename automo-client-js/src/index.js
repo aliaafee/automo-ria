@@ -15,7 +15,7 @@ icd10Coder = new Icd10CoderDialog();
 dlgLogin = new LoginDialog();
 admitWizard = new AdmissionWizard(
     {
-        'title': 'New Admission'
+        title: 'New Admission'
     }
 );
 

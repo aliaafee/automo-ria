@@ -15,7 +15,8 @@ module.exports = class PatientForm extends Form {
                 'hospital_no',
                 {
                     label: "Hospital No",
-                    required: true
+                    required: true,
+                    narrow: true
                 }
             )
         )
@@ -25,7 +26,8 @@ module.exports = class PatientForm extends Form {
                 'national_id_no',
                 {
                     label: "National ID No",
-                    required: true
+                    required: true,
+                    narrow: true
                 }
             )
         )
@@ -45,7 +47,8 @@ module.exports = class PatientForm extends Form {
                 'time_of_birth',
                 {
                     label: "Date of Birth",
-                    required: true
+                    required: true,
+                    narrow: true
                 }
             )
         )
@@ -62,6 +65,7 @@ module.exports = class PatientForm extends Form {
                 {
                     label: "Sex",
                     required: true,
+                    narrow: true,
                     onlyId: true,
                     data:[
                         {
@@ -104,7 +108,8 @@ module.exports = class PatientForm extends Form {
                 'permanent_address',
                 {
                     label: "Permanent Address",
-                    required: false
+                    required: false,
+                    narrow: true
                 }
             )
         )
@@ -113,7 +118,8 @@ module.exports = class PatientForm extends Form {
             new AddressField(
                 'current_address',
                 {
-                    label: "Current Address"
+                    label: "Current Address",
+                    narrow: true
                 }
             )
         )

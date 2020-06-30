@@ -32,6 +32,7 @@ module.exports = class AdmissionDetailsForm extends Form {
                 label: 'Time of Admission',
                 required: true,
                 labelTop: true,
+                narrow: true
             }
         ))
 
@@ -41,6 +42,7 @@ module.exports = class AdmissionDetailsForm extends Form {
                 label: 'Time of Discharge',
                 required: true,
                 labelTop: true,
+                narrow: true
             }
         ))
     }

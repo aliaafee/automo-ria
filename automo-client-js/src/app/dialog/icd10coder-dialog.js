@@ -314,7 +314,8 @@ module.exports = class Icd10CoderDialog extends Dialog {
     createElement() {
         super.createElement();
 
-        this.element.classList.add('icd10coder');
+        //this.element.classList.add('icd10coder');
+        this.element.id = 'icd10coder';
 
         this.headerElement.appendChild(this.searchBox.createElement());
         //this.searchBox.element.style.flexGrow = 1;
