@@ -15,7 +15,15 @@ module.exports = class Spinner extends Control {
     
 
     show() {
-        super.show();
+        requestAnimationFrame(() => {
+            super.show();
+        })
+    }
+
+    hide() {
+        requestAnimationFrame(() => {
+            super.hide()
+        })
     }
 
     createElement() {
