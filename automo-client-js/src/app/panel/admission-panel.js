@@ -3,9 +3,9 @@ const moment = require('moment');
 const Control = require("../../controls/control");
 const Button = require('../../controls/button')
 const ResourcePanel = require('../../controls/panel/resource-panel');
+const Spinner = require('../../controls/spinner')
 
 const Form = require("../../controls/form/form")
-const PatientForm = require('../form/patient-form')
 const AdmissionDetailsForm = require('../form/admission-details-form')
 const ProblemsForm = require('../form/problems-form')
 const AdmissionNotesForm = require('../form/admission-notes-form')
@@ -81,6 +81,8 @@ module.exports = class AdmissionPanel extends Control {
         
         this._panels = []
 
+        this.spinner = new Spinner()
+
         this._panels.push(
             new ResourcePanel(
                 new AdmissionDetailsForm(),
@@ -154,20 +156,12 @@ module.exports = class AdmissionPanel extends Control {
         )
     }
 
-    createElement() {
-        super.createElement();
-
-        this.element.appendChild(this.admissionList.createElement())
-
-        this._panels.forEach((panel) => {
-            this.element.appendChild(panel.createElement())
-        })
-
-        return this.element
-    }
-
     setAdmission(admission) {
+        this.spinner.show()
+        this._bodyElement.style.display = 'none'
+
         this.admissionList.setAdmission(admission)
+        this.admissionList.show()
         
         connection.get(
             admission.url,
@@ -176,18 +170,22 @@ module.exports = class AdmissionPanel extends Control {
                 this._panels.forEach((panel) => {
                     panel.setValue(admission)
                 })
+                this._bodyElement.style.display = ''
             },
             (error) => {
                 console.log(error)
             },
             () => {
                 console.log("finally")
+                this.spinner.hide()
             }
         )
     }
 
     setPatient(patient) {
-        console.log(patient)
+        this.spinner.show()
+        this.admissionList.hide()
+        this._bodyElement.style.display = 'none'
 
         connection.get(
             patient.admissions,
@@ -202,10 +200,30 @@ module.exports = class AdmissionPanel extends Control {
             },
             (error) => {
                 console.log(error)
+                this.spinner.hide()
             },
             () => {
                 console.log("Finally")
             }
         )
+    }
+
+    createElement() {
+        super.createElement();
+
+        this.element.appendChild(this.admissionList.createElement())
+
+        this.element.appendChild(this.spinner.createElement())
+
+        this._bodyElement = document.createElement('div')
+        this.element.appendChild(this._bodyElement)
+
+        this._panels.forEach((panel) => {
+            this._bodyElement.appendChild(panel.createElement())
+        })
+
+        this._bodyElement.style.display = 'none'
+
+        return this.element
     }
 }

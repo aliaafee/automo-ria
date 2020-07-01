@@ -179,7 +179,7 @@
 }
 
 #patient-panel .error {
-    margin: 0 15px 15px 15px;
+    margin: 15px 15px 15px 15px;
     font-style: italic;
     color: grey;
 }
@@ -201,6 +201,11 @@
 
 #patient-panel #admission-panel {
     margin-top: 15px;
+}
+
+#admission-panel > .spinner-container > .spinner {
+    margin-top: 15px;
+    border-radius: var(--border-radius);
 }
 
 #admission-panel > .admissions-list {
@@ -226,7 +231,7 @@
     font-size: 12pt;
 }
 
-#admission-panel > .resource-panel {
+#admission-panel > div > .resource-panel {
     margin-top: 15px;
 }
 
