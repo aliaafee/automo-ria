@@ -26,6 +26,10 @@ module.exports = class Button extends Control {
         if (this.options.style) {
             this.element.classList.add(this.options.style)
         }
+
+        if (this.options.className) {
+            this.element.classList.add(this.options.className)
+        }
         
         this.element.innerHTML = this.label;
 

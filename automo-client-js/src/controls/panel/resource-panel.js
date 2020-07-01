@@ -1,13 +1,27 @@
 const Control = require("../control");
 const Button = require("../button");
+const Spinner = require("../spinner")
 
 module.exports = class ResourcePanel extends Control {
-    constructor (form, options={}) {
+    constructor (form, onSaved, options={}) {
         super(options);
 
         this.form = form
+        this.onSaved = onSaved
 
         this._data = null
+
+        this.spinner = new Spinner()
+
+        this.btnExpand = new Button(
+            '<span class="arrow"></span>',
+            (event) => {
+                this._onToggleExpand()
+            },
+            {
+                className: 'expand-button'
+            }
+        )
 
         this.btnEdit = new Button(
             'Edit',
@@ -50,40 +64,65 @@ module.exports = class ResourcePanel extends Control {
 
     _onSave() {
         if (!this.form.validate()) {
-            this._errorElem.innerHTML = "Marked fields are not valid"
+            this._statusElem.innerHTML = "Marked fields are not valid"
             return
         }
 
         if (!this._data.url) {
-            this._errorElem.innerHTML = "No target URL found"
+            this._statusElem.innerHTML = "No target URL found"
             return
         }
 
         console.log(this.form.value())
 
+        this.spinner.show()
+        this.form.lock()
         connection.post(
             this._data.url,
             this.form.value(),
             (response) => {
                 console.log(response)
                 if (response.error) {
-                    this._errorElem.innerHTML = response.error
+                    this.form.unlock()
+                    this._statusElem.innerHTML = response.error
                     if (response.invalid_fields) {
+                        this._statusElem.innerHTML = "Marked fields are not valid"
                         this.form.markInvalidFields(response.invalid_fields)
+                    } else {
+                        this._statusElem.innerHTML = response.message
                     }
                     return
                 }
-                this._errorElem.innerHTML = "Saved"
+                this._statusElem.innerHTML = "Saved"
                 this.form.setValue(response)
-                this.form.lock()
+                if (this.onSaved) {
+                    this.onSaved(response)
+                }
                 this.btnEdit.show()
                 this.btnSave.hide()
                 this.btnCancel.hide()
             },
             (error) => {
-                this._errorElem.innerHTML = `Failed ${error}`
+                console.log(Object.keys(error))
+                this._statusElem.innerHTML = `Could Not Save (${error.message})`
+                this.form.unlock()
+            },
+            () => {
+                this.spinner.hide()
             }
         )
+    }
+
+    _onToggleExpand() {
+        if (this.element.classList.contains('collapsed')) {
+            this.element.classList.remove('collapsed')
+            return
+        }
+        this.element.classList.add('collapsed')
+    }
+
+    collapse() {
+        this.element.classList.add('collapsed')
     }
 
     setValue(value) {
@@ -98,33 +137,47 @@ module.exports = class ResourcePanel extends Control {
 
     createElement() {
         super.createElement()
-        this.element.style.display = 'block'
 
-        var toolBar = document.createElement('div');
-        toolBar.className = 'toolbar'
-        this.element.appendChild(toolBar)
+        this.element.classList.add('resource-panel')
 
+        var headerElement = document.createElement('div')
+        headerElement.className = 'header'
+        this.element.appendChild(headerElement)
+
+        headerElement.appendChild(this.btnExpand.createElement())
+
+        this.titleElement = document.createElement('div')
+        this.titleElement.className = 'title'
         if (this.options.title) {
-            var titleElem = document.createElement('h1')
-            titleElem.innerHTML = this.options.title
-            this.element.appendChild(titleElem)
+            this.titleElement.innerHTML = this.options.title
         }
+        headerElement.appendChild(this.titleElement)
 
-        toolBar.appendChild(this.btnEdit.createElement())
-        toolBar.appendChild(this.btnSave.createElement())
-        toolBar.appendChild(this.btnCancel.createElement())
+        var toolBarElement = document.createElement('div');
+        toolBarElement.className = 'toolbar'
+        headerElement.appendChild(toolBarElement)
 
-        this._errorElem = document.createElement('div')
-        this._errorElem.className = 'error'
+        toolBarElement.appendChild(this.btnEdit.createElement())
+        toolBarElement.appendChild(this.btnSave.createElement())
+        toolBarElement.appendChild(this.btnCancel.createElement())
 
-        this.element.appendChild(toolBar)
-        this.element.appendChild(this._errorElem)
-        this.element.appendChild(this.form.createElement())
+        this._statusElem = document.createElement('div')
+        this._statusElem.className = 'resource-status'
+
+        toolBarElement.prepend(this._statusElem)
+
+        var bodyElement = document.createElement('div')
+        bodyElement.className = 'body'
+        this.element.appendChild(bodyElement)
+
+        bodyElement.appendChild(this.spinner.createElement())
+        bodyElement.appendChild(this.form.createElement())
 
         this.form.lock()
         this.btnEdit.show()
         this.btnSave.hide()
         this.btnCancel.hide()
+        this.spinner.hide()
 
         return this.element
     }

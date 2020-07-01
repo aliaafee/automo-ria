@@ -3,6 +3,7 @@ module.exports = class Control {
     constructor(options = {}) {
         /* Options
          *  widht, height =  css size
+         *  className = class name of the element
          */
         this.element = null;
         this.options = options;
@@ -33,6 +34,9 @@ module.exports = class Control {
 
         //Add styles
         //this.element.style.display = "flex";
+        if (this.options.className) {
+            this.element.classList.add(this.options.className)
+        }
         this.element.style.userSelect = "none";
         this.element.style.width = this.options.width;
         this.element.style.height = this.options.height;

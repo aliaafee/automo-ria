@@ -137,7 +137,7 @@
 }
 
 #patient-panel{
-    background-color: var(--light);
+    /*background-color: var(--light);*/
     border-left: solid 1px var(--border);
 }
 
@@ -149,13 +149,14 @@
     max-width: 700px;
     margin-right: auto;
     margin-left: auto;
+    padding: 10px 15px 15px 15px;
 }
 
 #patient-panel .patient-banner {
     padding: 15px;
-    margin: 15px;
     background-color: var(--gray);
-    border-radius: var(--border-radius);
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
     color: var(--light);
     flex-direction: column;
     display: flex;
@@ -171,7 +172,7 @@
     justify-content: space-between;
 }
 
-#patient-panel .body {
+#patient-panel > .body {
     margin: 0 15px 15px 15px;
     display: flex;
     flex-direction: column;
@@ -191,6 +192,11 @@
 
 #patient-panel .patient-banner .details span {
     font-size: larger;
+}
+
+#patient-panel .patient-details {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
 li.admission-item .root-item-head {

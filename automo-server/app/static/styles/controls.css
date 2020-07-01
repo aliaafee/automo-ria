@@ -345,7 +345,8 @@ button:hover {
 }
 
 .field label {
-    padding: 5px 10px 5px 0;
+    /*padding: 0px 10px 5px 0;*/
+    margin-bottom: 5px;
     color: var(--gray);
 }
 
@@ -366,6 +367,90 @@ button:hover {
 
 .field .search-box {
     flex-grow: 1;
+}
+
+.resource-panel {
+    background-color: var(--light);
+    border: solid 1px var(--border);
+    border-radius: var(--border-radius);
+}
+
+.resource-panel .header {
+    display: flex;
+    height: 35px;
+}
+
+.resource-panel .header .expand-button {
+    border: none;
+    background-color: transparent;
+    margin: 0;
+
+}
+
+.resource-panel .header .expand-button:focus {
+    box-shadow: none;
+}
+
+.resource-panel .header .expand-button span {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+}
+
+.resource-panel.collapsed .header .expand-button span {
+    transform: rotate(-45deg);
+}
+
+.resource-panel .header .title {
+    flex: 1 1 auto;
+    padding: 10px 15px 10px 0px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.resource-panel .resource-status {
+    font-style: italic;
+    padding: 10px 15px 10px 15px;
+    color: grey;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.resource-panel > .body {
+    border-top: solid 1px var(--border);
+}
+
+.resource-panel > .body > .form {
+    padding: 15px;
+}
+
+.resource-panel.collapsed .toolbar {
+    display: none;
+}
+
+.resource-panel.collapsed > .body {
+    display: none;
+}
+
+.toolbar {
+    display: flex;
+}
+
+.toolbar button {
+    margin: 0;
+    background-color: transparent;
+    border: none;
+    color: var(--primary);
+}
+
+.toolbar button:hover {
+    text-decoration: underline;
+}
+
+.toolbar button:focus {
+    box-shadow: unset;
 }
 
 .invalid > .content > .invalid-feedback {
@@ -708,6 +793,8 @@ button:hover {
 
 .wizard-page > h1 {
     font-size: 12pt;
+    margin-top: 0;
+    margin-bottom: 10px;
 }
 
 
