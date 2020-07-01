@@ -111,7 +111,7 @@ class ReviewPage extends WizardPage {
 
         this.newPatient.setValue(wizard.newPatient.value())
         this.admissionDetails.setValue(wizard.admissionDetails.value())
-        this.problems.setValue(wizard.problems.value())
+        this.problems.setValue({'problems': wizard.problems.value()})
         this.admissionNotes.setValue(wizard.admissionNotes.value())
         this.investigations.setValue(wizard.investigations.value())
         this.proceduresReports.setValue(wizard.proceduresReports.value())

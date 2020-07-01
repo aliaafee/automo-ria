@@ -192,7 +192,7 @@ module.exports = class AdmissionPanel extends Control {
             (admissions) => {
                 console.log(admissions)
                 if (admissions) {
-                    this.setAdmission(admissions.items[1])
+                    this.setAdmission(admissions.items[0])
                 } else {
                     this.admissionList.hide()
                     console.log("Not Admissions Found")
