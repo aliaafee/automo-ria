@@ -4,6 +4,7 @@ module.exports = class Control {
         /* Options
          *  widht, height =  css size
          *  className = class name of the element
+         *  id = html id of element
          */
         this.element = null;
         this.options = options;
@@ -34,6 +35,9 @@ module.exports = class Control {
 
         //Add styles
         //this.element.style.display = "flex";
+        if (this.options.id) {
+            this.element.id = this.options.id
+        }
         if (this.options.className) {
             this.element.classList.add(this.options.className)
         }

@@ -357,6 +357,7 @@ def post_patient_admission(patient_id, admission_id):
         initial_vitalsigns_data = data.pop('initial_vitalsigns', None)
         personnel_data = data.pop('personnel', None)
         discharged_bed_data = data.pop('discharged_bed', None)
+        problems_data = data.pop('problems', None)
 
         invalid_fields = admission.validate_and_update(data)
 
@@ -387,9 +388,31 @@ def post_patient_admission(patient_id, admission_id):
             if invalid_vitals:
                 invalid_fields['initial_vitalsigns'] = invalid_vitals
 
+        problems = []
+        if problems_data:
+            try:
+                problems = problems_data_to_problems(problems_data)
+            except md.dbexception.FieldValueError as e:
+                invalid_fields['problems'] = e.invalid_fields
+
         if invalid_fields:
             db.session.rollback()
             return errors.invalid_fields(invalid_fields)
+
+        problems_to_delete = []
+        for problem in admission.problems:
+            if problem not in problems:
+                problems_to_delete.append(problem)
+        for problem in problems_to_delete:
+            admission.remove_problem(problem)
+            db.session.commit()
+        
+        for problem in problems:
+            if problem not in admission.patient.problems:
+                admission.patient.problems.append(problem)
+            if problem not in admission.problems:
+                admission.add_problem(problem)
+                db.session.commit()
 
         db.session.commit()
 

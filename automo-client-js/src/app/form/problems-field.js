@@ -40,7 +40,7 @@ module.exports = class ProblemsField extends Field {
 
         if (problem.icd10class) {
             code = problem.icd10class.code
-            preferred_plain = `<div class="preferred-plain">(${problem.icd10class.preferred_plain})</div>`
+            preferred_plain = `<div class="preferred-plain">${problem.icd10class.preferred_plain}</div>`
 
             if (problem.icd10class.preferred_long != null) {
                 preferred_long = `<div class="preferred-long">(${problem.icd10class.preferred_long})</div>`
@@ -134,7 +134,7 @@ module.exports = class ProblemsField extends Field {
 
     setValue(data) {
         if (data) {
-            if (data.length() == 0) {
+            if (data.length == 0) {
                 super.setValue(null);
             } else {
                 super.setValue(data)

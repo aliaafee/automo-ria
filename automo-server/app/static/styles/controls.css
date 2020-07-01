@@ -158,6 +158,27 @@ button.primary {
     background-color: var(--primary);
 }
 
+button.clear {
+    background-color: transparent;
+    border: none;
+}
+
+button.clear:hover {
+    background-color: transparent;
+}
+
+button.clear:focus {
+    background-color: transparent;
+}
+
+button.clear .arrow {
+    border-color: var(--border);
+}
+
+button.clear:hover .arrow {
+    border-color: var(--gray);
+}
+
 
 button:focus {
     outline: none;
@@ -381,25 +402,34 @@ button:hover {
 }
 
 .resource-panel .header .expand-button {
-    border: none;
-    background-color: transparent;
     margin: 0;
 
 }
 
 .resource-panel .header .expand-button:focus {
-    box-shadow: none;
+    /*box-shadow: none;*/
 }
 
-.resource-panel .header .expand-button span {
+.arrow {
     border: solid black;
     border-width: 0 3px 3px 0;
     display: inline-block;
     padding: 3px;
+}
+
+.arrow.right {
+    transform: rotate(-45deg);
+}
+
+.arrow.left {
+    transform: rotate(135deg);
+}
+
+.resource-panel .header .expand-button .arrow {
     transform: rotate(45deg);
 }
 
-.resource-panel.collapsed .header .expand-button span {
+.resource-panel.collapsed .header .expand-button .arrow {
     transform: rotate(-45deg);
 }
 

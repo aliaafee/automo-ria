@@ -1,313 +1,211 @@
+const moment = require('moment');
+
 const Control = require("../../controls/control");
-const Form = require("../../controls/form/form");
-const TextField = require('../../controls/form/text-field');
-const DateTimeField = require('../../controls/form/date-time-field');
-const DateField = require('../../controls/form/date-field');
-const BedField = require('../form/bed-field');
-const PrescriptionField = require('../form/prescription-field');
-const DoctorField = require('../form/doctor-field');
-const ProblemsField = require('../form/problems-field');
 const Button = require('../../controls/button')
 const ResourcePanel = require('../../controls/panel/resource-panel');
-const AdmissionDetailsForm = require('../form/admission-details-form');
-const AdmissionNotesForm = require('../form/admission-notes-form');
 
-module.exports = class AdmissionPanel extends Control {
-    constructor (options) {
-        super(options);
+const Form = require("../../controls/form/form")
+const PatientForm = require('../form/patient-form')
+const AdmissionDetailsForm = require('../form/admission-details-form')
+const ProblemsForm = require('../form/problems-form')
+const AdmissionNotesForm = require('../form/admission-notes-form')
+const DischargeNotesForm = require('../form/discharge-notes-form')
 
-        this.data = {}
+class AdmissionsList extends Control {
+    constructor(options={}) {
+        options.className = 'admissions-list'
+        super(options)
 
-        this.summary = new Button(
-            'Discharge Summary',
-            (event) => {
-                connection.get_blob(
-                    this.data.discharge_summary_pdf,
-                    (blob) => {
-                        //console.log(blob)
-                        var file = window.URL.createObjectURL(blob);
-                        window.open(file);
-                    },
-                    () => {
-                        console.log('failed')
-                    }
-                )
+        this.nextButton = new Button(
+            `<span class="arrow right"></span>`,
+            () => {
+                this._onNext()
+            },
+            {
+                style: 'clear'
             }
         )
 
-        /*
-        this.summary_html = new Button(
-            'Discharge Summary Html',
-            (event) => {
-                connection.get_blob(
-                    this.data.discharge_summary_html,
-                    (blob) => {
-                        //console.log(blob)
-                        var file = window.URL.createObjectURL(blob);
-                        window.open(file);
-                    },
-                    () => {
-                        console.log('failed')
-                    }
-                )
-            }
-        )
-        */
-
-        this.admissionDetails = new ResourcePanel(
-            new AdmissionDetailsForm(),
+        this.prevButton = new Button(
+            `<span class="arrow left"></span>`,
+            () => {
+                this._onPrev()
+            },
             {
-                title: 'Admission Details'
+                style: 'clear'
             }
         )
 
-        this.admissionNotes = new ResourcePanel(
-            new AdmissionNotesForm(),
-            {
-                title: 'Admission Details'
-            }
-        )
-
-        /*
-        this.form = new Form()
-
-        this.form.addField(new DateField(
-            'start_time',
-            {
-                label: "Admitted Date",
-                required: true,
-                labelSize: '125px'
-            }
-        ))
-
-        this.form.addField(new DateField(
-            'end_time',
-            {
-                label: "Discharged Date",
-                required: true,
-                labelSize: '125px'
-            }
-        ))
-
-        this.form.addField(new DoctorField(
-            'personnel',
-            {
-                label: "Consultant",
-                required: true,
-                labelSize: '125px'
-            }
-        ))
-
-        this.form.addField(new BedField(
-            'discharged_bed',
-            {
-                label: 'Bed',
-                labelSize: '125px'
-            }
-        ))
-
-        this.form.addField(new BedField(
-            'bed',
-            {
-                label: 'Bed',
-                labelSize: '125px'
-            }
-        ))
-
-        this.form.addField(new ProblemsField(
-            'problems',
-            {
-                label: 'Diagnosis',
-                labelTop: true
-            }
-        ))
-
-        this.form.addField(new TextField(
-            'chief_complaints',
-            {
-                label: 'Chief Complaints',
-                type: 'textarea',
-                required: true,
-                labelTop: true
-            }
-        ))
-
-        this.form.addField(new TextField(
-            'history',
-            {
-                label: 'History',
-                type: 'textarea',
-                required: true,
-                labelTop: true
-            }
-        ))
-
-        this.form.addField(new TextField(
-            'past_history',
-            {
-                label: 'Past History',
-                type: 'textarea',
-                required: true,
-                labelTop: true
-            }
-        ))
-
-        this.form.addField(new TextField(
-            'general_inspection',
-            {
-                label: 'General Inspection',
-                type: 'textarea',
-                required: true,
-                labelTop: true
-            }
-        ))
-
-        this.form.addField(new TextField(
-            'exam_head',
-            {
-                label: 'Head',
-                type: 'textarea',
-                required: true,
-                labelTop: true
-            }
-        ))
-
-        this.form.addField(new TextField(
-            'exam_neck',
-            {
-                label: 'Neck',
-                type: 'textarea',
-                required: true,
-                labelTop: true
-            }
-        ))
-
-        this.form.addField(new TextField(
-            'exam_chest',
-            {
-                label: 'Chest',
-                type: 'textarea',
-                required: true,
-                labelTop: true
-            }
-        ))
-
-        this.form.addField(new TextField(
-            'exam_abdomen',
-            {
-                label: 'Abdomen',
-                type: 'textarea',
-                required: true,
-                labelTop: true
-            }
-        ))
-
-        this.form.addField(new TextField(
-            'exam_genitalia',
-            {
-                label: 'Genitalia',
-                type: 'textarea',
-                required: true,
-                labelTop: true
-            }
-        ))
-
-        this.form.addField(new TextField(
-            'exam_pelvic_rectal',
-            {
-                label: 'Pelvin & Rectal',
-                type: 'textarea',
-                required: true,
-                labelTop: true
-            }
-        ))
-
-        this.form.addField(new TextField(
-            'exam_extremities',
-            {
-                label: 'Extremities',
-                type: 'textarea',
-                required: true,
-                labelTop: true
-            }
-        ))
-
-        this.form.addField(new TextField(
-            'exam_other',
-            {
-                label: 'Others',
-                type: 'textarea',
-                required: true,
-                labelTop: true
-            }
-        ))
-
-        this.form.addField(new TextField(
-            'hospital_course',
-            {
-                label: 'Hospital Course',
-                type: 'textarea',
-                required: true,
-                labelTop: true
-            }
-        ))
-
-        this.form.addField(new TextField(
-            'discharge_advice',
-            {
-                label: 'Discharge Advice',
-                type: 'textarea',
-                required: true,
-                labelTop: true
-            }
-        ))
-
-        this.form.addField(new PrescriptionField(
-            'prescription',
-            {
-                label: 'Prescription',
-                labelTop: true
-            }
-        ))
-
-        this.form.addField(new TextField(
-            'follow_up',
-            {
-                label: 'Follow Up',
-                type: 'textarea',
-                required: true,
-                labelTop: true
-            }
-        ))
-        */
-        
     }
 
-    setData(data) {
-        this.data = data
-        //this.form.setValue(data);
-        this.admissionDetails.setValue(data);
-        this.admissionNotes.setValue(data)
-        this.show()
+    setAdmission(admission) {
+        var from = ''
+        if (admission.start_time) {
+            from = moment(admission.start_time).format('LL')
+        }
+
+        var to = 'Current'
+        if (admission.end_time) {
+            to = moment(admission.end_time).format('LL')
+        }
+
+        this.labelElement.innerHTML = `
+            <h1>Admission</h1>
+            <div>${from} to ${to} </div>
+            <div>${admission.personnel.complete_name}</div>
+            <div>${admission.personnel.department.name}</div>
+        `
+    }
+
+    createElement() {
+        super.createElement()
+
+        this.element.appendChild(this.prevButton.createElement())
+
+        this.labelElement = document.createElement('div')
+        this.labelElement.className = 'label'
+        this.element.appendChild(this.labelElement)
+
+        this.element.appendChild(this.nextButton.createElement())
+
+        return this.element
+    }
+}
+
+module.exports = class AdmissionPanel extends Control {
+    constructor (options={}) {
+        options.id = 'admission-panel'
+        super(options);
+
+        this.admissionList = new AdmissionsList()
+        
+        this._panels = []
+
+        this._panels.push(
+            new ResourcePanel(
+                new AdmissionDetailsForm(),
+                (admission) => {
+                    this.admissionList.setAdmission(admission)
+                },
+                {
+                    title: 'Admission Details'
+                }
+            )
+        )
+
+        this._panels.push(
+            new ResourcePanel(
+                new ProblemsForm(),
+                null,
+                {
+                    title: 'Diagnosis'
+                }
+            )
+        )
+
+        this._panels.push(
+            new ResourcePanel(
+                new AdmissionNotesForm(),
+                null,
+                {
+                    title: 'Admission Notes'
+                }
+            )
+        )
+
+        this._panels.push(
+            new ResourcePanel(
+                new Form(),
+                null,
+                {
+                    title: 'Investigations'
+                }
+            )
+        )
+
+        this._panels.push(
+            new ResourcePanel(
+                new Form(),
+                null,
+                {
+                    title: 'Procedures/ Reports/ Other Notes'
+                }
+            )
+        )
+
+        this._panels.push(
+            new ResourcePanel(
+                new DischargeNotesForm(),
+                null,
+                {
+                    title: 'Discharge Notes'
+                }
+            )
+        )
+
+        this._panels.push(
+            new ResourcePanel(
+                new Form(),
+                null,
+                {
+                    title: 'Discharge Prescription'
+                }
+            )
+        )
     }
 
     createElement() {
         super.createElement();
-        //this.element.style.flexGrow = 1;
-        //this.element.style.flexDirection = 'column'
-        this.element.classList.add('admission-panel')
-        this.element.appendChild(this.summary.createElement())
-        //this.element.appendChild(this.summary_html.createElement())
 
-        this.element.appendChild(this.admissionDetails.createElement())
-        this.element.appendChild(this.admissionNotes.createElement())
-        //this.form.element.style.flexGrow = 1;
+        this.element.appendChild(this.admissionList.createElement())
 
-        //this.form.lock();
-        this.element.style.display = 'none';
+        this._panels.forEach((panel) => {
+            this.element.appendChild(panel.createElement())
+        })
 
         return this.element
     }
 
+    setAdmission(admission) {
+        this.admissionList.setAdmission(admission)
+        
+        connection.get(
+            admission.url,
+            (admission) => {
+                console.log(admission)
+                this._panels.forEach((panel) => {
+                    panel.setValue(admission)
+                })
+            },
+            (error) => {
+                console.log(error)
+            },
+            () => {
+                console.log("finally")
+            }
+        )
+    }
 
+    setPatient(patient) {
+        console.log(patient)
+
+        connection.get(
+            patient.admissions,
+            (admissions) => {
+                console.log(admissions)
+                if (admissions) {
+                    this.setAdmission(admissions.items[1])
+                } else {
+                    this.admissionList.hide()
+                    console.log("Not Admissions Found")
+                }
+            },
+            (error) => {
+                console.log(error)
+            },
+            () => {
+                console.log("Finally")
+            }
+        )
+    }
 }

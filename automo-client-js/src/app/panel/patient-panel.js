@@ -5,6 +5,7 @@ const Scrolled = require('../../controls/scrolled');
 const Spinner = require('../../controls/spinner');
 const ResourcePanel = require('../../controls/panel/resource-panel');
 const PatientForm = require('../form/patient-form');
+const AdmissionPanel = require('../panel/admission-panel')
 
 
 class PatientBanner extends Control {
@@ -37,7 +38,7 @@ class PatientBanner extends Control {
         this._fieldElements['sex'] = document.createElement('span');
         detailsElement.appendChild(this._fieldElements['sex']);
 
-        var slash = document.createTextNode(' | ')
+        var slash = document.createTextNode(' / ')
         detailsElement.appendChild(slash)
 
         this._fieldElements['age'] = document.createElement('span');
@@ -90,6 +91,8 @@ module.exports = class PatientPanel extends Scrolled {
             }
         )
 
+        this.admissionPanel = new AdmissionPanel()
+
         this.spinner = new Spinner();
     }
 
@@ -103,6 +106,9 @@ module.exports = class PatientPanel extends Scrolled {
 
         this.patientDetails.setValue(patient)
         this.patientDetails.show()
+
+        this.admissionPanel.setPatient(patient)
+        this.admissionPanel.show()
 
         onDone()
 
@@ -122,6 +128,7 @@ module.exports = class PatientPanel extends Scrolled {
     setPatient(patient, onDone, onFailed) {
         this.patientBanner.setValue(patient)
         this.patientBanner.show()
+
         this.patientDetails.hide()
 
         this._bodyElement.style.display = 'none';
@@ -167,6 +174,8 @@ module.exports = class PatientPanel extends Scrolled {
         this._bodyElement = document.createElement('div');
         this._bodyElement.className = 'body';
         this._container.appendChild(this._bodyElement);
+
+        this._bodyElement.appendChild(this.admissionPanel.createElement())
 
         this._errorElement = document.createElement('div');
         this._errorElement.className = 'error';

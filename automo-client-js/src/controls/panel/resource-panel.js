@@ -19,7 +19,8 @@ module.exports = class ResourcePanel extends Control {
                 this._onToggleExpand()
             },
             {
-                className: 'expand-button'
+                className: 'expand-button',
+                style: 'clear'
             }
         )
 
