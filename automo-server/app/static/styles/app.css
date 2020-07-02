@@ -118,26 +118,29 @@
 #patient-list .patient-label {
     display: flex;
     flex-direction: row;
-    flex-grow: 1;
+    flex: 1 1 auto;
 }
 
 #patient-list .patient-label .patient-id-number {
     flex: 0 0 60px;
     padding-right: 5px;
+    white-space: nowrap;
 }
 
 #patient-list .patient-label .patient-name {
-    flex: 1 1;
+    flex: 1 1 auto;
     padding-right: 5px;
 }
 
 #patient-list .patient-label .patient-age {
     flex: 0 0 45px;
     padding-right: 5px;
+    white-space: nowrap;
 }
 
 #patient-list .patient-label .patient-sex {
-    flex: 0 0 20px
+    flex: 0 0 20px;
+    white-space: nowrap;
 }
 
 #patient-panel{

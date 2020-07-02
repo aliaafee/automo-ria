@@ -109,7 +109,7 @@ module.exports = class ListBox extends Scrolled {
 
     clearSelection() {
         if (this._selectedElement != null) {
-            this._selectedElement.className = null;
+            this._selectedElement.className = '';
         }
         this._selectedElement = null;
 
