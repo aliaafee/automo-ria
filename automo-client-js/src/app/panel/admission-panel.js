@@ -16,6 +16,9 @@ class AdmissionsList extends Control {
         options.className = 'admissions-list'
         super(options)
 
+        this.onChangeAdmissionUrl = null
+        this._admission = null
+
         this.nextButton = new Button(
             `<span class="arrow right"></span>`,
             () => {
@@ -38,7 +41,41 @@ class AdmissionsList extends Control {
 
     }
 
+    _onPrev() {
+        if (!this._admission) {
+            return
+        }
+
+        if (!this._admission.prev) {
+            return
+        }
+
+        if (!this.onChangeAdmissionUrl) {
+            return
+        }
+
+        this.onChangeAdmissionUrl(this._admission.prev)
+    }
+
+    _onNext() {
+        if (!this._admission) {
+            return
+        }
+
+        if (!this._admission.next) {
+            return
+        }
+
+        if (!this.onChangeAdmissionUrl) {
+            return
+        }
+
+        this.onChangeAdmissionUrl(this._admission.next)
+    }
+
     setAdmission(admission) {
+        this._admission = admission
+
         var from = ''
         if (admission.start_time) {
             from = moment(admission.start_time).format('LL')
@@ -55,6 +92,22 @@ class AdmissionsList extends Control {
             <div>${admission.personnel.complete_name}</div>
             <div>${admission.personnel.department.name}</div>
         `
+
+        if (admission.prev) {
+            this.prevButton.show()
+            this.prevCountElement.innerHTML = admission.prev_count
+        } else {
+            this.prevButton.hideSoft()
+            this.prevCountElement.innerHTML = ""
+        }
+
+        if (admission.next) {
+            this.nextButton.show()
+            this.nextCountElement.innerHTML = admission.next_count
+        } else {
+            this.nextButton.hideSoft()
+            this.nextCountElement.innerHTML = ""
+        }
     }
 
     createElement() {
@@ -62,11 +115,20 @@ class AdmissionsList extends Control {
 
         this.element.appendChild(this.prevButton.createElement())
 
+        this.prevCountElement = document.createElement('span')
+        this.prevButton.element.appendChild(this.prevCountElement)
+
         this.labelElement = document.createElement('div')
         this.labelElement.className = 'label'
         this.element.appendChild(this.labelElement)
 
         this.element.appendChild(this.nextButton.createElement())
+
+        this.nextCountElement = document.createElement('span')
+        this.nextButton.element.prepend(this.nextCountElement)
+
+        this.prevButton.hideSoft()
+        this.nextButton.hideSoft()
 
         return this.element
     }
@@ -77,7 +139,31 @@ module.exports = class AdmissionPanel extends Control {
         options.id = 'admission-panel'
         super(options);
 
+        this._admission = null;
+
         this.admissionList = new AdmissionsList()
+
+        this.admissionList.onChangeAdmissionUrl = (admission_url) => {
+            this.admissionList.hide()
+            this.setAdmissionUrl(admission_url)
+        }
+
+        this.btnDischargeSummary = new Button(
+            'Discharge Summary',
+            () => {
+                connection.get_blob(
+                    this._admission.discharge_summary_pdf,
+                    (blob) => {
+                        //console.log(blob)
+                        var file = window.URL.createObjectURL(blob);
+                        window.open(file);
+                    },
+                    () => {
+                        console.log('failed')
+                    }
+                )
+            }
+        )
         
         this._panels = []
 
@@ -87,7 +173,8 @@ module.exports = class AdmissionPanel extends Control {
             new ResourcePanel(
                 new AdmissionDetailsForm(),
                 (admission) => {
-                    this.admissionList.setAdmission(admission)
+                    /*this.admissionList.setAdmission(admission)*/
+                    this.setAdmission(admission)
                 },
                 {
                     title: 'Admission Details'
@@ -157,20 +244,35 @@ module.exports = class AdmissionPanel extends Control {
     }
 
     setAdmission(admission) {
-        this.spinner.show()
-        this._bodyElement.style.display = 'none'
-
         this.admissionList.setAdmission(admission)
         this.admissionList.show()
         
+        this.setAdmissionUrl(admission.url)
+    }
+
+    setAdmissionUrl(admission_url) {
+        this.spinner.show()
+        this._bodyElement.style.display = 'none'
+
         connection.get(
-            admission.url,
+            admission_url,
             (admission) => {
+                this._admission = admission
+
+                if (this._admission.discharge_summary_pdf) {
+                    this.btnDischargeSummary.unlock()
+                } else {
+                    this.btnDischargeSummary.lock()
+                }
                 console.log(admission)
                 this._panels.forEach((panel) => {
                     panel.setValue(admission)
+                    panel.expand()
                 })
                 this._bodyElement.style.display = ''
+
+                this.admissionList.setAdmission(admission)
+                this.admissionList.show()
             },
             (error) => {
                 console.log(error)
@@ -216,7 +318,14 @@ module.exports = class AdmissionPanel extends Control {
         this.element.appendChild(this.spinner.createElement())
 
         this._bodyElement = document.createElement('div')
+        this._bodyElement.className = 'body'
         this.element.appendChild(this._bodyElement)
+
+        this._toolbarElement = document.createElement('div')
+        this._toolbarElement.className = "toolbar"
+        this._bodyElement.appendChild(this._toolbarElement)
+
+        this._toolbarElement.appendChild(this.btnDischargeSummary.createElement())
 
         this._panels.forEach((panel) => {
             this._bodyElement.appendChild(panel.createElement())

@@ -126,10 +126,19 @@ module.exports = class ResourcePanel extends Control {
         this.element.classList.add('collapsed')
     }
 
+    expand() {
+        this.element.classList.remove('collapsed')
+    }
+
     setValue(value) {
         this._data = value
 
         this.form.setValue(this._data)
+        this.form.lock()
+        this.btnEdit.show()
+        this.btnSave.hide()
+        this.btnCancel.hide()
+        this._statusElem.innerHTML = ""
     }
 
     value() {

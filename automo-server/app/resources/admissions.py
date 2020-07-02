@@ -11,6 +11,18 @@ from .success import success_response
 from .item_getters import get_query_result, get_one_query_result, post_one_query_result, problems_data_to_problems
 
 
+def prev_admissions(admission):
+    return md.Admission.query\
+        .filter(md.Admission.patient_id == admission.patient_id)\
+        .order_by(md.Admission.start_time.desc())\
+        .filter(md.Admission.start_time < admission.start_time)\
+
+def next_admissions(admission):
+    return md.Admission.query\
+        .filter(md.Admission.patient_id == admission.patient_id)\
+        .order_by(md.Admission.start_time.asc())\
+        .filter(md.Admission.start_time > admission.start_time)\
+
 def get_serialized_admission(admission):
     additional_data = {}
 
@@ -61,6 +73,24 @@ def get_serialized_admission(admission):
         patient_id=admission.patient_id, admission_id=admission.id,
         _external = True
     )
+
+    prev_count = prev_admissions(admission).count()
+    if prev_count:
+        additional_data['prev'] = url_for(
+            'api.get_patient_admission',
+            patient_id=admission.patient_id, admission_id=prev_admissions(admission).first().id,
+            _external = True
+        )
+        additional_data['prev_count'] = prev_count
+
+    next_count = next_admissions(admission).count()
+    if next_count:
+        additional_data['next'] = url_for(
+            'api.get_patient_admission',
+            patient_id=admission.patient_id, admission_id=next_admissions(admission).first().id,
+            _external = True
+        )
+        additional_data['next_count'] = next_count
 
     fields=[
         'id',
@@ -399,13 +429,18 @@ def post_patient_admission(patient_id, admission_id):
             db.session.rollback()
             return errors.invalid_fields(invalid_fields)
 
-        problems_to_delete = []
-        for problem in admission.problems:
-            if problem not in problems:
-                problems_to_delete.append(problem)
-        for problem in problems_to_delete:
-            admission.remove_problem(problem)
-            db.session.commit()
+        if problems_data is not None:
+            #if problems data has been set, but is not None
+            #check for None status and not regular false status
+            #if its None we have to ignore and prevent from deleting all
+            #problems
+            problems_to_delete = []
+            for problem in admission.problems:
+                if problem not in problems:
+                    problems_to_delete.append(problem)
+            for problem in problems_to_delete:
+                admission.remove_problem(problem)
+                db.session.commit()
         
         for problem in problems:
             if problem not in admission.patient.problems:

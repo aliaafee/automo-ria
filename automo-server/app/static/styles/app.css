@@ -141,7 +141,7 @@
 }
 
 #patient-panel{
-    /*background-color: var(--light);*/
+    background-color: var(--light);
     border-left: solid 1px var(--border);
 }
 
@@ -214,7 +214,7 @@
 
 #admission-panel > .admissions-list {
     display: flex;
-    background-color: var(--light);
+    background-color: var(--white);
     border: solid 1px var(--border);
     border-radius: var(--border-radius);
 }
@@ -235,9 +235,19 @@
     font-size: 12pt;
 }
 
-#admission-panel > div > .resource-panel {
+#admission-panel > .body > .toolbar {
+    border: solid 1px var(--border);
+    border-radius: var(--border-radius);
+    height: var(--header-height);
+    background-color: var(--white);
     margin-top: 15px;
 }
+
+#admission-panel > .body > .resource-panel {
+    margin-top: 15px;
+}
+
+
 
 li.admission-item .root-item-head {
     padding: 0 0 0 0 !important;

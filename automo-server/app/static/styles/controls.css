@@ -24,6 +24,7 @@
     --border: #343a4032; 
     --a: rgba(0, 0, 0, 0.125);
     --border-radius: 5px;
+    --header-height: 35px;
 }
 
 *, *::before, *::after {
@@ -160,6 +161,7 @@ button.primary {
 
 button.clear {
     background-color: transparent;
+    color: var(--gray);
     border: none;
 }
 
@@ -391,14 +393,14 @@ button:hover {
 }
 
 .resource-panel {
-    background-color: var(--light);
+    background-color: var(--white);
     border: solid 1px var(--border);
     border-radius: var(--border-radius);
 }
 
 .resource-panel .header {
     display: flex;
-    height: 35px;
+    height: var(--header-height);
 }
 
 .resource-panel .header .expand-button {
@@ -480,7 +482,11 @@ button:hover {
 }
 
 .toolbar button:focus {
-    box-shadow: unset;
+}
+
+.toolbar button:disabled {
+    color: var(--gray);
+    text-decoration: none;
 }
 
 .invalid > .content > .invalid-feedback {
