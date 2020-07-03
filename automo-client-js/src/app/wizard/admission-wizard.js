@@ -37,7 +37,7 @@ class Problems extends WizardForm {
     }
 
     value() {
-        return super.value()['problems']
+        return super.value()
     }
 }
 
@@ -111,7 +111,7 @@ class ReviewPage extends WizardPage {
 
         this.newPatient.setValue(wizard.newPatient.value())
         this.admissionDetails.setValue(wizard.admissionDetails.value())
-        this.problems.setValue({'problems': wizard.problems.value()})
+        this.problems.setValue(wizard.problems.value())
         this.admissionNotes.setValue(wizard.admissionNotes.value())
         this.investigations.setValue(wizard.investigations.value())
         this.proceduresReports.setValue(wizard.proceduresReports.value())
@@ -182,7 +182,7 @@ module.exports = class AdmissionWizard extends Wizard {
         }
 
         admission['problems'] = []
-        this.problems.value().forEach((problem) => {
+        this.problems.value().problems.forEach((problem) => {
             problem.start_time = admission.start_time
             admission['problems'].push(problem)
         })
