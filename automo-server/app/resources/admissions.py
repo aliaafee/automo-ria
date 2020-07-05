@@ -8,7 +8,7 @@ from .. import db
 from . import api
 from . import errors
 from .success import success_response
-from .item_getters import get_query_result, get_one_query_result, post_one_query_result, problems_data_to_problems
+from .item_getters import get_query_result, get_one_query_result, post_one_query_result, problems_data_to_problems, prescription_data_to_prescription
 
 
 def prev_admissions(admission):
@@ -147,74 +147,117 @@ def get_admissions():
 def new_admission():
     admission_data = request.get_json()
 
+    invalid_fields = {}
+
     patient_data = admission_data.pop('patient', None)
     if not patient_data:
-        return errors.invalid_fields({'patient': 'Patient is required'})
+        #return errors.invalid_fields({'patient': 'Patient is required'})
+        invalid_fields['patient'] = "Required"
 
     try:
         patient_id = patient_data.pop('id', None)
         if not patient_id:
             patient = md.Patient()
 
-            invalid_fields = patient.validate_and_insert(patient_data)
-            if invalid_fields:
-                return errors.invalid_fields({'patient': invalid_fields})
+            _invalid_fields = patient.validate_and_insert(patient_data)
+            if _invalid_fields:
+                invalid_fields['patient'] = _invalid_fields
+            #invalid_fields = patient.validate_and_insert(patient_data)
+            #if invalid_fields:
+            #    return errors.invalid_fields({'patient': invalid_fields})
 
-            db.session.add(patient)
+            #db.session.add(patient)
         else:
             patient = md.Patient.query.get(patient_id)
 
             if not patient:
-                return errors.invalid_fields({'patient': 'Patient with id {} not found'.format(patient_id)})
+                invalid_fields['patient'] = {'id': 'Patient with id {} not found'.format(patient_id)}
+                #return errors.invalid_fields({'patient': 'Patient with id {} not found'.format(patient_id)})
 
         personnel_data = admission_data.pop('personnel', None)
         if personnel_data:
-            admission_data['personnel_id'] = personnel_data.pop('id', None)
+            personnel_id = personnel_data.pop('id', None)
+            personnel = md.Personnel.query.get(personnel_id)
+            if not personnel:
+                invalid_fields['personnel'] = {'id': 'Personnel with id {} not found'.format(personnel_id)}
+        else:
+            invalid_fields['personnel'] = 'Required'
         
         discharged_bed_data = admission_data.pop('discharged_bed', None)
         if discharged_bed_data:
-            admission_data['discharged_bed_id'] = discharged_bed_data.pop('id', None)
+            discharged_bed_id = discharged_bed_data.pop('id', None)
+            discharged_bed = md.Bed.query.get(discharged_bed_id)
+            if not discharged_bed:
+                invalid_fields['discharged_bed'] = {'id': 'Bed with id {} not found'.format(discharged_bed_id)}
         else:
-            return errors.invalid_fields({'discharged_bed': 'Required'})
+            #return errors.invalid_fields({'discharged_bed': 'Required'})
+            invalid_fields['discharged_bed'] = 'Required'
 
+        #initial_vitalsigns_data = admission_data.pop('initial_vitalsigns', None)
+        #problems_data = admission_data.pop('problems', None)
+        #encounters_data = admission_data.pop('encounters', None)
+        #prescription_data = admission_data.pop('prescription', None)
+
+        #admission = md.Admission()
+        #invalid_fields.update(admission.validate_and_insert(admission_data))
+        #if invalid_fields:
+        #    db.session.rollback()
+        #    return errors.invalid_fields(invalid_fields)
+        #patient.encounters.append(admission)
+
+        initial_vitalsigns = None
         initial_vitalsigns_data = admission_data.pop('initial_vitalsigns', None)
-        problems_data = admission_data.pop('problems', None)
-        encounters_data = admission_data.pop('encounters', None)
-        prescription_data = admission_data.pop('prescription', None)
-
-        admission = md.Admission()
-        invalid_fields = admission.validate_and_insert(admission_data)
-        if invalid_fields:
-            db.session.rollback()
-            return errors.invalid_fields(invalid_fields)
-        patient.encounters.append(admission)
-
         if initial_vitalsigns_data:
             initial_vitalsigns = md.VitalSigns()
-            invalid_fields = initial_vitalsigns.validate_and_insert(initial_vitalsigns_data)
-            if invalid_fields:
-                db.session.rollback()
-                return errors.invalid_fields({'initial_vitalsigns': invalid_fields })
-            admission.add_child_encounter(initial_vitalsigns)
+            _invalid_fields = initial_vitalsigns.validate_and_insert(initial_vitalsigns_data)
+            if _invalid_fields:
+                invalid_fields['initial_vitalsigns'] = _invalid_fields
+            #if invalid_fields:
+            #    db.session.rollback()
+            #    return errors.invalid_fields({'initial_vitalsigns': invalid_fields })
+            #admission.add_child_encounter(initial_vitalsigns)
 
         problems = []
+        problems_data = admission_data.pop('problems', None)
         if problems_data:
             try:
                 problems = problems_data_to_problems(problems_data)
             except md.dbexception.FieldValueError as e:
-                db.session.rollback()
-                return errors.invalid_fields({'problems': e.invalid_fields})
+                invalid_fields['problems'] = e.invalid_fields
+                #db.session.rollback()
+                #return errors.invalid_fields({'problems': e.invalid_fields})
 
         encounters = []
+        encounters_data = admission_data.pop('encounters', None)
         if encounters_data:
             #TODO
             print("Adding encounters")
 
         prescription = []
+        prescription_data = admission_data.pop('prescription', None)
         if prescription_data:
-            #TODO
-            print("Adding prescription")
-            print(prescription_data)
+            try:
+                prescription = prescription_data_to_prescription(prescription_data)
+            except md.dbexception.FieldValueError as e:
+                invalid_fields['prescription'] = e.invalid_fields
+
+        admission = md.Admission()
+        invalid_fields.update(admission.validate_and_insert(admission_data))
+
+        if invalid_fields:
+            return errors.invalid_fields(invalid_fields)
+
+        admission.personnel = personnel
+        admission.discharged_bed = discharged_bed
+
+        db.session.add(patient)
+        patient.encounters.append(admission)
+        
+        if initial_vitalsigns:
+            admission.add_child_encounter(initial_vitalsigns)
+
+        for item in prescription:
+            admission.prescription.append(item)
 
         for problem in problems:
             patient.problems.append(problem)
@@ -228,9 +271,9 @@ def new_admission():
     except md.dbexception.AutoMODatabaseError as e:
         db.session.rollback()
         return errors.unprocessable('Database Error: {}'.format(e))
-    except Exception as e:
-        db.session.rollback()
-        return errors.unprocessable('Error: {}'.format(e))
+    #except Exception as e:
+    #    db.session.rollback()
+    #    return errors.unprocessable('Error: {}'.format(e))
 
     admission_serialized = get_serialized_admission(admission)
     admission_serialized['patient'] = patient.get_serialized()
@@ -360,9 +403,13 @@ def post_patient_admission(patient_id, admission_id):
 
     admission = query.first()
     if admission is None:
-            return errors.resource_not_found('Admission not found')
+        return errors.resource_not_found('Admission not found')
 
     data = request.get_json()
+    print(type(data))
+    if not isinstance(data,dict):
+        return errors.unprocessable('Data is not of expected type')
+
     all_field_names = list(data.keys()).copy()
 
     end_admission = request.args.get('end', False, type=bool)
@@ -421,10 +468,15 @@ def post_patient_admission(patient_id, admission_id):
             if invalid_vitals:
                 invalid_fields['initial_vitalsigns'] = invalid_vitals
 
+        #Process Prescription
+        prescription = []
         if prescription_data:
-            #Add prescription data
-            print(prescription_data)
+            try:
+                prescription = prescription_data_to_prescription(prescription_data)
+            except md.dbexception.FieldValueError as e:
+                invalid_fields['prescription'] = e.invalid_fields
 
+        #Processing Problems
         problems = []
         if problems_data:
             try:
@@ -435,6 +487,19 @@ def post_patient_admission(patient_id, admission_id):
         if invalid_fields:
             db.session.rollback()
             return errors.invalid_fields(invalid_fields)
+
+        if prescription_data is not None:
+            #check for not None, not just false
+            prescription_to_delete = []
+            for item in admission.prescription:
+                if item not in prescription:
+                    prescription_to_delete.append(item)
+            for item in prescription_to_delete:
+                admission.prescription.remove(item)
+
+        for prescription_item in prescription:
+            if prescription_item not in admission.prescription:
+                admission.prescription.append(prescription_item)
 
         if problems_data is not None:
             #if problems data has been set, but is not None

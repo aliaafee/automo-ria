@@ -7,6 +7,7 @@ class Prescription(db.Model, SerializerMixin, ValidatorMixin):
     __versioned__ = {}
 
     serialized_attrs = [
+        'id',
         'drug',
         'drug_order',
         'active'

@@ -567,6 +567,21 @@ class ClientApp:
                     }
                 ],
                 {'error': 'unprocessable', 'message': 'Databse Error: This problem already exists in this encounter'}
+            ),
+            (
+                '{}patients/1/admissions/1'.format(self.index_url),
+                {
+                    'prescription': [
+                        {
+                            'drug': { 
+                                'id': 1
+                            },
+                            'drug_order': 'PO TDS x 10 days',
+                            'active': True
+                        }
+                    ]
+                },
+                {}
             )
         ]
 
@@ -992,7 +1007,9 @@ class ClientApp:
             data['prescription'] = []
             for i in range(randint(1, precription_count)):
                 data['prescription'].append({
-                    'drug_str': choice(drugs),
+                    'drug': {
+                        'name': choice(drugs)
+                    },
                     'drug_order': choice(orders)
                 })
 
@@ -1206,7 +1223,9 @@ class ClientApp:
             meds = []
             for i in range(randint(1, precription_count)):
                 meds.append({
-                    'drug_str': choice(drugs),
+                    'drug': {
+                        'name': choice(drugs)
+                    },
                     'drug_order': choice(orders)
                 })
             presc_post_result = self.conn.post_json(

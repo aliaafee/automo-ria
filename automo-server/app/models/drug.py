@@ -7,6 +7,7 @@ class Drug(db.Model, SerializerMixin, ValidatorMixin):
     __versioned__ = {}
 
     serialized_attrs = [
+        'id',
         'name'
     ]
     

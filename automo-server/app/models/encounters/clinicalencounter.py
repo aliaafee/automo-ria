@@ -32,8 +32,7 @@ class ClinicalEncounter(Encounter):
     ]
 
     required_attrs = [
-        'start_time',
-        'personnel_id'
+        'start_time'
     ]
 
     label = "Clinical Encounter"

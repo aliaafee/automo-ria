@@ -163,3 +163,79 @@ def problems_data_to_problems(data):
         raise md.dbexception.FieldValueError('Invalid fields', invalid_items)
 
     return processed_items
+
+
+def drug_data_to_drug(data):
+    drug_id = data.pop('id', None)
+
+    if drug_id:
+        drug = md.Drug.query.get(drug_id)
+        if drug:
+            return drug
+        else:
+            raise md.dbexception.FieldValueError('Drug not found', {'id': 'Drug with id {} not found'.format(drug_id)})
+
+    if 'name' in data:
+        drug = md.Drug.query.filter(md.Drug.name == data['name']).first()
+        if drug:
+            return drug
+
+    drug = md.Drug()
+    invalid_fields = drug.validate_and_insert(data)
+    if invalid_fields:
+        raise md.dbexception.FieldValueError('Invalid drug fields', invalid_fields)
+
+    return drug
+
+
+
+def prescription_data_to_prescription(data):
+    item_class = md.Prescription
+    processed_items = []
+    invalid_items = []
+
+    for item_data in data:
+        invalid_fields = {}
+
+        drug = None
+        drug_data = item_data.pop('drug', None)
+        if drug_data:
+            try:
+                drug = drug_data_to_drug(drug_data)
+            except md.dbexception.FieldValueError as e:
+                invalid_fields['drug'] = e.invalid_fields
+        #    drug_id = drug_data.pop('id', None)
+        #    if drug_id:
+        #        drug = md.Drug.query.get(drug_id)
+        #        if drug is None:
+        #            invalid_fields['drug'] = {'id': 'Drug id:{} not found'.format(drug_id)}
+        #    else:
+        #        if drug_data.has_key['name']:
+        #            drug = md.Drug.query.filter(md.Drug.name == drug_data['name']).first()
+        #            if not drug:
+        #
+        #
+        #        drug = md.Drug()
+        #        invalid_drug_fields = drug.validate_and_insert(drug_data)
+        #        if invalid_drug_fields:
+        #            invalid_fields['drug'] = invalid_drug_fields
+        item = None
+        item_id = item_data.pop('id', None)
+        if item_id is None:
+            item = item_class()
+            invalid_fields.update(item.validate_and_insert(item_data))
+        else:
+            item = item_class.query.get(item_id)
+            if item is None:
+                invalid_fields.update({'id': 'Item not found'})
+            else:
+                invalid_fields.update(item.validate_and_update(item_data))
+        item.drug = drug
+        if invalid_fields:
+            invalid_items.append(invalid_fields)
+        processed_items.append(item)
+
+    if invalid_items:
+        raise md.dbexception.FieldValueError('Invalid fields', invalid_items)
+
+    return processed_items

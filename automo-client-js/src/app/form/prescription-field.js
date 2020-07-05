@@ -32,7 +32,8 @@ module.exports = class PrescriptionField extends Field {
             (event) => {
                 this._data.push({
                     'drug': this.txtDrug.value(),
-                    'drug_order': this.txtOrder.value()
+                    'drug_order': this.txtOrder.value(),
+                    'active': true
                 })
                 this.txtDrug.setValue(null)
                 this.txtOrder.setValue("")
