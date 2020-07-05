@@ -22,7 +22,8 @@ def main():
         'personnel': {
             'all': url_for('api.get_personnel', _external=True),
             'doctors': url_for('api.get_personnel', type='doctor', _external=True)
-        }
+        },
+        'drugs': url_for('api.get_drugs', _external=True)
     }
 
     return jsonify(result)

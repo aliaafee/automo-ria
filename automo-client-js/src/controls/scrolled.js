@@ -9,9 +9,15 @@ module.exports = class Scrolled extends Control {
         this.element.scrollTo(0, position);
     }
 
-    scrollToElement(element) {
+    scrollToElement(element, testVisibility=true) {
+        if (testVisibility) {
+            if (this.isInView(element, this.element)) {
+                return
+            }
+        }
         this.scrollTo(0)
-        var pos = element.offsetTop - this.element.offsetTop
+        //var pos = element.offsetTop - this.element.offsetTop
+        var pos = element.offsetTop
         this.scrollTo(pos)
     }
 

@@ -21,6 +21,7 @@ module.exports = class ResourceSearchBox extends Control {
          *  cache
          *  displaySelected
          *  displayNull
+         *  resourceIndex = ['path','to','index']
          */
         super(options);
         this.idFunction = idFunction;
@@ -48,11 +49,14 @@ module.exports = class ResourceSearchBox extends Control {
                 this._onSelectResult(result);
             },
             {
-                /*height: options.popupHeight,*/
                 cache: options.cache,
                 displayNull: options.displayNull
             }
         )
+    }
+
+    focus() {
+        this._textBox.focus()
     }
 
     value() {
@@ -105,12 +109,6 @@ module.exports = class ResourceSearchBox extends Control {
 
         this._listBox.setResourceUrl(
             url.format(parts)
-            /*
-            this.resourceUrl + '?' + querystring.stringify(
-                {
-                    'q': query
-                }
-            )*/
         )
     }
 
@@ -153,7 +151,6 @@ module.exports = class ResourceSearchBox extends Control {
         this.element.appendChild(
             this._textBox.createElement()
         );
-        //this._textBox.element.style.flexGrow = 1;
 
         this.element.appendChild(
             this._popup.createElement()
@@ -163,30 +160,49 @@ module.exports = class ResourceSearchBox extends Control {
             this._listBox.createElement()
         );
 
-        //this._listBox.element.style.flexGrow = 1;
-
-        this._textBox.element.addEventListener('keyup', (ev) => {
-            if (ev.code == 'ArrowUp') {
-                this._selectUp();
-            } else if (ev.code == 'ArrowDown') {
-                this._selectDown();
+        this._textBox.element.addEventListener('keydown', (event) => {
+            if (event.code == 'ArrowUp') {
+                event. preventDefault()
+                if (!this._popup.isVisible()) {
+                    this._listBox.clearFocus()
+                    this._search()
+                }
+                this._listBox.focusUp()
+            } else if (event.code == 'ArrowDown') {
+                event. preventDefault()
+                if (!this._popup.isVisible()) {
+                    this._listBox.clearFocus()
+                    this._search()
+                }
+                this._listBox.focusDown()
             }
+        })
+
+        
+        this._textBox.element.addEventListener('keyup', (event) => {
+            if (event.code == 'Enter') {
+                event. preventDefault()
+                this._listBox.selectFocused()
+            } 
         });
 
         this._textBox.element.addEventListener('input', (event) => {
             this._search();
         })
 
-        this._textBox.element.addEventListener('focusin', (ev) => {
+        this._textBox.element.addEventListener('focusin', (event) => {
             if (this._textBox.isLocked()) {
                 return
             }
 
             if (this.options.displaySelected) {
-                if (this._selelctedItem == null) {
-                    this._textBox.setValue("")
-                }
+                //if (this._selelctedItem == null) {
+                this._textBox.setValue("")
+                //}
             }
+
+            this._listBox.clearFocus()
+
             this._search();
         })
 
@@ -197,11 +213,11 @@ module.exports = class ResourceSearchBox extends Control {
 
         this._textBox.element.addEventListener('blur', blurEvent)
 
-        this._popup.element.addEventListener('mouseenter', (ev) => {
+        this._popup.element.addEventListener('mouseenter', (event) => {
             this._textBox.element.removeEventListener('blur', blurEvent);
         })
 
-        this._popup.element.addEventListener('mouseleave', (ev) => {
+        this._popup.element.addEventListener('mouseleave', (event) => {
             this._textBox.element.addEventListener('blur', blurEvent)
         })
 

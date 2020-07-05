@@ -165,7 +165,6 @@ module.exports = class ProblemsField extends Field {
         this._listElement = document.createElement('ol');
         this._listElement.className = 'problems-list'
         this._placeholderElement.appendChild(this._listElement);
-        this._placeholderElement.style.flexDirection = 'column';
 
         this._buttonsElement = document.createElement('div')
         this._buttonsElement.className = 'field-buttons'

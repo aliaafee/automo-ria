@@ -18,7 +18,8 @@ from . import users,\
               admissions,\
               icd10,\
               personnel,\
-              prescription
+              prescription,\
+              drugs
 
 @api.before_request
 @authentication.auth.login_required

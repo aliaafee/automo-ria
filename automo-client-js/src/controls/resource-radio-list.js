@@ -44,13 +44,14 @@ module.exports = class ResourceRadioList extends ResourceList {
 
         var radio = document.createElement('input');
         radio.type = 'radio';
+        //radio.tabIndex = -1;
         item.appendChild(radio);
 
         var labelElement = document.createElement('div');
         item.appendChild(labelElement);
         labelElement.innerHTML = label;
 
-        radio.addEventListener('click', this._onItemClicked);
+        radio.addEventListener('change', this._onItemClicked);
 
         return item;
     }
@@ -62,6 +63,7 @@ module.exports = class ResourceRadioList extends ResourceList {
             var links = this.element.getElementsByTagName('a');
             for (var i = 0; i < links.length; i++) {
                 links[i].addEventListener('click', this.options.onLink)
+                links[i].tabIndex = -1
             }
         }
     }

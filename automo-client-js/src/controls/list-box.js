@@ -25,6 +25,8 @@ module.exports = class ListBox extends Scrolled {
         this._selectedItem = null;
         this._selectedElement = null;
 
+        this._focusedElement = null;
+
         this._locked = false;
 
         this._onItemClicked = (event) => {
@@ -66,12 +68,12 @@ module.exports = class ListBox extends Scrolled {
 
     _onSelectItem(event) {
         this._selectedItem = null;
-        var selectedItemId = this._selectedElement.getAttribute('item-id');
+        this._selectedItemId = this._selectedElement.getAttribute('item-id');
 
-        if (selectedItemId == null) {
+        if (this._selectedItemId == null) {
             this._selectedItem = null
         } else {
-            this._selectedItem = this._listDataItems[selectedItemId];
+            this._selectedItem = this._listDataItems[this._selectedItemId];
         }
         
         this.onSelectItem(this._selectedItem);
@@ -82,29 +84,93 @@ module.exports = class ListBox extends Scrolled {
     }
 
     setSelection(itemId, scroll=true) {
+        this.clearSelection();
         if (itemId == null || itemId == '') {
-            this.clearSelection();
+            if (this.options.displayNull) {
+                this._selectedItem = this._listElement.firstChild
+                this._highlightSelection()
+                if (scroll) {
+                    this.scrollToElement(this._selectedElement)
+                }
+            }
             return;
         }
-        this.clearSelection();
+        
+        this._selectedItemId = itemId
 
         this._selectedItem = this._listDataItems[itemId]
         
         this._selectedElement = this._listChildElems[itemId];
         this._highlightSelection();
         if (scroll) {
-            //this._selectedElement.scrollIntoView();
-            //console.log(this._selectedElement.scrollHeight);
-            //console.log(this._selectedElement.offsetTop);
-            //var pos = this._selectedElement.scrollHeight - this._selectedElement.offsetTop;
-            //this.scrollTo(0)
-
-            //var pos_parent = this.element.offsetTop;
-            //var pos = this._selectedElement.offsetTop - pos_parent;
-            //console.log(pos)
-            //this.scrollTo(pos);
             this.scrollToElement(this._selectedElement);
         }
+    }
+
+    selectFocused() {
+        if (!this._focusedElement) {
+            return
+        }
+
+        var item_id = this._focusedElement.getAttribute('item-id');
+
+        if (!item_id) {
+            if (this.options.displayNull) {
+                this.clearSelection()
+                this.onSelectItem(null)
+            }
+            return
+        }
+
+        this.setSelection(item_id)
+        this.onSelectItem(this._selectedItem);
+    }
+
+    focusUp() {
+        var elem = null;
+
+        if (!this._focusedElement) {
+            elem = this._listElement.lastChild
+        } else {
+            elem = this._focusedElement.previousSibling
+        }
+
+        this.clearFocus()
+
+        if (!elem) {
+            return
+        }
+
+        this._focusedElement = elem
+        this._focusedElement.classList.add("focused")
+        this.scrollToElement(this._focusedElement)
+    }
+
+    focusDown() {
+        var elem = null;
+
+        if (!this._focusedElement) {
+            elem = this._listElement.firstChild
+        } else {
+            elem = this._focusedElement.nextSibling
+        }
+
+        this.clearFocus()
+
+        if (!elem) {
+            return
+        }
+
+        this._focusedElement = elem
+        this._focusedElement.classList.add("focused")
+        this.scrollToElement(this._focusedElement)
+    }
+
+    clearFocus() {
+        if (this._focusedElement != null) {
+            this._focusedElement.classList.remove("focused")
+        }
+        this._focusedElement = null
     }
 
     clearSelection() {
@@ -113,10 +179,13 @@ module.exports = class ListBox extends Scrolled {
         }
         this._selectedElement = null;
 
+        this._selectedItemId = null
         this._selectedItem = null;
     }
 
     _clear() {
+        this.clearFocus()
+        
         while (this._listElement.firstChild) {
             this._listElement.firstChild.remove();
         }

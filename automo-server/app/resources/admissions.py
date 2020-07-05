@@ -214,6 +214,7 @@ def new_admission():
         if prescription_data:
             #TODO
             print("Adding prescription")
+            print(prescription_data)
 
         for problem in problems:
             patient.problems.append(problem)
@@ -273,6 +274,7 @@ def get_patient_admissions(patient_id):
 
 @api.route("patients/<int:patient_id>/admissions/", methods=['POST'])
 def new_patient_admission(patient_id):
+    #TODO: Update this to reuse code from new_admission() route
     patient = md.Patient.query.get(patient_id)
 
     if patient is None:
@@ -388,6 +390,7 @@ def post_patient_admission(patient_id, admission_id):
         personnel_data = data.pop('personnel', None)
         discharged_bed_data = data.pop('discharged_bed', None)
         problems_data = data.pop('problems', None)
+        prescription_data = data.pop('prescription', None)
 
         invalid_fields = admission.validate_and_update(data)
 
@@ -417,6 +420,10 @@ def post_patient_admission(patient_id, admission_id):
                 admission.add_child_encounter(initial_vitalsigns)
             if invalid_vitals:
                 invalid_fields['initial_vitalsigns'] = invalid_vitals
+
+        if prescription_data:
+            #Add prescription data
+            print(prescription_data)
 
         problems = []
         if problems_data:

@@ -298,6 +298,10 @@ li.admission-item .root-item-head div.doctor {
     display: flex;
 }
 
+.problems-field .input-placeholder {
+    flex-direction: column;
+}
+
 .problems-field li .category-label {
     flex-grow: 1;
 }
@@ -325,6 +329,14 @@ li.admission-item .root-item-head div.doctor {
 }
 
 .problems-field.locked li button {
+    display: none;
+}
+
+.precription-field .input-placeholder {
+    flex-direction: column;
+}
+
+.precription-field.locked li button {
     display: none;
 }
 

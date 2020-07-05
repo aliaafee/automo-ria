@@ -8,6 +8,7 @@ const AdmissionDetailsForm = require('../form/admission-details-form')
 const ProblemsForm = require('../form/problems-form')
 const AdmissionNotesForm = require('../form/admission-notes-form')
 const DischargeNotesForm = require('../form/discharge-notes-form')
+const PrescriptionForm = require('../form/prescription-form')
 
 const StatusDialog = require("../../controls/dialog/status-dialog")
 
@@ -80,14 +81,10 @@ class DischargeNotes extends WizardForm {
     }
 }
 
-class Prescription extends WizardPage {
+class Prescription extends WizardForm {
     constructor(options = {}) {
         options.title = "Discharge Prescription"
-        super(options)
-    }
-
-    value() {
-        return []
+        super(new PrescriptionForm(), options)
     }
 }
 
@@ -103,7 +100,7 @@ class ReviewPage extends WizardPage {
         this.investigations = new Form({title: "Investigations"})
         this.proceduresReports = new Form({title: "Procedures/ Reports/ Other Notes"})
         this.dischargeNotes = new DischargeNotesForm({title: "Discharge Prescription"})
-        this.prescription = new Form({title: "Prescription"})
+        this.prescription = new PrescriptionForm({title: "Prescription"})
     }
 
     show(wizard) {
@@ -189,7 +186,7 @@ module.exports = class AdmissionWizard extends Wizard {
 
         admission['patient'] = this.newPatient.value()
         admission['encounters'] = this.investigations.value().concat(this.proceduresReports.value())
-        admission['prescription'] = this.prescription.value()
+        admission['prescription'] = this.prescription.value().prescription
 
         return admission
     }

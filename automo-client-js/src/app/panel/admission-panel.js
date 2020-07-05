@@ -10,6 +10,7 @@ const AdmissionDetailsForm = require('../form/admission-details-form')
 const ProblemsForm = require('../form/problems-form')
 const AdmissionNotesForm = require('../form/admission-notes-form')
 const DischargeNotesForm = require('../form/discharge-notes-form')
+const PrescriptionForm = require('../form/prescription-form')
 
 class AdmissionsList extends Control {
     constructor(options={}) {
@@ -234,7 +235,7 @@ module.exports = class AdmissionPanel extends Control {
 
         this._panels.push(
             new ResourcePanel(
-                new Form(),
+                new PrescriptionForm(),
                 null,
                 {
                     title: 'Discharge Prescription'

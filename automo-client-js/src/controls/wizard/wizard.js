@@ -81,14 +81,15 @@ module.exports = class Wizard extends Dialog {
     }
 
     _onSave() {
+        /*
         var currentPage = this.getCurrentPage()
 
         if (!currentPage.validate()) {
             console.log("Invalid input")
-            //return false
+            return false
         }
 
-        console.log(currentPage.value())
+        console.log(currentPage.value())*/
 
         this.onSave(this.value())
     }

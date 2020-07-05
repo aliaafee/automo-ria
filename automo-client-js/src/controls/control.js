@@ -59,6 +59,42 @@ module.exports = class Control {
         this.element.style.display = "none";
     }
 
+    isVisible() {
+        if (this.element.style.display == "none") {
+            return false
+        }
+        if (this.element.style.visibility == 'hidden') {
+            return false
+        }
+        return true
+    }
+
+    isInView(elem, parent) {
+        if (!elem) {
+            elem = this.element
+        }
+
+        if (!elem) {
+            return false
+        }
+
+        if (!parent) {
+            parent = elem.parentElement
+        }
+
+        var rect = elem.getBoundingClientRect();
+        var parentRect = parent.getBoundingClientRect();
+        //const windowHeight = (window.innerHeight || parent.clientHeight);
+
+        var windowHeight = Math.min(window.innerHeight, parent.clientHeight);
+
+        var elemTop = rect.top - parentRect.top
+
+        const vertInView = (elemTop + rect.height <= windowHeight) && ((elemTop) >= 0);
+
+        return (vertInView);
+    }
+
     lock() {
 
     }

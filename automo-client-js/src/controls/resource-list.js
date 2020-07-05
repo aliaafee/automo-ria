@@ -68,6 +68,21 @@ module.exports = class ResourceList extends ListBox {
         )
     }
 
+    selectFocused() {
+        if (!this._focusedElement) {
+            return
+        }
+
+        var next_url = this._focusedElement.getAttribute('next-url');
+
+        if (!next_url) {
+            super.selectFocused()
+        }
+
+        this.focusUp()
+        this._onLoadNextClicked()
+    }
+
     _onLoadNextClicked() {
         if (this._nextElement != null) {
             this._listElement.removeChild(this._nextElement);
