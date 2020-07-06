@@ -1,4 +1,5 @@
-const moment = require('moment');
+//const moment = require('moment');
+const datetime = require('../../controls/datetime');
 
 const Control = require("../../controls/control");
 const Button = require('../../controls/button')
@@ -79,12 +80,14 @@ class AdmissionsList extends Control {
 
         var from = ''
         if (admission.start_time) {
-            from = moment.utc(admission.start_time, 'YYYY-MM-DD').format('LL')
+            //from = moment.utc(admission.start_time, 'YYYY-MM-DD').format('LL')
+            from = datetime.toLocalDateFormatted(admission.start_time)
         }
 
         var to = 'Current'
         if (admission.end_time) {
-            to = moment.utc(admission.end_time, 'YYYY-MM-DD').format('LL')
+            //to = moment.utc(admission.end_time, 'YYYY-MM-DD').format('LL')
+            to = datetime.toLocalDateFormatted(admission.end_time)
         }
 
         this.labelElement.innerHTML = `

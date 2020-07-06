@@ -255,7 +255,7 @@ def new_admission():
         admission = md.Admission()
         invalid_fields.update(admission.validate_and_insert(admission_data))
 
-        if admission.start_time:
+        if admission.start_time and patient.id:
             similar_admission = get_admission_from_start_time(patient, admission.start_time)
             if similar_admission:
                 invalid_fields['start_time'] = 'Previous admission with same start_time found.'

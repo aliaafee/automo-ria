@@ -1,4 +1,4 @@
-const moment = require('moment');
+const datetime_format = require('../datetime')
 
 const TextField = require("./text-field");
 
@@ -16,8 +16,7 @@ module.exports = class DateField extends TextField {
         if (!value) {
             return null
         }
-        var datetime = moment.utc(value, "YYYY-MM-DD").toDate();
-        return datetime;
+        return datetime_format.toUTCDate(value)
     }
 
     setValue(value) {
@@ -25,8 +24,7 @@ module.exports = class DateField extends TextField {
             super.setValue("")
             return
         }
-        this._value = moment.utc(value);
-        super.setValue(this._value.format('YYYY-MM-DD'))
+        super.setValue(datetime_format.toLocalDateIsoString(value))
     }
 
     lock() {
