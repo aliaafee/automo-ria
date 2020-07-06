@@ -9,6 +9,7 @@ module.exports = class ResourceList extends ListBox {
          * autoLoadNext = false
          * cache = false
          * displayNull
+         *  nullLabel
          * 
          */
         super(idFunction, labelFunction, onSelectItem, options);
@@ -183,7 +184,15 @@ module.exports = class ResourceList extends ListBox {
         }
     }
 
-    _createNullElement(label="--") {
+    _createNullElement(label) {
+        if (!label) {
+            if (this.options.nullLabel && !label) {
+                label = this.options.nullLabel
+            } else {
+                label = "--"
+            }
+        }
+        
         this._nullElement = document.createElement('li')
         this._nullElement.setAttribute('item-id', '');
         this._nullElement.innerHTML = label

@@ -21,6 +21,7 @@ module.exports = class ResourceSearchBox extends Control {
          *  cache
          *  displaySelected
          *  displayNull
+         *  nullLabel
          *  resourceIndex = ['path','to','index']
          */
         super(options);
@@ -50,7 +51,8 @@ module.exports = class ResourceSearchBox extends Control {
             },
             {
                 cache: options.cache,
-                displayNull: options.displayNull
+                displayNull: options.displayNull,
+                nullLabel: options.nullLabel
             }
         )
     }

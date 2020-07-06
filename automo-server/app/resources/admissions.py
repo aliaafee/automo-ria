@@ -11,6 +11,17 @@ from .success import success_response
 from .item_getters import get_query_result, get_one_query_result, post_one_query_result, problems_data_to_problems, prescription_data_to_prescription
 
 
+def get_admission_from_start_time(patient, start_time, ignore_admission=None):
+    query = md.Admission.query\
+        .filter(md.Admission.patient == patient)\
+        .filter(md.Admission.start_time == start_time)
+    
+    if ignore_admission:
+        query = query.filter(md.Admission.id != ignore_admission.id)
+
+    return query.first()
+
+
 def prev_admissions(admission):
     return md.Admission.query\
         .filter(md.Admission.patient_id == admission.patient_id)\
@@ -244,6 +255,11 @@ def new_admission():
         admission = md.Admission()
         invalid_fields.update(admission.validate_and_insert(admission_data))
 
+        if admission.start_time:
+            similar_admission = get_admission_from_start_time(patient, admission.start_time)
+            if similar_admission:
+                invalid_fields['start_time'] = 'Previous admission with same start_time found.'
+
         if invalid_fields:
             return errors.invalid_fields(invalid_fields)
 
@@ -406,7 +422,6 @@ def post_patient_admission(patient_id, admission_id):
         return errors.resource_not_found('Admission not found')
 
     data = request.get_json()
-    print(type(data))
     if not isinstance(data,dict):
         return errors.unprocessable('Data is not of expected type')
 
@@ -439,7 +454,13 @@ def post_patient_admission(patient_id, admission_id):
         problems_data = data.pop('problems', None)
         prescription_data = data.pop('prescription', None)
 
+        print(admission.start_time)
         invalid_fields = admission.validate_and_update(data)
+        print(admission.start_time)
+        if admission.start_time:
+            similar_admission = get_admission_from_start_time(admission.patient, admission.start_time, admission)
+            if similar_admission:
+                invalid_fields['start_time'] = 'Previous admission with same start_time found.'
 
         if personnel_data:
             personnel_id = personnel_data.pop('id')

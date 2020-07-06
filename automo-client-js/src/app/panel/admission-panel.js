@@ -79,12 +79,12 @@ class AdmissionsList extends Control {
 
         var from = ''
         if (admission.start_time) {
-            from = moment(admission.start_time).format('LL')
+            from = moment.utc(admission.start_time, 'YYYY-MM-DD').format('LL')
         }
 
         var to = 'Current'
         if (admission.end_time) {
-            to = moment(admission.end_time).format('LL')
+            to = moment.utc(admission.end_time, 'YYYY-MM-DD').format('LL')
         }
 
         this.labelElement.innerHTML = `

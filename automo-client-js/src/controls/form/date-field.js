@@ -16,7 +16,7 @@ module.exports = class DateField extends TextField {
         if (!value) {
             return null
         }
-        var datetime = moment(value, "YYYY-MM-DD").toDate();
+        var datetime = moment.utc(value, "YYYY-MM-DD").toDate();
         return datetime;
     }
 
@@ -25,7 +25,7 @@ module.exports = class DateField extends TextField {
             super.setValue("")
             return
         }
-        this._value = moment(value);
+        this._value = moment.utc(value);
         super.setValue(this._value.format('YYYY-MM-DD'))
     }
 

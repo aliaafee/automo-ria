@@ -1,6 +1,7 @@
 const Wizard = require('../../controls/wizard/wizard')
 const WizardPage = require('../../controls/wizard/wizard-page')
 const WizardForm = require('../../controls/wizard/wizard-form')
+const ResourceSearchBox = require('../../controls/resource-search-box')
 
 const Form = require("../../controls/form/form")
 const PatientForm = require('../form/patient-form')
@@ -13,12 +14,99 @@ const PrescriptionForm = require('../form/prescription-form')
 const StatusDialog = require("../../controls/dialog/status-dialog")
 
 
-class NewPatient extends WizardForm {
+class PatientPage extends WizardForm {
     constructor(options = {}) {
         options.title = "Patient Details"
 
         super(new PatientForm(), options)
+
+        this._selectedPatient = null;
+
+        this._searchBox = new ResourceSearchBox(
+            (item) => {
+                return item.id
+            },
+            (item) => {
+                return `${item.name} (${item.national_id_no})`
+            },
+            (item) => {
+                this._selectedPatient = item
+                if (!item) {
+                    this.form.clear()
+                    this.form.unlock()
+                    return
+                }
+                this.form.setValue(item)
+                this.form.lock()
+                this._loadPatient()
+            },
+            {
+                placeholder: 'Select Patient',
+                displaySelected: true,
+                displayNull: true,
+                nullLabel: '[New Patient]',
+                resourceIndex: ['patients'],
+                popupHeight: '50%'
+            }
+        )
+    }
+
+    _loadPatient() {
+        if (!this._selectedPatient) {
+            return
+        }
+
+        connection.get(
+            this._selectedPatient.url,
+            (patient) => {
+                this.form.setValue(patient)
+            }
+        )
+    }
+
+    validate() {
+        if (this._selectedPatient) {
+            return true
+        }
+        return super.validate()
+    }
+
+    value() {
+        if (this._selectedPatient) {
+            return this._selectedPatient
+        }
+        return super.value()
+    }
+
+    setValue(value) {
+        if ("id" in value) {
+            this._selectedPatient = value
+            this.form.setValue(value)
+            this.form.lock()
+            this._loadPatient()
+            return
+        }
+        this._selectedPatient = null
+        this.form.setValue(value)
+        this.form.unlock()
+    }
+
+    show() {
+        super.show()
+        //Need to call unlock on form for proper sizing or
+        //growing of text boxes
+        if (!this._selectedPatient) {
+            this.form.unlock()
+        }
+    }
+
+    createElement() {
+        super.createElement()
         
+        this.element.prepend(this._searchBox.createElement())
+        this._searchBox._textBox.element.tabIndex = -1
+
+        return this.element
     }
 }
 
@@ -145,7 +233,7 @@ module.exports = class AdmissionWizard extends Wizard {
     constructor(options) {
         super(options)
 
-        this.newPatient = new NewPatient()
+        this.newPatient = new PatientPage()
         this.admissionDetails = new AdmissionDetails()
         this.problems = new Problems()
         this.admissionNotes = new AdmissionNotes()
