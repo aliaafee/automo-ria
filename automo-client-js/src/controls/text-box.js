@@ -21,9 +21,9 @@ module.exports = class TextBox extends Control {
     setValue(value) {
         this.element.value = value;
         if (this.options.grow && this.options.type == 'textarea') {
-            //requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
                 this._fitToContents()
-            //})
+            })
         }
     }
 
@@ -68,12 +68,17 @@ module.exports = class TextBox extends Control {
             return
         }
 
+        if (this.element.scrollHeight == 0) {
+            return
+        }
+
         this.element.style.overflow = 'hidden'
         this.element.style.height = '';
+
         var height = this.element.scrollHeight + 2
         if (this.options.maxGrow) {
             if (height > this.options.maxGrow) {
-                height = this.options.maxGrow
+                height = this.options.maxGrow + 'px';
                 this.element.style.overflow = 'auto'
             }
         }

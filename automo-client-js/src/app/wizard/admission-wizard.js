@@ -191,6 +191,33 @@ module.exports = class AdmissionWizard extends Wizard {
         return admission
     }
 
+    setValue(data) {
+        this.newPatient.setValue(data['patient'])
+        this.admissionDetails.setValue(data)
+        this.admissionNotes.setValue(data)
+        this.dischargeNotes.setValue(data)
+        //this.encounters.setValue(data)
+        this.problems.setValue(data)
+        this.prescription.setValue(data)
+    }
+
+    _onNext() {
+        super._onNext()
+        localStorage.setItem('wizard_draft', JSON.stringify(this.value()))
+    }
+
+    show(afterSave, onCancel) {
+        super.show(afterSave, onCancel)
+
+        var data = JSON.parse(localStorage.getItem('wizard_draft'))
+
+        console.log(data)
+
+        if (data) {
+            this.setValue(data)
+        }
+    }
+
     _invalidFieldsList(invalid_fields) {
         if (!invalid_fields) {
             return ""

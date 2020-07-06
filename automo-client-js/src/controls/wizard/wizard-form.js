@@ -29,6 +29,13 @@ module.exports = class WizardForm extends WizardPage {
         this.form.setValue(value)
     }
 
+    show() {
+        super.show()
+        //Need to call unlock on form for proper sizing or
+        //growing of text boxes
+        this.form.unlock()
+    }
+
     createElement() {
         super.createElement()
 

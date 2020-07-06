@@ -16,18 +16,17 @@ module.exports = class DateField extends TextField {
         if (!value) {
             return null
         }
-        var datetime = moment(value).toDate();
+        var datetime = moment(value, "YYYY-MM-DD").toDate();
         return datetime;
     }
 
     setValue(value) {
-        super.setValue(value);
         if (!value) {
-            this._textBox.setValue("")
+            super.setValue("")
             return
         }
         this._value = moment(value);
-        this._textBox.setValue(this._value.format('yyyy-MM-DD'))
+        super.setValue(this._value.format('YYYY-MM-DD'))
     }
 
     lock() {

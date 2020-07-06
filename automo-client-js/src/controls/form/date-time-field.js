@@ -23,7 +23,7 @@ module.exports = class DateTimeField extends TextField {
     setValue(value) {
         super.setValue(value);
         if (!value) {
-            this._textBox.setValue("")
+            super.setValue("")
             return
         }
         this._value = moment(value);
