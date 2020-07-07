@@ -432,10 +432,12 @@ button:hover {
 
 .resource-panel .header .expand-button .arrow {
     transform: rotate(45deg);
+    transition: transform 0.25s ease-out;
 }
 
 .resource-panel.collapsed .header .expand-button .arrow {
     transform: rotate(-45deg);
+    transition: transform 0.25s ease-out;
 }
 
 .resource-panel .header .title {
