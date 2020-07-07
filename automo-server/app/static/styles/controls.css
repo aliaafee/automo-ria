@@ -316,6 +316,7 @@ button:hover {
 
 .list-box div.spinner-container {
     /*padding: 5px;*/
+    /*position: fixed;*/
 }
 
 .form {
@@ -475,8 +476,12 @@ button:hover {
     display: flex;
 }
 
-.locked .toolbar {
+#admission-panel .body.locked .resource-panel .toolbar {
     display: none;
+}
+
+#admission-panel .body.locked * {
+    color: var(--border);
 }
 
 .toolbar button {

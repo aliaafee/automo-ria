@@ -6,25 +6,42 @@ module.exports = class Spinner extends Control {
 
         this._spinnerElement = null;
         this._labelElement = null;
+
+        this._activeJobs = 0
     }
 
     setLabel(label) {
         this._labelElement.innerHtml = label;
     }
 
-    
+    reset() {
+        this._activeJobs = 0
+    }
 
     show() {
-        requestAnimationFrame(() => {
-            super.show();
-        })
+        this._activeJobs += 1
+        console.log(this._activeJobs)
+        super.show();
     }
 
     hide() {
-        requestAnimationFrame(() => {
+        this._activeJobs -= 1
+        if (this._activeJobs < 1) {
+            this._activeJobs = 0
             super.hide()
-        })
+        }
+        console.log(this._activeJobs)
     }
+
+    hideSoft() {
+        this._activeJobs -= 1
+        if (this._activeJobs < 1) {
+            this._activeJobs = 0
+            super.hideSoft()
+        }
+        console.log(this._activeJobs)
+    }
+
 
     createElement() {
         super.createElement();

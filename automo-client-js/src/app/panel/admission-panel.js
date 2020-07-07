@@ -140,6 +140,9 @@ class AdmissionsList extends Control {
 
 module.exports = class AdmissionPanel extends Control {
     constructor (options={}) {
+        /* options
+         *    spinner = spinner object
+         */
         options.id = 'admission-panel'
         super(options);
 
@@ -171,7 +174,11 @@ module.exports = class AdmissionPanel extends Control {
         
         this._panels = []
 
-        this.spinner = new Spinner()
+        if (this.options.spinner) {
+            this.spinner = this.options.spinner
+        } else {
+            this.spinner = new Spinner()
+        }
 
         this._panels.push(
             new ResourcePanel(
@@ -256,7 +263,8 @@ module.exports = class AdmissionPanel extends Control {
 
     setAdmissionUrl(admission_url) {
         this.spinner.show()
-        this._bodyElement.style.display = 'none'
+        //this._bodyElement.style.display = 'none'
+        this._bodyElement.classList.add('locked')
 
         connection.get(
             admission_url,
@@ -273,7 +281,8 @@ module.exports = class AdmissionPanel extends Control {
                     panel.setValue(admission)
                     panel.expand()
                 })
-                this._bodyElement.style.display = ''
+                //this._bodyElement.style.display = ''
+                this._bodyElement.classList.remove('locked')
 
                 this.admissionList.setAdmission(admission)
                 this.admissionList.show()
@@ -283,7 +292,7 @@ module.exports = class AdmissionPanel extends Control {
             },
             () => {
                 console.log("finally")
-                this.spinner.hide()
+                this.spinner.hideSoft()
             }
         )
     }
@@ -291,7 +300,8 @@ module.exports = class AdmissionPanel extends Control {
     setPatient(patient) {
         this.spinner.show()
         this.admissionList.hide()
-        this._bodyElement.style.display = 'none'
+        //this._bodyElement.style.display = 'none'
+        this._bodyElement.classList.add('locked')
 
         connection.get(
             patient.admissions,
@@ -306,10 +316,10 @@ module.exports = class AdmissionPanel extends Control {
             },
             (error) => {
                 console.log(error)
-                this.spinner.hide()
             },
             () => {
                 console.log("Finally")
+                this.spinner.hideSoft()
             }
         )
     }
@@ -319,7 +329,9 @@ module.exports = class AdmissionPanel extends Control {
 
         this.element.appendChild(this.admissionList.createElement())
 
-        this.element.appendChild(this.spinner.createElement())
+        if (!this.options.spinner) {
+            this.element.appendChild(this.spinner.createElement())
+        }
 
         this._bodyElement = document.createElement('div')
         this._bodyElement.className = 'body'
@@ -335,7 +347,8 @@ module.exports = class AdmissionPanel extends Control {
             this._bodyElement.appendChild(panel.createElement())
         })
 
-        this._bodyElement.style.display = 'none'
+        //this._bodyElement.style.display = 'none'
+        this._bodyElement.classList.add('locked')
 
         return this.element
     }

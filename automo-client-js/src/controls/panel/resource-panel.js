@@ -76,6 +76,8 @@ module.exports = class ResourcePanel extends Control {
 
         console.log(this.form.value())
 
+        this.btnSave.hide()
+        this.btnCancel.hide()
         this.spinner.show()
         this.form.lock()
         connection.post(
@@ -107,6 +109,8 @@ module.exports = class ResourcePanel extends Control {
                 console.log(Object.keys(error))
                 this._statusElem.innerHTML = `Could Not Save (${error.message})`
                 this.form.unlock()
+                this.btnSave.show()
+                this.btnCancel.show()
             },
             () => {
                 this.spinner.hide()

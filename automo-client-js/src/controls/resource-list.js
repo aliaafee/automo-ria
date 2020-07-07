@@ -232,13 +232,15 @@ module.exports = class ResourceList extends ListBox {
         //this._listElement.style.flexGrow = 0;
 
         this.element.appendChild(this.spinner.createElement());
-        this.spinner.hide();
+        //this.spinner.hide();
 
         if (this.options.autoLoadNext) {
             this.element.addEventListener('scroll', () => {
                 this._autoLoadNext();
             })
         }
+
+        this.spinner.hide()
 
         return this.element;
     }

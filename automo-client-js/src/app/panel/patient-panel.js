@@ -91,9 +91,13 @@ module.exports = class PatientPanel extends Scrolled {
             }
         )
 
-        this.admissionPanel = new AdmissionPanel()
-
         this.spinner = new Spinner();
+
+        this.admissionPanel = new AdmissionPanel(
+            {
+                spinner: this.spinner
+            }
+        )
     }
 
     _setPatient(patient, onDone) {
@@ -134,22 +138,21 @@ module.exports = class PatientPanel extends Scrolled {
         this._bodyElement.style.display = 'none';
         this._errorElement.style.display = 'none';
 
+        this.spinner.reset()
         this.spinner.show();
         connection.get(
             patient.url,
             patient => {
-                this.spinner.hideSoft();
                 this._setPatient(patient, onDone)
             },
             (error) => {
-                this.spinner.hideSoft();
                 console.log(error);
                 this._errorElement.innerHTML = 'Failed to Load'
                 this._errorElement.style.display = ''
                 onFailed();
             },
             () => {
-                
+                this.spinner.hideSoft();
             }
         )
     }
