@@ -87,6 +87,8 @@ module.exports = class ResourcePanel extends Control {
                 console.log(response)
                 if (response.error) {
                     this.form.unlock()
+                    this.btnSave.show()
+                    this.btnCancel.show()
                     this._statusElem.innerHTML = response.error
                     if (response.invalid_fields) {
                         this._statusElem.innerHTML = "Marked fields are not valid"

@@ -81,6 +81,7 @@ class PatientPage extends WizardForm {
     setValue(value) {
         if ("id" in value) {
             this._selectedPatient = value
+            this._searchBox.setValue(value)
             this.form.setValue(value)
             this.form.lock()
             this._loadPatient()
@@ -92,7 +93,9 @@ class PatientPage extends WizardForm {
     }
 
     show() {
+        console.log("Showing patien form")
         super.show()
+        this.form.lock()
         //Need to call unlock on form for proper sizing or
         //growing of text boxes
         if (!this._selectedPatient) {

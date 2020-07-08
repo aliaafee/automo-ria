@@ -146,10 +146,13 @@ module.exports = class PatientPanel extends Scrolled {
                 this._setPatient(patient, onDone)
             },
             (error) => {
-                console.log(error);
-                this._errorElement.innerHTML = 'Failed to Load'
                 this._errorElement.style.display = ''
                 onFailed();
+                if (error.status == 404) {
+                    this._errorElement.innerHTML = 'Patient Not Found'
+                    return
+                }
+                this._errorElement.innerHTML = `Failed to load patient: ${error.message}`
             },
             () => {
                 this.spinner.hideSoft();

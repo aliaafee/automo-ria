@@ -1044,6 +1044,50 @@ class ClientApp:
         pprint(admit_post_result)
 
 
+    def register_random_patient(self):
+        index = self.conn.get(self.index_url)
+        
+        def fake_address():
+            add = {}
+            add_str = fake.address().split('\n')
+            add['line_1'] = add_str[0]
+            add['city'] = add_str[1].split(",")[0]
+            try:
+                add['region'] = add_str[1].split(",")[1]
+            except:
+                pass
+            add['country'] = fake.country()
+            return add
+        patient = {
+            'hospital_no': '{}'.format(randint(100000, 999999)),
+            'national_id_no': 'A{}'.format(randint(100000, 999999)),
+            'name': fake.name(),
+            'time_of_birth': datetime.datetime(
+                randint(1900,1999),
+                randint(1,12),
+                randint(1, 25)
+            ).isoformat(),
+            'sex': choice(['M','F']),
+            'allergies': fake.paragraph(),
+            'phone_no': fake.phone_number(),
+            'permanent_address': fake_address(),
+            'current_address': fake_address(),
+        }
+
+        patient_post_result = self.conn.post_json(
+            index['patients'],
+            patient
+        )
+
+        error = patient_post_result.pop('error', None)
+        if error:
+            print("Could Not Register")
+            print(patient_post_result)
+            print("")
+            return
+
+        print("Registered Patient {}".format(patient['name']))
+
 
     def register_and_admit_random_patient(self):
         problems_count = 5
@@ -1273,7 +1317,7 @@ class ClientApp:
         error = patient_post_result.pop('error', None)
         if error:
             print("Could Not Register")
-            print(admission_post_result)
+            print(patient_post_result)
             print("")
             return
 
@@ -1308,6 +1352,8 @@ class ClientApp:
         #    self.register_and_admit_random_patient()
 
         self.register_and_admit_random_patient_single_request()
+
+        self.register_random_patient()
         
         """
         ward_index = 1

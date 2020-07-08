@@ -162,14 +162,14 @@ module.exports = class ProblemsField extends Field {
 
         this.element.classList.add('problems-field')
 
+        this._buttonsElement = document.createElement('div')
+        this._buttonsElement.className = 'toolbar'
+        this._placeholderElement.appendChild(this._buttonsElement)
+        this._buttonsElement.appendChild(this.btnAddProblem.createElement())
+
         this._listElement = document.createElement('ol');
         this._listElement.className = 'problems-list'
         this._placeholderElement.appendChild(this._listElement);
-
-        this._buttonsElement = document.createElement('div')
-        this._buttonsElement.className = 'field-buttons'
-        this._placeholderElement.appendChild(this._buttonsElement)
-        this._buttonsElement.appendChild(this.btnAddProblem.createElement())
 
         return this.element;
     }

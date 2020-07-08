@@ -96,11 +96,11 @@ module.exports = class Control {
     }
 
     lock() {
-        this.classList.add('locked')
+        this.element.classList.add('locked')
     }
 
     unlock() {
-        this.classList.remove('locked')
+        this.element.classList.remove('locked')
     }
 
     show() {

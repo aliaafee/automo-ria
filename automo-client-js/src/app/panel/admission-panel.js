@@ -75,8 +75,21 @@ class AdmissionsList extends Control {
         this.onChangeAdmissionUrl(this._admission.next)
     }
 
+    setError(message) {
+        this.labelElement.innerHTML = message
+    }
+
     setAdmission(admission) {
         this._admission = admission
+
+        if (!admission) {
+            this.prevCountElement.innerHTML = ""
+            this.nextCountElement.innerHTML = ""
+            this.prevButton.hideSoft()
+            this.nextButton.hideSoft()
+            this.labelElement.innerHTML = "No Admissions"
+            return
+        }
 
         var from = ''
         if (admission.start_time) {
@@ -151,7 +164,7 @@ module.exports = class AdmissionPanel extends Control {
         this.admissionList = new AdmissionsList()
 
         this.admissionList.onChangeAdmissionUrl = (admission_url) => {
-            this.admissionList.hide()
+            this.admissionList.lock()
             this.setAdmissionUrl(admission_url)
         }
 
@@ -256,14 +269,14 @@ module.exports = class AdmissionPanel extends Control {
 
     setAdmission(admission) {
         this.admissionList.setAdmission(admission)
-        this.admissionList.show()
+        this.admissionList.unlock()
         
         this.setAdmissionUrl(admission.url)
     }
 
     setAdmissionUrl(admission_url) {
         this.spinner.show()
-        //this._bodyElement.style.display = 'none'
+        this._bodyElement.style.display = ''
         this._bodyElement.classList.add('locked')
 
         connection.get(
@@ -285,10 +298,16 @@ module.exports = class AdmissionPanel extends Control {
                 this._bodyElement.classList.remove('locked')
 
                 this.admissionList.setAdmission(admission)
-                this.admissionList.show()
+                this.admissionList.unlock()
             },
             (error) => {
-                console.log(error)
+                this._bodyElement.style.display = 'none'
+                this.admissionList.setAdmission(null)
+                if (error.status == 404) {
+                    this.admissionList.setError(`Admission Not Found`)
+                    return
+                }
+                this.admissionList.setError(`Failed to load admissions: ${error.message}`)
             },
             () => {
                 console.log("finally")
@@ -299,8 +318,8 @@ module.exports = class AdmissionPanel extends Control {
 
     setPatient(patient) {
         this.spinner.show()
-        this.admissionList.hide()
-        //this._bodyElement.style.display = 'none'
+        this.admissionList.lock()
+        this._bodyElement.style.display = ''
         this._bodyElement.classList.add('locked')
 
         connection.get(
@@ -310,15 +329,23 @@ module.exports = class AdmissionPanel extends Control {
                 if (admissions) {
                     this.setAdmission(admissions.items[0])
                 } else {
-                    this.admissionList.hide()
+                    this._bodyElement.style.display = 'none'
+                    this.admissionList.setAdmission(null)
                     console.log("Not Admissions Found")
                 }
             },
             (error) => {
-                console.log(error)
+                this._bodyElement.style.display = 'none'
+                this.admissionList.setAdmission(null)
+                if (error.status == 404) {
+                    this.admissionList.setError(`No Admissions`)
+                    return
+                }
+                this.admissionList.setError(`Failed to load admissions: ${error.message}`)
             },
             () => {
                 console.log("Finally")
+                this.admissionList.unlock()
                 this.spinner.hideSoft()
             }
         )

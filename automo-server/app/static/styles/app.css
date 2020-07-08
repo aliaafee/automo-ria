@@ -238,6 +238,14 @@
     font-size: 12pt;
 }
 
+#admission-panel > .admissions-list.locked * {
+    color: transparent;
+}
+
+#admission-panel > .admissions-list.locked button {
+    visibility: hidden;
+}
+
 #admission-panel > .body > .toolbar {
     border: solid 1px var(--border);
     border-radius: var(--border-radius);
@@ -250,6 +258,13 @@
     margin-top: 15px;
 }
 
+#admission-panel .body.locked .resource-panel .toolbar {
+    display: none;
+}
+
+#admission-panel .body.locked * {
+    color: transparent;
+}
 
 
 li.admission-item .root-item-head {
