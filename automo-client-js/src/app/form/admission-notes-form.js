@@ -49,21 +49,21 @@ module.exports = class AdmissionNotesForm extends Form {
                 grow: true
             }
         ))
-        /*
+        
         this.addField(new TextField(
-            'mental_state',
+            'general_inspection',
             {
-                label: 'Mental State Examination',
+                label: 'General Inspection',
                 type: 'textarea',
                 labelTop: true,
                 grow: true
             }
         ))
-            */
+
         this.addField(new TextField(
-            'general_inspection',
+            'exam_mse',
             {
-                label: 'General Inspection',
+                label: 'Mental State Examination',
                 type: 'textarea',
                 labelTop: true,
                 grow: true

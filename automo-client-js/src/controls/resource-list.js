@@ -56,6 +56,9 @@ module.exports = class ResourceList extends ListBox {
                 console.log(error);
                 this._clear();
                 this.resource_data = {};
+                if (this.options.displayNull) {
+                    this._createNullElement()
+                }
                 if (error.status == 404) {
                     this._createFailedElement('Not Found...')
                 } else {

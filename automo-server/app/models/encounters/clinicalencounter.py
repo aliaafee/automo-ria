@@ -42,6 +42,7 @@ class ClinicalEncounter(Encounter):
     past_history = db.Column(db.Text)
 
     general_inspection = db.Column(db.Text)
+    exam_mse = db.Column(db.Text)
     exam_head = db.Column(db.Text)
     exam_neck = db.Column(db.Text)
     exam_chest = db.Column(db.Text)

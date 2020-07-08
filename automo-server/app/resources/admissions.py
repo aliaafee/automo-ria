@@ -119,6 +119,7 @@ def get_serialized_admission(admission):
         'past_history',
         'general_inspection',
         'initial_vitalsigns',
+        'exam_mse',
         'exam_head',
         'exam_neck',
         'exam_chest',
