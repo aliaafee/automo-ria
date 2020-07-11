@@ -66,7 +66,8 @@ module.exports = class Dialog extends Control {
     }
 
     createElement() {
-        this.element = document.createElement('div');
+        //this.element = document.createElement('div');
+        super.createElement();
 
         this.focusTrap = createFocusTrap(this.element);
 

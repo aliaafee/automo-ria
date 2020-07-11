@@ -61,6 +61,7 @@ class ClientApp:
             "   get <url> - get specified url, 'index' to get index of api\n"
             "   admin <command> - administrative commands\n"
             "   test <command> - run tests\n"
+            "   exit\n"
         )
         return False
 

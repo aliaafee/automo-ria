@@ -5,14 +5,16 @@ const PatientBrowser = require('./app/panel/patient-browser');
 const Icd10CoderDialog = require('./app/dialog/icd10coder-dialog');
 const MainPanel = require('./app/panel/main-panel');
 const AdmissionWizard = require('./app/wizard/admission-wizard')
+const UserDialog = require('./app/dialog/user-dialog')
 
 const DATEFORMAT = 'D MMM YYYY';
 
 logger = new Logger();
 connection = new Connection(logger);
 
-icd10Coder = new Icd10CoderDialog();
 dlgLogin = new LoginDialog();
+dlgUser = new UserDialog();
+icd10Coder = new Icd10CoderDialog();
 admitWizard = new AdmissionWizard(
     {
         title: 'New Admission'
@@ -52,7 +54,7 @@ logout = () => {
 
 mainPanel = new MainPanel(
     () => {
-
+        dlgUser.show()
     },
     () => {
         logout();

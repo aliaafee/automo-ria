@@ -1,6 +1,6 @@
 """Database User"""
 from passlib.hash import pbkdf2_sha256
-from flask import current_app
+from flask import current_app, url_for
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
@@ -22,6 +22,9 @@ class User(SerializerMixin, ValidatorMixin, UserMixin, db.Model):
         'personnel',
         'active'
     ]
+
+    def url(self):
+        return url_for('api.user', username=self.username, _external=True)
 
     id = db.Column(db.Integer, primary_key=True)
 

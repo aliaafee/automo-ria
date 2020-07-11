@@ -15,7 +15,7 @@ module.exports = class MainPanel extends Control {
         this._userButton = new Button(
             'Username',
             (event) => {
-                console.log("Open User Dialog")
+                console.log("Open User Dialog");
                 onUser();
             }
         )

@@ -17,9 +17,7 @@ def users():
 
     result = {}
     for user in users:
-        result[user.username] = {
-            'uri' : url_for('api.user',username=user.username)
-        }
+        result[user.username] = user.get_serialized()
 
     return jsonify(result)
 
@@ -106,6 +104,7 @@ def update_user(username):
 
     invalid_fields = {}
 
+    #Should users be able to change this?, we will have to consider
     fullname = user_data.pop('fullname', None)
     if fullname == '':
         invalid_fields['fullname'] = 'Fullname is required'
