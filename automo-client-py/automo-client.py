@@ -30,14 +30,10 @@ class ClientApp:
         try:
             command = command_list.pop(0)
         except IndexError:
-            return False
+            command = None
 
         if command == 'exit':
             self.running = False
-            return True
-
-        if command == 'help':
-            print("Commands: help, exit, get_index, get <url>")
             return True
 
         if command == 'get':
@@ -60,7 +56,12 @@ class ClientApp:
         if command == 'test':
             return tests.process_command(command_list, self.conn)
 
-        print("Unknown Command")
+        print(
+            "Supported commands:\n"
+            "   get <url> - get specified url, 'index' to get index of api\n"
+            "   admin <command> - administrative commands\n"
+            "   test <command> - run tests\n"
+        )
         return False
 
 
@@ -78,16 +79,15 @@ class ClientApp:
 
             if command_str == "":
                 command_str = self.last_command
-                print(command_str)
+                if command_str:
+                    print(command_str)
 
-            if command_str:
+            result = self.process_command(command_str)
 
-                result = self.process_command(command_str)
-
-                if result:
-                    self.last_command = command_str
-                else:
-                    print("Command Error")
+            if result:
+                self.last_command = command_str
+            else:
+                print("Use a supported command.")
 
         print("Exiting")
 

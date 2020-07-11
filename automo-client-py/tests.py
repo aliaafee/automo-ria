@@ -10,7 +10,7 @@ def process_command(command_list, conn):
     try:
         command = command_list.pop(0)
     except IndexError:
-        return False
+        command = None
     
     if command == 'get':
         get_test(conn)
@@ -18,6 +18,10 @@ def process_command(command_list, conn):
 
     if command == 'post':
         post_test(conn)
+        return True
+
+    if command == 'new':
+        new_test(conn)
         return True
 
     if command == 'admit':
@@ -36,7 +40,18 @@ def process_command(command_list, conn):
         register_random_patient(conn)
         return True
 
-
+    print(
+        "WARNING: Never run tests on production server, it will\n"
+        "         corrut data\n"
+        "test supported commands:\n"
+        "   get - run get tests\n"
+        "   post - run post tests\n"
+        "   new - run new test\n"
+        "   admit - register and admit one patient and discharge\n"
+        "   admit_only - register and admit one patien, dont discharge\n"
+        "   admit1 - register and admit a patient with only a signle request\n"
+        "   register - register one patient, dont admit\n"
+    )
     return False
 
     

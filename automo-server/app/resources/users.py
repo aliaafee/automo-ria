@@ -75,7 +75,6 @@ def add_user():
     return user.get_serialized()
 
 
-
 @api.route("/users/<username>")
 def user(username):
     user = md.User.query.filter_by(username=username).first()
@@ -115,6 +114,8 @@ def update_user(username):
     if password == '':
         invalid_fields['password'] = 'Password is not valid'
 
+    current_password = user_data.pop('current_password', None)
+
     personnel = None
     personnel_data = user_data.pop('personnel', None)
     if personnel_data:
@@ -130,6 +131,19 @@ def update_user(username):
 
     if invalid_fields:
         return errors.invalid_fields(invalid_fields)
+
+    if password:
+        if user is g.current_user:
+            #current_user trying to change password
+            if not current_password:
+                return errors.unauthorized("Current password is not valid")
+            if not g.current_user.verify_password(current_password):
+                #current_password does not match
+                return errors.unauthorized("Current password is not valid")
+        else:
+            #Only administrator is allowed to change other passwords
+            if not g.current_user.is_administrator():
+                return errors.unauthorized("Password cannot be changed")
 
     try:
         if fullname:
@@ -147,4 +161,7 @@ def update_user(username):
         db.session.rollback()
         return errors.unprocessable("Database Error: {}".format(e))
 
-    return jsonify(user.get_serialized())
+    response_data = user.get_serialized()
+    response_data['_message'] = 'User date saved.' 
+
+    return jsonify(response_data)

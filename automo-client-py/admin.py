@@ -6,11 +6,15 @@ def process_command(command_list, conn):
     try:
         command = command_list.pop(0)
     except IndexError:
-        return False
+        command = None
 
     if command == 'user':
         return process_user_command(command_list, conn)
 
+    print(
+        "admin supported commands:\n"
+        "   user <commands> - administer users, help for details\n"
+    )
     return False
 
 
@@ -18,7 +22,7 @@ def process_user_command(command_list, conn):
     try:
         command = command_list.pop(0)
     except IndexError:
-        return False
+        command = None
 
     if command == 'list':
         return list_user(conn)
@@ -35,6 +39,14 @@ def process_user_command(command_list, conn):
     if command == 'update':
         return update_user(command_list, conn)
 
+    print(
+        "user supported commands:\n"
+        "  list - list all users\n"
+        "  get <username> - get details of user\n"
+        "  add <username> - add new user\n"
+        "  pwd <username> - change password, blank username = current user\n"
+        "  update <username> - update information of user\n"
+    )
     return False
 
 
@@ -45,7 +57,7 @@ def list_user(conn):
 
     if not user_list:
         print("User list not accesible.")
-        return False
+        return True
 
     pprint(user_list)
 
@@ -56,8 +68,9 @@ def get_user(command_list, conn):
     try:
         username = command_list.pop(0)
     except IndexError:
-        print("Expected username")
-        return False
+        #print("Expected username")
+        #return False
+        username = conn.user.username
 
     current_data = conn.get(
         "{}{}".format(conn.get_index()['users'], username)
@@ -75,7 +88,7 @@ def add_user(command_list, conn):
         username = command_list.pop(0)
     except IndexError:
         print("Expected username")
-        return False
+        return True
 
     print("Adding User '{}'".format(username))
 
@@ -104,16 +117,20 @@ def pwd_user(command_list, conn):
     try:
         username = command_list.pop(0)
     except IndexError:
-        print("Expected username")
-        return False
+        #print("Expected username")
+        #return False
+        username = conn.user.username
 
-    new_password = getpass("New Password: ")
+    data = {}
+
+    if username == conn.user.username:
+        data['current_password'] = getpass("Current Password: ")
+
+    data['password'] = getpass("New Password: ")
 
     result = conn.post_json(
         "{}{}".format(conn.get_index()['users'], username),
-        {
-            'password': new_password,
-        }
+        data
     )
 
     pprint(result)
@@ -125,8 +142,9 @@ def update_user(command_list, conn):
     try:
         username = command_list.pop(0)
     except IndexError:
-        print("Expected username")
-        return False
+        #print("Expected username")
+        #return False
+        username = conn.user.username
 
     current_data = conn.get(
         "{}{}".format(conn.get_index()['users'], username)
