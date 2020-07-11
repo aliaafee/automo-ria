@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, send_file
 from flask_login import login_required, current_user
 
 from ... import models as md
@@ -9,19 +9,10 @@ from . import main
 
 
 @main.route('/')
-#@login_required
 def homepage():
     return render_template('index.html')
 
 
-"""
-@main.route('/name/<new>')
-@login_required
-def change_name(new):
-    p = md.User.query.get(1)
-    print(p)
-    p.name = new
-    db.session.add(p)
-    db.session.commit()
-    return "name changed"
-"""
+@main.route('/manifest.webmanifest')
+def webapp_manifest():
+    return send_file('static/manifest.webmanifest')
