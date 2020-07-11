@@ -13,6 +13,7 @@ def main():
         'patients' : url_for('api.get_patients', _external=True),
         'admissions' : url_for('api.get_admissions', _external=True),
         'user': url_for('api.user',username=g.current_user.username, _external=True),
+        'users': url_for('api.add_user', _external=True),
         'auth_token': url_for('api.get_token', _external=True),
         'icd10': {
             'categories': url_for('api.get_icd10_categories', _external=True),

@@ -29,6 +29,13 @@ def invalid_fields(invalid_fields=[]):
     return response
 
 
+@api.app_errorhandler(405)
+def app_method_not_allowed(e):
+    response = jsonify({'error': 'method not allowed', 'message': 'The method is not allowed for requested URL.'})
+    response.status_code = 405
+    return response
+
+
 @api.app_errorhandler(404)
 def app_page_not_found(e):
     return resource_not_found()

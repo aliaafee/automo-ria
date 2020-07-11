@@ -19,7 +19,8 @@ class User(SerializerMixin, ValidatorMixin, UserMixin, db.Model):
         'username',
         'fullname',
         'complete_name',
-        'personnel'
+        'personnel',
+        'active'
     ]
 
     id = db.Column(db.Integer, primary_key=True)
@@ -60,6 +61,8 @@ class User(SerializerMixin, ValidatorMixin, UserMixin, db.Model):
 
     def verify_password(self, password):
         """Verify password"""
+        if not self.active:
+            return False
         if self.password_hash is None:
             return False
         return pbkdf2_sha256.verify(password, self.password_hash)
@@ -85,7 +88,11 @@ class User(SerializerMixin, ValidatorMixin, UserMixin, db.Model):
             data = s.loads(token)
         except:
             return None
-        return User.query.get(data['id'])
+        user = User.query.get(data['id'])
+        if user:
+            if not user.active:
+                return None
+        return user
 
 
 

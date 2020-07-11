@@ -52,7 +52,7 @@ def post_patient_admission_prescription(patient_id, admission_id):
         invalid_items = []
         for item in prescription_data:
             invalid_fields = {}
-
+            """
             drug_id = item.pop('drug_id', None)
             drug = md.Drug.query.get(drug_id) if drug_id is not None else None
 
@@ -61,6 +61,22 @@ def post_patient_admission_prescription(patient_id, admission_id):
             if drug_str == "" and drug is None:
                 invalid_fields['drug_id'] = 'Both drug_id and drug_str cannot be empty/invalid'
                 invalid_fields['drug_str'] = invalid_fields['drug_id']
+            """
+            drug = None
+            drug_str = None
+            
+            drug_data = item.pop('drug', None)
+            if drug_data:
+                drug_id = drug_data.pop('id', None)
+                drug_name = drug_data.pop('name', None)
+                if drug_id:
+                    drug = md.Drug.query.get(drug_id)
+                    if drug is None:
+                        invalid_fields['drug'] = {'id': 'Invalid Drug id'}
+                elif drug_name:
+                    drug_str = drug_name
+                else:
+                    invalid_fields['drug'] = 'Either valid drug_id or name should be given.'
 
             drug_order = item.pop('drug_order', None)
             if drug_order is None:
