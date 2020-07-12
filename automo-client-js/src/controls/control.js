@@ -29,9 +29,13 @@ module.exports = class Control {
         parent.removeChild(this.element);
     }
 
-    createElement() {
+    createElement(tagName) {
+        if (!tagName) {
+            tagName = 'div'
+        }
+
         //Create the element
-        this.element = document.createElement('div');
+        this.element = document.createElement(tagName);
 
         //Add styles
         //this.element.style.display = "flex";

@@ -99,6 +99,7 @@ class PatientList extends Control {
         this.element.appendChild(toolbarElement)
 
         toolbarElement.appendChild(this.searchBox.createElement());
+        this.searchBox.element.setAttribute('autocomplete', 'off')
 
         toolbarElement.appendChild(this.btnDismiss.createElement());
 

@@ -135,7 +135,7 @@ module.exports = class Form extends Control {
     }
 
     createElement() {
-        super.createElement();
+        super.createElement('form');
 
         this.element.classList.add("form")
 
