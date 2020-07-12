@@ -20,7 +20,6 @@ module.exports = class Spinner extends Control {
 
     show() {
         this._activeJobs += 1
-        console.log(this._activeJobs)
         super.show();
     }
 
@@ -30,7 +29,6 @@ module.exports = class Spinner extends Control {
             this._activeJobs = 0
             super.hide()
         }
-        console.log(this._activeJobs)
     }
 
     hideSoft() {
@@ -39,7 +37,6 @@ module.exports = class Spinner extends Control {
             this._activeJobs = 0
             super.hideSoft()
         }
-        console.log(this._activeJobs)
     }
 
 

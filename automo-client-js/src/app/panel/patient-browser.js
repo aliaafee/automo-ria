@@ -138,7 +138,6 @@ module.exports = class PatientBrowser extends Splitter {
                 patient, 
                 () => {
                     patientList.unlock();
-                    console.log("Patient Set");
                 },
                 () => {
                     patientList.unlock();

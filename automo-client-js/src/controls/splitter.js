@@ -179,7 +179,6 @@ module.exports = class Spitter extends Control {
                     `calc(100% - ${this.options.pane1Size})`
                 )
             } else {
-                console.log('setWidth');
                 this._setWidths(
                     `${this.options.pane1Size}`,
                     `calc(100% - ${this.options.pane1Size})`

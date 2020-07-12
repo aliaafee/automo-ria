@@ -93,7 +93,6 @@ class PatientPage extends WizardForm {
     }
 
     show() {
-        console.log("Showing patien form")
         super.show()
         this.form.lock()
         //Need to call unlock on form for proper sizing or

@@ -54,7 +54,14 @@ logout = () => {
 
 mainPanel = new MainPanel(
     () => {
-        dlgUser.show()
+        dlgUser.show(
+            (data) => {
+                connection.user.password = data.password
+            },
+            () => {
+                console.log("Cancelled")
+            }
+        )
     },
     () => {
         logout();

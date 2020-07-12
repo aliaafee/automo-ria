@@ -130,7 +130,6 @@ module.exports = class Dialog extends Control {
             ;
         })
 
-        console.log(this.options.title)
         if (this.options.title) {
             this.setTitle(this.options.title)
         }

@@ -174,12 +174,11 @@ module.exports = class AdmissionPanel extends Control {
                 connection.get_blob(
                     this._admission.discharge_summary_pdf,
                     (blob) => {
-                        //console.log(blob)
                         var file = window.URL.createObjectURL(blob);
                         window.open(file);
                     },
                     () => {
-                        console.log('failed')
+                        console.log('Failed to get discharge summary')
                     }
                 )
             }
@@ -289,7 +288,7 @@ module.exports = class AdmissionPanel extends Control {
                 } else {
                     this.btnDischargeSummary.lock()
                 }
-                console.log(admission)
+
                 this._panels.forEach((panel) => {
                     panel.setValue(admission)
                     panel.expand()
@@ -310,7 +309,6 @@ module.exports = class AdmissionPanel extends Control {
                 this.admissionList.setError(`Failed to load admissions: ${error.message}`)
             },
             () => {
-                console.log("finally")
                 this.spinner.hideSoft()
             }
         )
@@ -325,13 +323,11 @@ module.exports = class AdmissionPanel extends Control {
         connection.get(
             patient.admissions,
             (admissions) => {
-                console.log(admissions)
                 if (admissions) {
                     this.setAdmission(admissions.items[0])
                 } else {
                     this._bodyElement.style.display = 'none'
                     this.admissionList.setAdmission(null)
-                    console.log("Not Admissions Found")
                 }
             },
             (error) => {
@@ -344,7 +340,6 @@ module.exports = class AdmissionPanel extends Control {
                 this.admissionList.setError(`Failed to load admissions: ${error.message}`)
             },
             () => {
-                console.log("Finally")
                 this.admissionList.unlock()
                 this.spinner.hideSoft()
             }
