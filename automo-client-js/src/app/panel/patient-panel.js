@@ -100,7 +100,7 @@ module.exports = class PatientPanel extends Scrolled {
         )
     }
 
-    _setPatient(patient, onDone) {
+    _setPatient(patient, onDone, admission) {
         this.patient = patient;
 
         this.patientBanner.setValue(this.patient)
@@ -111,29 +111,24 @@ module.exports = class PatientPanel extends Scrolled {
         this.patientDetails.setValue(patient)
         this.patientDetails.show()
 
-        this.admissionPanel.setPatient(patient)
+        
         this.admissionPanel.show()
 
-        onDone()
-
-        /*
-        var processes = 2;
-        var setPatientDone = () => {
-            processes -= 1;
-            if (processes < 1) {
-                onDone();
-            }
+        if (admission) {
+            this.admissionPanel.setAdmission(admission)
+            return
         }
-
-        this.currentAdmissionTile.setPatient(patient, setPatientDone);
-        this.admissionsTile.setPatient(patient, setPatientDone);*/
+        this.admissionPanel.setPatient(patient)
+        
+        onDone()
     }
 
-    setPatient(patient, onDone, onFailed) {
+    setPatient(patient, onDone, onFailed, admission) {
         this.patientBanner.setValue(patient)
         this.patientBanner.show()
 
         this.patientDetails.hide()
+        this.patientDetails.collapse()
 
         this._bodyElement.style.display = 'none';
         this._errorElement.style.display = 'none';
@@ -143,7 +138,7 @@ module.exports = class PatientPanel extends Scrolled {
         connection.get(
             patient.url,
             patient => {
-                this._setPatient(patient, onDone)
+                this._setPatient(patient, onDone, admission)
             },
             (error) => {
                 this._errorElement.style.display = ''
@@ -159,6 +154,7 @@ module.exports = class PatientPanel extends Scrolled {
             }
         )
     }
+
 
     createElement() {
         super.createElement();

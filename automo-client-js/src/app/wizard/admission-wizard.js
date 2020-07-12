@@ -356,7 +356,7 @@ module.exports = class AdmissionWizard extends Wizard {
                 )
                 statusDialog.showDismiss(
                     () => {
-                        this.afterSave(data)
+                        this.afterSave(response)
                         this.hide()
                     }
                 )
