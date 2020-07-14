@@ -1,8 +1,9 @@
-const Control = require("../control");
+//const Control = require("../control");
 const Button = require("../button");
-const Spinner = require("../spinner")
+const Spinner = require("../spinner");
+const CollapsePanel = require("./collapse-panel");
 
-module.exports = class ResourcePanel extends Control {
+module.exports = class ResourcePanel extends CollapsePanel {
     constructor (form, onSaved, options={}) {
         super(options);
 
@@ -12,17 +13,6 @@ module.exports = class ResourcePanel extends Control {
         this._data = null
 
         this.spinner = new Spinner()
-
-        this.btnExpand = new Button(
-            '<span class="arrow"></span>',
-            (event) => {
-                this._onToggleExpand()
-            },
-            {
-                className: 'expand-button',
-                style: 'clear'
-            }
-        )
 
         this.btnEdit = new Button(
             'Edit',
@@ -120,22 +110,6 @@ module.exports = class ResourcePanel extends Control {
         )
     }
 
-    _onToggleExpand() {
-        if (this.element.classList.contains('collapsed')) {
-            this.element.classList.remove('collapsed')
-            return
-        }
-        this.element.classList.add('collapsed')
-    }
-
-    collapse() {
-        this.element.classList.add('collapsed')
-    }
-
-    expand() {
-        this.element.classList.remove('collapsed')
-    }
-
     setValue(value) {
         this._data = value
 
@@ -156,22 +130,9 @@ module.exports = class ResourcePanel extends Control {
 
         this.element.classList.add('resource-panel')
 
-        var headerElement = document.createElement('div')
-        headerElement.className = 'header'
-        this.element.appendChild(headerElement)
-
-        headerElement.appendChild(this.btnExpand.createElement())
-
-        this.titleElement = document.createElement('div')
-        this.titleElement.className = 'title'
-        if (this.options.title) {
-            this.titleElement.innerHTML = this.options.title
-        }
-        headerElement.appendChild(this.titleElement)
-
         var toolBarElement = document.createElement('div');
         toolBarElement.className = 'toolbar'
-        headerElement.appendChild(toolBarElement)
+        this.headerElement.appendChild(toolBarElement)
 
         toolBarElement.appendChild(this.btnEdit.createElement())
         toolBarElement.appendChild(this.btnSave.createElement())
@@ -182,12 +143,8 @@ module.exports = class ResourcePanel extends Control {
 
         toolBarElement.prepend(this._statusElem)
 
-        var bodyElement = document.createElement('div')
-        bodyElement.className = 'body'
-        this.element.appendChild(bodyElement)
-
-        bodyElement.appendChild(this.spinner.createElement())
-        bodyElement.appendChild(this.form.createElement())
+        this.bodyElement.appendChild(this.spinner.createElement())
+        this.bodyElement.appendChild(this.form.createElement())
 
         this.form.lock()
         this.btnEdit.show()

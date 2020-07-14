@@ -4,6 +4,7 @@ const datetime = require('../../controls/datetime');
 const Control = require("../../controls/control");
 const Button = require('../../controls/button')
 const ResourcePanel = require('../../controls/panel/resource-panel');
+const CollapsePanel = require('../../controls/panel/collapse-panel')
 const Spinner = require('../../controls/spinner')
 
 const Form = require("../../controls/form/form")
@@ -12,6 +13,7 @@ const ProblemsForm = require('../form/problems-form')
 const AdmissionNotesForm = require('../form/admission-notes-form')
 const DischargeNotesForm = require('../form/discharge-notes-form')
 const PrescriptionForm = require('../form/prescription-form')
+const EncountersList = require('./encounters-list')
 
 class AdmissionsList extends Control {
     constructor(options={}) {
@@ -226,24 +228,22 @@ module.exports = class AdmissionPanel extends Control {
         )
 
         this._panels.push(
-            new ResourcePanel(
-                new Form(),
-                null,
+            new EncountersList(
                 {
-                    title: 'Investigations'
+                    title: 'Encounters'
                 }
             )
         )
 
+        /*
         this._panels.push(
-            new ResourcePanel(
-                new Form(),
-                null,
+            new CollapsePanel(
                 {
                     title: 'Procedures/ Reports/ Other Notes'
                 }
             )
         )
+        */
 
         this._panels.push(
             new ResourcePanel(

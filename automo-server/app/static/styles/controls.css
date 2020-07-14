@@ -241,6 +241,7 @@ button:hover {
 /* width */
 ::-webkit-scrollbar {
     width: 5px;
+    height: 5px;
     border-radius: var(--border-radius);
 }
 
@@ -400,23 +401,23 @@ button:hover {
     display: none;
 }
 
-.resource-panel {
+.collapse-panel {
     background-color: var(--white);
     border: solid 1px var(--border);
     border-radius: var(--border-radius);
 }
 
-.resource-panel .header {
+.collapse-panel .header {
     display: flex;
     height: var(--header-height);
 }
 
-.resource-panel .header .expand-button {
+.collapse-panel .header .expand-button {
     margin: 0;
 
 }
 
-.resource-panel .header .expand-button:focus {
+.collapse-panel .header .expand-button:focus {
     /*box-shadow: none;*/
 }
 
@@ -435,17 +436,17 @@ button:hover {
     transform: rotate(135deg);
 }
 
-.resource-panel .header .expand-button .arrow {
+.collapse-panel .header .expand-button .arrow {
     transform: rotate(45deg);
     transition: transform 0.25s ease-out;
 }
 
-.resource-panel.collapsed .header .expand-button .arrow {
+.collapse-panel.collapsed .header .expand-button .arrow {
     transform: rotate(-45deg);
     transition: transform 0.25s ease-out;
 }
 
-.resource-panel .header .title {
+.collapse-panel .header .title {
     flex: 1 1 auto;
     padding: 10px 15px 10px 0px;
     overflow: hidden;
@@ -460,7 +461,11 @@ button:hover {
     white-space: nowrap;
 }
 
-.resource-panel > .body {
+.collapse-panel > .header > .title {
+    font-weight: bold;
+}
+
+.collapse-panel > .body {
     border-top: solid 1px var(--border);
 }
 
@@ -472,7 +477,7 @@ button:hover {
     display: none;
 }
 
-.resource-panel.collapsed > .body {
+.collapse-panel.collapsed > .body {
     display: none;
 }
 

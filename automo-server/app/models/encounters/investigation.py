@@ -162,10 +162,10 @@ class CompleteBloodCount(Investigation):
       hemoglobin (Hemoglobin) in g% 
       tlc (Total Leucocyte Count) 10^9/L
       plt (Platelate Count) 10^9/L
-      dlc_n (DLC Nutrophils) %
+      dlc_n (DLC Neutrophils) %
       dlc_l (DLC Lymphocytes) %
       dlc_m (DLC Monocytes) %
-      dlc_e (DLC Monocytes) %"""
+      dlc_e (DLC Eiosinophils) %"""
     __tablename__ = "completebloodcount"
 
     id = db.Column(db.Integer, db.ForeignKey('investigation.id'), primary_key=True)
@@ -181,6 +181,7 @@ class CompleteBloodCount(Investigation):
         'start_time',
         'end_time',
         'personnel_id',
+        'hemoglobin',
         'tlc',
         'plt', 
         'dlc_n',

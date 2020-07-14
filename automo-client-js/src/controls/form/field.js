@@ -40,6 +40,7 @@ module.exports = class Field extends Control {
     }
 
     setLabel(text) {
+        this.options.label = text
         if (this._labelElement != null) {
             this._labelElement.innerText = text;
         }

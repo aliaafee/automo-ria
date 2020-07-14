@@ -29,6 +29,10 @@ module.exports = class Form extends Control {
     }
 
     setValue(value) {
+        if (!value) {
+            this.clear()
+            return
+        }
         //Value is dictionary with fieldName: value
         for (var i = 0; i < this._fieldNames.length; i++) {
             this._fields[i].setValue(
