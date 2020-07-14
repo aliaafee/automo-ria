@@ -455,7 +455,7 @@ button:hover {
 
 .resource-panel .resource-status {
     font-style: italic;
-    padding: 10px 15px 10px 15px;
+    padding: 10px 0px 10px 0px;
     color: grey;
     overflow: hidden;
     white-space: nowrap;

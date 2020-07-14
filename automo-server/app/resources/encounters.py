@@ -34,6 +34,26 @@ def post_patient_encounter(patient_id, encounter_id):
     )
 
 
+@api.route("/patients/<int:patient_id>/encounters/<int:encounter_id>", methods=['DELETE'])
+def delete_patient_encounter(patient_id, encounter_id):
+    encounter = md.Encounter.query.filter_by(id=encounter_id, patient_id=patient_id).first()
+
+    if encounter is None:
+        return errors.resource_not_found("Encounter not found")
+
+    try:
+        db.session.delete(encounter)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return errors.unprocessable('Database Error: {}'.format(e))
+
+    return jsonify({
+        'status': 'success',
+        'message': 'Deleted'
+    })
+
+
 @api.route("patients/<int:patient_id>/admissions/<int:admission_id>/encounters/")
 def get_patient_admission_encounters(patient_id, admission_id):
     query = md.Encounter.query\

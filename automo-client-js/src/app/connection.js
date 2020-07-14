@@ -12,7 +12,6 @@ module.exports = class Connection {
 
 
     login(index_url, username, password, on_success, on_failed, on_finally) {
-        this.logger.log_spinner(`User '${username}' attemting to login...`);
         this.index_url = index_url;
         this.user = new User();
         this.user.login(
@@ -23,12 +22,10 @@ module.exports = class Connection {
                 this.resource_index = resource_index;
                 on_success();
                 on_finally != null ? on_finally() : false;
-                this.logger.log_success(`User '${username}' logged in.`);
             },
             (error) => {
                 on_failed(error);
                 on_finally != null ? on_finally() : false;
-                this.logger.log_error(`Login failed for '${username}'. ${error.message}`);
             }
         )
     }
@@ -59,14 +56,35 @@ module.exports = class Connection {
     }
 
 
-    _get(url, on_success, on_failed, on_finally, refetchTokenOnFail = true) {
+    _authenticate_and_execute(func, on_failed, on_finally) {
+        if (this.user == null) {
+            on_failed(new Error("User not logged in"));
+            on_finally != null ? on_finally() : false;
+            return;
+        }
+        if (!this.user.tokenValid()) {
+            this.user.getToken(
+                () => {
+                    func()
+                },
+                (error) => {
+                    on_failed(error)
+                    on_finally != null ? on_finally() : false;
+                }
+            );
+            return;
+        }
+        func()
+    }
+
+
+    _get(url, on_success, on_failed, on_finally, refetchTokenOnFail = true, method='GET') {
         let headers = this.user.getAuthorizationHeaders();
 
-        fetch(url, { method: 'GET', headers: headers })
+        fetch(url, { method: method, headers: headers })
             .then(status)
             .then(response => response.json())
             .then(data => {
-                this.logger.log_success(`GET ${url}`)
                 on_success(data);
                 on_finally != null ? on_finally() : false;
             })
@@ -77,13 +95,11 @@ module.exports = class Connection {
                             this._get(url, on_success, on_failed, on_finally, false)
                         },
                         (getTokenError) => {
-                            this.logger.log_error(`GET ${url} failed. ${getTokenError.message}`);
                             on_failed(getTokenError);
                             on_finally != null ? on_finally() : false;
                         }
                     );
                 } else {
-                    this.logger.log_error(`GET ${url} failed. ${error.message}.`)
                     on_failed(error);
                     on_finally != null ? on_finally() : false;
                 }
@@ -92,26 +108,24 @@ module.exports = class Connection {
 
 
     get(url, on_success, on_failed, on_finally) {
-        this.logger.log_spinner(`GET ${url}...`)
-        if (this.user == null) {
-            on_failed(new Error("User not logged in"));
-            on_finally != null ? on_finally() : false;
-            return;
-        }
-        if (!this.user.tokenValid()) {
-            this.user.getToken(
-                () => {
-                    this._get(url, on_success, on_failed, on_finally)
-                },
-                (error) => {
-                    this.logger.log_error(`GET ${url} failed. Failed to renew token.`)
-                    on_failed(error)
-                    on_finally != null ? on_finally() : false;
-                }
-            );
-            return;
-        }
-        this._get(url, on_success, on_failed, on_finally);
+        this._authenticate_and_execute(
+            () => {
+                this._get(url, on_success, on_failed, on_finally)
+            },
+            on_failed,
+            on_finally
+        )
+    }
+
+
+    delete(url, on_success, on_failed, on_finally) {
+        this._authenticate_and_execute(
+            () => {
+                this._get(url, on_success, on_failed, on_finally, true, 'DELETE')
+            },
+            on_failed,
+            on_finally
+        )
     }
 
 
@@ -122,7 +136,6 @@ module.exports = class Connection {
             .then(status)
             .then(response => response.blob())
             .then(blob => {
-                this.logger.log_success(`GET ${url}`)
                 on_success(blob);
                 on_finally != null ? on_finally() : false;
             })
@@ -133,13 +146,11 @@ module.exports = class Connection {
                             this._get(url, on_success, on_failed, on_finally, false)
                         },
                         (getTokenError) => {
-                            this.logger.log_error(`GET ${url} failed. ${getTokenError.message}`);
                             on_failed(getTokenError);
                             on_finally != null ? on_finally() : false;
                         }
                     );
                 } else {
-                    this.logger.log_error(`GET ${url} failed. ${error.message}.`)
                     on_failed(error);
                     on_finally != null ? on_finally() : false;
                 }
@@ -149,51 +160,14 @@ module.exports = class Connection {
 
     get_blob(url, on_success, on_failed, on_finally) {
         this.logger.log_spinner(`GET ${url}...`)
-        if (this.user == null) {
-            on_failed(new Error("User not logged in"));
-            on_finally != null ? on_finally() : false;
-            return;
-        }
-        if (!this.user.tokenValid()) {
-            this.user.getToken(
-                () => {
-                    this._get(url, on_success, on_failed, on_finally)
-                },
-                (error) => {
-                    this.logger.log_error(`GET ${url} failed. Failed to renew token.`)
-                    on_failed(error)
-                    on_finally != null ? on_finally() : false;
-                }
-            );
-            return;
-        }
-        this._get_blob(url, on_success, on_failed, on_finally);
+        this._authenticate_and_execute(
+            () => {
+                this._get_blob(url, on_success, on_failed, on_finally);
+            },
+            on_failed,
+            on_finally
+        )
     }
-
-
-    post(url, post_data, on_success, on_failed, on_finally) {
-        this.logger.log_spinner(`POST ${url}...`)
-        if (this.user == null) {
-            on_failed(new Error("User not logged in"));
-            on_finally != null ? on_finally() : false;
-            return;
-        }
-        if (!this.user.tokenValid()) {
-            this.user.getToken(
-                () => {
-                    this._post(url, post_data, on_success, on_failed, on_finally)
-                },
-                (error) => {
-                    this.logger.log_error(`POST ${url} failed. Failed to renew token.`)
-                    on_failed(error)
-                    on_finally != null ? on_finally() : false;
-                }
-            );
-            return;
-        }
-        this._post(url, post_data, on_success, on_failed, on_finally);
-    }
-
 
     _post(url, post_data, on_success, on_failed, on_finally, refetchTokenOnFail = true) {
         let headers = this.user.getAuthorizationHeaders();
@@ -204,7 +178,6 @@ module.exports = class Connection {
             .then(status)
             .then(response => response.json())
             .then(data => {
-                this.logger.log_success(`POST ${url}`)
                 on_success(data);
                 on_finally != null ? on_finally() : false;
             })
@@ -215,16 +188,25 @@ module.exports = class Connection {
                             this._post(url, post_data, on_success, on_failed, on_finally, false)
                         },
                         (getTokenError) => {
-                            this.logger.log_error(`POST ${url} failed. ${getTokenError.message}`);
                             on_failed(getTokenError);
                             on_finally != null ? on_finally() : false;
                         }
                     );
                 } else {
-                    this.logger.log_error(`POST ${url} failed. ${error.message}.`)
                     on_failed(error);
                     on_finally != null ? on_finally() : false;
                 }
             })
+    }
+
+
+    post(url, post_data, on_success, on_failed, on_finally) {
+        this._authenticate_and_execute(
+            () => {
+                this._post(url, post_data, on_success, on_failed, on_finally);
+            },
+            on_failed,
+            on_finally
+        )
     }
 }

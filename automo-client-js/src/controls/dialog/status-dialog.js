@@ -24,22 +24,6 @@ module.exports = class StatusDialog extends Dialog {
         this.spinner = new Spinner()
     }
 
-    createElement() {
-        super.createElement()
-
-        this.element.className = 'foreground-centered-small'
-
-        this.footerElement.appendChild(this.btnOk.createElement())
-
-        this.bodyElement.appendChild(this.spinner.createElement())
-
-        this.messageElement = document.createElement('div')
-        this.messageElement.className = 'message'
-        this.bodyElement.appendChild(this.messageElement)
-
-        return this.element
-    }
-
     setMessage(message) {
         this.messageElement.innerHTML = message
     }
@@ -69,8 +53,8 @@ module.exports = class StatusDialog extends Dialog {
         this.element.className = "foreground"
     }
 
-    show(title, message, dissmissable=true, onOk, onCancel) {
-        super.show(onOk,onCancel)
+    show(title, message, dissmissable=true) {
+        super.show(onCancel)
 
         this.setTitle(title)
         this.messageElement.innerHTML = message
@@ -80,5 +64,21 @@ module.exports = class StatusDialog extends Dialog {
         } else{
             this.hideSpinner()
         }
+    }
+
+    createElement() {
+        super.createElement()
+
+        this.element.className = 'foreground-centered-small'
+
+        this.footerElement.appendChild(this.btnOk.createElement())
+
+        this.bodyElement.appendChild(this.spinner.createElement())
+
+        this.messageElement = document.createElement('div')
+        this.messageElement.className = 'message'
+        this.bodyElement.appendChild(this.messageElement)
+
+        return this.element
     }
 }

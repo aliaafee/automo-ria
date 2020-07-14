@@ -37,77 +37,82 @@ module.exports = class ResourcePanel extends CollapsePanel {
     }
 
     _onEdit() {
-        this.form.unlock()
-
-        this.btnEdit.hide()
-        this.btnSave.show()
-        this.btnCancel.show()
+        this.unlock()
     }
 
     _onCancel() {
         this.form.setValue(this._data)
-        this.form.lock()
-
-        this.btnEdit.show()
-        this.btnSave.hide()
-        this.btnCancel.hide()
+        this.lock()
     }
 
     _onSave() {
         if (!this.form.validate()) {
-            this._statusElem.innerHTML = "Marked fields are not valid"
+            this.statusElem.innerHTML = "Marked fields are not valid"
             return
         }
 
         if (!this._data.url) {
-            this._statusElem.innerHTML = "No target URL found"
+            this.statusElem.innerHTML = "No target URL found"
             return
         }
 
         console.log(this.form.value())
 
-        this.btnSave.hide()
-        this.btnCancel.hide()
+        this.transient()
         this.spinner.show()
-        this.form.lock()
+        this.statusElem.innerHTML = "Saving.."
         connection.post(
             this._data.url,
             this.form.value(),
             (response) => {
                 console.log(response)
                 if (response.error) {
-                    this.form.unlock()
-                    this.btnSave.show()
-                    this.btnCancel.show()
-                    this._statusElem.innerHTML = response.error
+                    this.statusElem.innerHTML = response.error
                     if (response.invalid_fields) {
-                        this._statusElem.innerHTML = "Marked fields are not valid"
+                        this.statusElem.innerHTML = "Marked fields are not valid"
                         this.form.markInvalidFields(response.invalid_fields)
                     } else {
-                        this._statusElem.innerHTML = response.message
+                        this.statusElem.innerHTML = response.message
                     }
+                    this.unlock()
                     return
                 }
-                this._statusElem.innerHTML = "Saved"
+                this.statusElem.innerHTML = "Saved"
                 this.form.setValue(response)
                 if (this.onSaved) {
                     this.onSaved(response)
                 }
-                this.btnEdit.show()
-                this.btnSave.hide()
-                this.btnCancel.hide()
+                this.lock()
             },
             (error) => {
-                console.log(Object.keys(error))
-                this._statusElem.innerHTML = `Could Not Save (${error.message})`
-                this.form.unlock()
-                this.btnSave.show()
-                this.btnCancel.show()
+                this.statusElem.innerHTML = `Could Not Save`
+                this.unlock()
             },
             () => {
-                this.spinner.hide()
+                this.spinner.hideSoft()
             }
         )
+    }
+
+    transient() {
+        this.form.lock()
+        this.btnSave.hide()
+        this.btnCancel.hide()
+        this.btnEdit.hide()
+    }
+
+    lock() {
+        this.form.lock()
+        this.btnEdit.show()
+        this.btnSave.hide()
+        this.btnCancel.hide()
+    }
+
+    unlock() {
+        this.form.unlock()
+        this.btnEdit.hide()
+        this.btnSave.show()
+        this.btnCancel.show()
     }
 
     setValue(value) {
@@ -118,7 +123,7 @@ module.exports = class ResourcePanel extends CollapsePanel {
         this.btnEdit.show()
         this.btnSave.hide()
         this.btnCancel.hide()
-        this._statusElem.innerHTML = ""
+        this.statusElem.innerHTML = ""
     }
 
     value() {
@@ -130,18 +135,18 @@ module.exports = class ResourcePanel extends CollapsePanel {
 
         this.element.classList.add('resource-panel')
 
-        var toolBarElement = document.createElement('div');
-        toolBarElement.className = 'toolbar'
-        this.headerElement.appendChild(toolBarElement)
+        this.toolBarElement = document.createElement('div');
+        this.toolBarElement.className = 'toolbar'
+        this.headerElement.appendChild(this.toolBarElement)
 
-        toolBarElement.appendChild(this.btnEdit.createElement())
-        toolBarElement.appendChild(this.btnSave.createElement())
-        toolBarElement.appendChild(this.btnCancel.createElement())
+        this.toolBarElement.appendChild(this.btnEdit.createElement())
+        this.toolBarElement.appendChild(this.btnSave.createElement())
+        this.toolBarElement.appendChild(this.btnCancel.createElement())
 
-        this._statusElem = document.createElement('div')
-        this._statusElem.className = 'resource-status'
+        this.statusElem = document.createElement('div')
+        this.statusElem.className = 'resource-status'
 
-        toolBarElement.prepend(this._statusElem)
+        this.toolBarElement.prepend(this.statusElem)
 
         this.bodyElement.appendChild(this.spinner.createElement())
         this.bodyElement.appendChild(this.form.createElement())
@@ -150,7 +155,7 @@ module.exports = class ResourcePanel extends CollapsePanel {
         this.btnEdit.show()
         this.btnSave.hide()
         this.btnCancel.hide()
-        this.spinner.hide()
+        this.spinner.hideSoft()
 
         return this.element
     }
