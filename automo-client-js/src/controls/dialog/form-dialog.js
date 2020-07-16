@@ -14,6 +14,9 @@ module.exports = class FormDialog extends Dialog {
             options.okLabel != null ? options.okLabel : 'Ok',
             (ev) => {
                 this._onOk(ev);
+            },
+            {
+                icon: options.okIcon
             }
         );
 
@@ -21,6 +24,9 @@ module.exports = class FormDialog extends Dialog {
             options.cancelLabel != null ? options.cancelLabel : 'Cancel',
             (ev) => {
                 this._onCancel(ev);
+            },
+            {
+                icon: options.cancelIcon
             }
         )
     }

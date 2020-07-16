@@ -20,6 +20,9 @@ module.exports = class EncounterPanel extends ResourcePanel {
             'Delete',
             () => {
                 this._onDelete()
+            },
+            {
+                icon: 'trash'
             }
         )
     }

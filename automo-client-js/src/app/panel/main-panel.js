@@ -17,6 +17,9 @@ module.exports = class MainPanel extends Control {
             (event) => {
                 console.log("Open User Dialog");
                 onUser();
+            },
+            {
+                icon: 'user'
             }
         )
         this._logoutButton = new Button(
@@ -24,6 +27,9 @@ module.exports = class MainPanel extends Control {
             (event) => {
                 console.log("Logout")
                 onLogout();
+            },
+            {
+                icon: 'log-out'
             }
         )
 
@@ -32,41 +38,49 @@ module.exports = class MainPanel extends Control {
         this.addMenuItem(this._logoutButton)
 
         this.addSidebarItem(
-            new Button('P')
+            new Button(
+                'Patients',
+                () => {},
+                {
+                    icon: 'users'
+                }
+            )
         )
         this.addSidebarItem(
-            new Button('A', (event) => {
-                admitWizard.show(
-                    (admission) => {
-                        console.log(admission)
-                        this._main.setPatient(
-                            admission.patient,
-                            () => {},
-                            () => {},
-                            admission
-                        )
-                    },
-                    () => {
-                        console.log("Cancelled")
-                    }
-                )
-            })
-        )
-        this.addSidebarItem(
-            new Button('I', (event) => {
-                icd10Coder.show(
-                    (value) => {
-                        console.log(value);
-                    },
-                    () => {
-                        console.log('Cancelled');
-                    }
-                )
-            })
+            new Button(
+                'New Admission', 
+                (event) => {
+                    admitWizard.show(
+                        (admission) => {
+                            console.log(admission)
+                            this._main.setPatient(
+                                admission.patient,
+                                () => {},
+                                () => {},
+                                admission
+                            )
+                        },
+                        () => {
+                            console.log("Cancelled")
+                        }
+                    )
+                },
+                {
+                    icon: 'file-plus'
+                }
+            )
         )
         this.addSidebarSpacer()
         this.addSidebarItem(
-            new Button('S')
+            new Button(
+                'Settings',
+                () => {
+                    console.log('Settings')
+                },
+                {
+                    icon: 'settings'
+                }
+            )
         )
     }
 
@@ -119,9 +133,6 @@ module.exports = class MainPanel extends Control {
             }
             var elem = item.createElement();
             elem.classList.add('side-bar-item');
-            if (item.label == 'P') {
-                elem.classList.add('selected')
-            }
             this._sideBarElement.appendChild(elem)
         })
 
@@ -156,6 +167,8 @@ module.exports = class MainPanel extends Control {
         //this._sideBarElement.innerHTML = "side";
         //this._mainElement.innerHTML = "main";
         this._mainElement.appendChild(this._main.createElement());
+
+        
 
         return this.element;
     }

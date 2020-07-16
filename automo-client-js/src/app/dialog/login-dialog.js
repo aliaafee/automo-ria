@@ -40,7 +40,7 @@ module.exports = class LoginDialog extends FormDialog {
             {
                 title: 'Login',
                 okLabel: 'Login',
-                //width: '400px',
+                okIcon: 'log-in',
                 centered: true
             }
         );

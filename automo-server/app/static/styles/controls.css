@@ -155,6 +155,20 @@ button {
     margin-left: 5px;
     margin-right: 5px;
     cursor: pointer;
+    display: flex;
+}
+
+button > span {
+    margin: auto;
+    display: flex;
+}
+
+button > span .label {
+    margin-left: 5px;
+}
+
+button > span *:only-child {
+    margin: 0;
 }
 
 button.primary {
@@ -163,12 +177,13 @@ button.primary {
 
 button.clear {
     background-color: transparent;
-    color: var(--gray);
+    color: var(--secondary);
     border: none;
 }
 
 button.clear:hover {
     background-color: transparent;
+    color: var(--dark);
 }
 
 button.clear:focus {
@@ -176,11 +191,11 @@ button.clear:focus {
 }
 
 button.clear .arrow {
-    border-color: var(--border);
+    border-color: var(--secondary);
 }
 
 button.clear:hover .arrow {
-    border-color: var(--gray);
+    border-color: var(--dark);
 }
 
 
@@ -199,6 +214,11 @@ button:disabled {
 
 button:hover {
     background-color: #343a40d3;
+}
+
+.icon {
+    width: 16px;
+    height: 16px;
 }
 
 .dialog-footer button {
@@ -423,7 +443,7 @@ button:hover {
 
 .arrow {
     border: solid black;
-    border-width: 0 3px 3px 0;
+    border-width: 0 2px 2px 0;
     display: inline-block;
     padding: 3px;
 }
@@ -465,6 +485,10 @@ button:hover {
     font-weight: bold;
 }
 
+.collapse-panel > .header > .toolbar button .label {
+    display: unset;
+}
+
 .collapse-panel > .body {
     border-top: solid 1px var(--border);
 }
@@ -489,11 +513,12 @@ button:hover {
     margin: 0;
     background-color: transparent;
     border: none;
-    color: var(--primary);
+    color: var(--secondary);
 }
 
 .toolbar button:hover {
     text-decoration: underline;
+    color: var(--dark);
 }
 
 .toolbar button:focus {
@@ -933,5 +958,9 @@ button:hover {
 @media only screen and (max-width: 576px) {
     .field.narrow {
         grid-column: 1 / 3;
+    }
+
+    .collapse-panel > .header > .toolbar button .label {
+        display: none;
     }
 }

@@ -18,6 +18,9 @@ module.exports = class ResourcePanel extends CollapsePanel {
             'Edit',
             (event) => {
                 this._onEdit()
+            },
+            {
+                icon: 'edit-3'
             }
         )
 
@@ -25,6 +28,9 @@ module.exports = class ResourcePanel extends CollapsePanel {
             'Save',
             (event) => {
                 this._onSave()
+            },
+            {
+                icon: 'save'
             }
         )
 
@@ -32,6 +38,9 @@ module.exports = class ResourcePanel extends CollapsePanel {
             'Cancel',
             (event) => {
                 this._onCancel()
+            },
+            {
+                icon: 'x'
             }
         )
     }

@@ -102,11 +102,15 @@
 
 #patient-list .toolbar button {
     margin-right: 0;
-    font-size: 16pt;
     display: none;
     padding-top: 0;
     padding-bottom: 0;
-    color: var(--gray)
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+#patient-list .toolbar button .label {
+    display: none;
 }
 
 #patient-list .list-box {
@@ -427,6 +431,15 @@ button.menu-bar-item:focus {
     color: var(--gray);
     min-width: 40px;
     min-height: 40px;
+}
+
+.side-bar-item .label{
+    display: none;
+}
+
+.side-bar-item .icon {
+    width: 20px;
+    height: 20px;
 }
 
 .side-bar-item:hover {

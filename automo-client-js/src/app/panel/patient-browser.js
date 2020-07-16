@@ -24,10 +24,13 @@ class PatientList extends Control {
         });
 
         this.btnDismiss = new Button(
-            '&times;',
+            'Close Search',
             () => {
                 this.searchBox.setValue("")
                 this.onDismissSearch()
+            },
+            {
+                icon: 'x'
             }
         )
 

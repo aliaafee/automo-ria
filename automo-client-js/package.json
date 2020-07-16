@@ -11,6 +11,7 @@
   "author": "Ali Aafee",
   "license": "ISC",
   "dependencies": {
+    "feather-icons": "^4.28.0",
     "focus-trap": "^5.1.0",
     "moment": "^2.26.0"
   }
