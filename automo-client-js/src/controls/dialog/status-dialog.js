@@ -54,7 +54,7 @@ module.exports = class StatusDialog extends Dialog {
     }
 
     show(title, message, dissmissable=true) {
-        super.show(onCancel)
+        super.show(() => {})
 
         this.setTitle(title)
         this.messageElement.innerHTML = message

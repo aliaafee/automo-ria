@@ -165,10 +165,10 @@
 
 #patient-panel .patient-banner {
     padding: 15px;
-    background-color: var(--gray);
+    background-color: var(--mid);
     border-top-left-radius: var(--border-radius);
     border-top-right-radius: var(--border-radius);
-    color: var(--light);
+    color: var(--white);
     flex-direction: column;
     display: flex;
 }
@@ -192,13 +192,13 @@
 #patient-panel .error {
     margin: 15px 15px 15px 15px;
     font-style: italic;
-    color: grey;
+    color: var(--mid);
 }
 
 #patient-panel .patient-banner h1 {
     margin: 0 0 10px 0;
     padding-right: 15px;
-    color: var(--light);
+    color: var(--white);
 }
 
 #patient-panel .patient-banner .details span {
@@ -270,7 +270,7 @@
     color: transparent;
 }
 
-
+/*
 li.admission-item .root-item-head {
     padding: 0 0 0 0 !important;
     display: flex;
@@ -295,7 +295,7 @@ li.admission-item .root-item-head div.duration {
 li.admission-item .root-item-head div.doctor {
     font-weight: bold;
     min-width: 30%;
-}
+}*/
 
 .encounters-list {
     padding: 15px;
@@ -427,8 +427,9 @@ button.menu-bar-item:focus {
 }
 
 .side-bar-item {
+    color: var(--mid);
+    background-color: var(--dark);
     padding: 5px;
-    color: var(--gray);
     min-width: 40px;
     min-height: 40px;
 }
@@ -444,6 +445,7 @@ button.menu-bar-item:focus {
 
 .side-bar-item:hover {
     color: var(--white);
+    background-color: var(--dark);
 }
 
 .side-bar-item.selected {

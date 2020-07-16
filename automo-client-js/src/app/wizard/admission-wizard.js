@@ -351,7 +351,7 @@ module.exports = class AdmissionWizard extends Wizard {
 
                 statusDialog.setTitle("Success")
                 statusDialog.setMessage(
-                    `Successfully saved admission details of ${data.patient.name}.`
+                    `Successfully saved Admission  details of ${data.patient.name} (${data.patient.national_id_no}).`
                 )
                 statusDialog.showDismiss(
                     () => {
