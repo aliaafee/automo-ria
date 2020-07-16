@@ -183,6 +183,9 @@ module.exports = class AdmissionPanel extends Control {
                         console.log('Failed to get discharge summary')
                     }
                 )
+            },
+            {
+                icon: 'printer'
             }
         )
         
