@@ -20,6 +20,9 @@ module.exports = class ProblemsField extends Field {
                         console.log('Cancelled');
                     }
                 )
+            },
+            {
+                icon: 'plus'
             }
         )
     }
@@ -94,16 +97,20 @@ module.exports = class ProblemsField extends Field {
 
             elem.innerHTML = this._getProblemLabel(item)
 
-            var deleteElem = document.createElement('button')
-            deleteElem.innerHTML = 'Delete'
-            deleteElem.setAttribute('item-index', i)
-            deleteElem.addEventListener('click', (event) => {
-                this._deleteItem(
-                    event.currentTarget.getAttribute('item-index')
-                )
-            })
-
-            elem.appendChild(deleteElem)
+            var deleteButton = new Button(
+                'Delete', 
+                (event) => {
+                    this._deleteItem(
+                        event.currentTarget.getAttribute('item-index')
+                    )
+                },
+                {
+                    icon: 'trash',
+                    style: 'clear'
+                }
+            )
+            elem.appendChild(deleteButton.createElement())
+            deleteButton.element.setAttribute('item-index', i)
         }
     }
 

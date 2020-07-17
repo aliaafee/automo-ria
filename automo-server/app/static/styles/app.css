@@ -332,6 +332,7 @@ li.admission-item .root-item-head div.doctor {
     min-height: 27px;
     border-bottom: solid 1px var(--border);
     display: flex;
+    align-items: flex-start;
 }
 
 .problems-field .input-placeholder {
@@ -582,6 +583,10 @@ button.side-bar-item:focus {
         border-bottom: solid 1px var(--border);
         width:  100%;
         flex-grow: 1;
+    }
+
+    .problems-field li button .label{
+        display: none;
     }
 }
 
