@@ -13,7 +13,6 @@ module.exports = class ProblemsField extends Field {
                 icd10Coder.show(
                     (value) => {
                         this._data.push(value)
-                        console.log(value)
                         this.displayData()
                     },
                     () => {
@@ -119,10 +118,7 @@ module.exports = class ProblemsField extends Field {
             return
         }
 
-        console.log(itemIndex)
-        console.log(this._data)
         this._date = this._data.splice(itemIndex, 1)
-        console.log(this._data)
 
         this.displayData()
     }
@@ -150,7 +146,8 @@ module.exports = class ProblemsField extends Field {
             super.setValue(null)
         }
 
-        this._data = data;
+        this._data = [];
+        Object.assign(this._data, data);
         this.displayData();
     }
 

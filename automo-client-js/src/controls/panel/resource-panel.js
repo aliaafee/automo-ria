@@ -88,7 +88,7 @@ module.exports = class ResourcePanel extends CollapsePanel {
                     return
                 }
                 this.statusElem.innerHTML = "Saved"
-                this.form.setValue(response)
+                this.setValue(response)
                 if (this.onSaved) {
                     this.onSaved(response)
                 }
