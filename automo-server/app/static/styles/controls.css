@@ -15,6 +15,7 @@
 
     --border: #b0b5ba; /* same as mid-light */
     
+    --alert-dark: #95232f; /* alert color made dark */
     --alert: #dc3546;
     --invalid: #dc354646; /* alert color made transparent */
     
@@ -210,6 +211,8 @@ button.clear:hover,
     text-decoration: underline;
 }
 
+
+
 button.clear:focus,
 .toolbar button:focus {
     background-color: transparent;
@@ -227,6 +230,14 @@ button.clear .arrow {
 
 button.clear:hover .arrow {
     border-color: var(--dark);
+}
+
+button.clear.alert {
+    color: var(--alert-dark);
+}
+
+button.clear.alert:hover {
+    color: var(--alert);
 }
 
 .icon {

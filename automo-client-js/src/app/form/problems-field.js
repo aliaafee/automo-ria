@@ -21,7 +21,8 @@ module.exports = class ProblemsField extends Field {
                 )
             },
             {
-                icon: 'plus'
+                icon: 'plus',
+                style: 'clear'
             }
         )
     }
@@ -105,7 +106,8 @@ module.exports = class ProblemsField extends Field {
                 },
                 {
                     icon: 'trash',
-                    style: 'clear'
+                    style: 'clear',
+                    className: 'alert'
                 }
             )
             elem.appendChild(deleteButton.createElement())

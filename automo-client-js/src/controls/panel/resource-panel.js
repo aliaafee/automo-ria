@@ -20,7 +20,8 @@ module.exports = class ResourcePanel extends CollapsePanel {
                 this._onEdit()
             },
             {
-                icon: 'edit-3'
+                icon: 'edit-3',
+                style: 'clear'
             }
         )
 
@@ -30,7 +31,8 @@ module.exports = class ResourcePanel extends CollapsePanel {
                 this._onSave()
             },
             {
-                icon: 'save'
+                icon: 'save',
+                style: 'clear'
             }
         )
 
@@ -40,7 +42,8 @@ module.exports = class ResourcePanel extends CollapsePanel {
                 this._onCancel()
             },
             {
-                icon: 'x'
+                icon: 'x',
+                style: 'clear'
             }
         )
     }
