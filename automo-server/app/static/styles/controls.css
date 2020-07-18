@@ -15,7 +15,7 @@
 
     --border: #b0b5ba; /* same as mid-light */
     
-    --invalid: #dc35467a;
+    --invalid: #dc354646;
     
     --foreground: #343a409b; /* dark made transparent */
     --dialog-shadow: 0px 0px 41px -7px #343a409b;
@@ -536,7 +536,7 @@ button.clear:hover .arrow {
 .compact .invalid > .content > .input-placeholder input,
 .compact .invalid > .content > .input-placeholder textarea,
 .compact .invalid > .content > .input-placeholder select {
-    background-color: var(--invalid));
+    background-color: var(--invalid);
 }
 
 .compact input:focus,

@@ -65,6 +65,7 @@ module.exports = class ResourcePanel extends CollapsePanel {
             return
         }
 
+        var _data = this.form.value();
         console.log(this.form.value())
 
         this.transient()
@@ -72,10 +73,11 @@ module.exports = class ResourcePanel extends CollapsePanel {
         this.statusElem.innerHTML = "Saving.."
         connection.post(
             this._data.url,
-            this.form.value(),
+            _data,
             (response) => {
                 console.log(response)
                 if (response.error) {
+                    this.unlock()
                     this.statusElem.innerHTML = response.error
                     if (response.invalid_fields) {
                         this.statusElem.innerHTML = "Marked fields are not valid"
@@ -83,7 +85,6 @@ module.exports = class ResourcePanel extends CollapsePanel {
                     } else {
                         this.statusElem.innerHTML = response.message
                     }
-                    this.unlock()
                     return
                 }
                 this.statusElem.innerHTML = "Saved"
