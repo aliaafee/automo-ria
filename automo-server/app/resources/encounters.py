@@ -1,3 +1,4 @@
+from sqlalchemy import or_
 from flask import url_for, jsonify, request
 
 from .. import models as md
@@ -29,8 +30,19 @@ def get_patient_encounter(patient_id, encounter_id):
 
 @api.route("/patients/<int:patient_id>/encounters/<int:encounter_id>", methods=['POST'])
 def post_patient_encounter(patient_id, encounter_id):
+    
+    data = request.get_json()
+
+    personnel_data = data.pop('personnel', None)
+    if personnel_data:
+        personnel_id = personnel_data.pop('id', None)
+        if personnel_id:
+            data['personnel_id'] = personnel_id 
+
     return post_one_query_result(
-        md.Encounter.query.filter_by(id=encounter_id, patient_id=patient_id)
+        md.Encounter.query.filter_by(id=encounter_id, patient_id=patient_id),
+        data,
+        ['personnel']
     )
 
 
@@ -60,12 +72,17 @@ def get_patient_admission_encounters(patient_id, admission_id):
         .filter(md.Encounter.patient_id == patient_id)\
         .filter(md.Encounter.parent_id == admission_id)
 
-    encounter_type = request.args.get('type', None)
-    if encounter_type:
-        if encounter_type not in md.encounters.ENCOUNTER_MODEL_TYPES:
-            return errors.resource_not_found("Encounters of type {} not found".format(encounter_type))
-
-        query = query.filter(md.Encounter.type == encounter_type)
+    encounter_types_str = request.args.get('type', None)
+    if encounter_types_str:
+        
+        encounter_types = encounter_types_str.split(",")
+        if len(encounter_types) > 1:
+            or_filters = []
+            for encounter_type in encounter_types:
+                or_filters.append(md.Encounter.type == encounter_type)
+            query = query.filter(or_(*or_filters))
+        else:                
+            query = query.filter(md.Encounter.type == encounter_types[0])
 
     return get_query_result(
         query,
@@ -92,6 +109,12 @@ def new_patient_admission_encounter(patient_id, admission_id):
 
     if not isinstance(data, dict):
         return errors.unprocessable("Unexpected data format")
+
+    personnel_data = data.pop('personnel', None)
+    if personnel_data:
+        personnel_id = personnel_data.pop('id', None)
+        if personnel_id:
+            data['personnel_id'] = personnel_id 
 
     encounter_type = data.pop('type', None)
 

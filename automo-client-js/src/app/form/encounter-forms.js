@@ -2,6 +2,7 @@ const Form = require('../../controls/form/form')
 const DateTimeField = require('../../controls/form/date-time-field')
 const TextField = require('../../controls/form/text-field')
 const FloatField = require('../../controls/form/float-field')
+const DoctorField = require('../form/doctor-field')
 
 
 module.exports.encounter = class Encounter extends Form {
@@ -18,6 +19,248 @@ module.exports.encounter = class Encounter extends Form {
             }
         ))
 
+    }
+}
+
+
+module.exports.measurements = class Measurements extends module.exports.encounter {
+    constructor(options = {}) {
+        options.labelTop = true
+        super(options)
+
+        this.getFieldByName('start_time').setLabel("Record Time")
+
+        this.addField(new FloatField(
+            'weight',
+            {
+                label: 'Weight (kg)'
+            }
+        ))
+
+        this.addField(new FloatField(
+            'height',
+            {
+                label: 'Height (m)'
+            }
+        ))
+    }
+}
+
+module.exports.vitalsigns = class VitalSigns extends module.exports.encounter {
+    constructor(options = {}) {
+        options.labelTop = true
+        super(options)
+
+        this.getFieldByName('start_time').setLabel("Record Time")
+
+        this.addField(new FloatField(
+            'pulse_rate',
+            {
+                label: 'Weight (kg)'
+            }
+        ))
+
+        this.addField(new FloatField(
+            'respiratory_rate',
+            {
+                label: 'Height (m)'
+            }
+        ))
+
+        this.addField(new FloatField(
+            'diastolic_bp',
+            {
+                label: 'Weight (kg)'
+            }
+        ))
+
+        this.addField(new FloatField(
+            'systolic_bp',
+            {
+                label: 'Height (m)'
+            }
+        ))
+
+        this.addField(new FloatField(
+            'temperature',
+            {
+                label: 'Height (m)'
+            }
+        ))
+    }
+}
+
+module.exports.otherencounter = class OtherEncounter extends module.exports.encounter {
+    constructor(options = {}) {
+        options.labelTop = true
+        super(options)
+
+        this.addField(new TextField(
+            'title',
+            {
+                label: 'Title'
+            }
+        ))
+
+        this.addField(new TextField(
+            'note',
+            {
+                label: 'Note',
+                type: 'textarea',
+                grow: true
+            }
+        ))
+    }
+}
+
+
+module.exports.progress = class Progress extends module.exports.encounter {
+    constructor(options = {}) {
+        options.labelTop = true
+        super(options)
+
+        this.getFieldByName('start_time').setLabel("Examination Time")
+
+        this.addField(new DoctorField(
+            'personnel',
+            {
+                label: 'Examining Doctor'
+            }
+        ))
+
+        this.addField(new TextField(
+            'subjective',
+            {
+                label: 'Subjective',
+                type: 'textarea',
+                grow: true
+            }
+        ))
+
+        this.addField(new TextField(
+            'objective',
+            {
+                label: 'Objective',
+                type: 'textarea',
+                grow: true
+            }
+        ))
+
+        this.addField(new TextField(
+            'assessment',
+            {
+                label: 'Assessment',
+                type: 'textarea',
+                grow: true
+            }
+        ))
+
+        this.addField(new TextField(
+            'plan',
+            {
+                label: 'Plan',
+                type: 'textarea',
+                grow: true
+            }
+        ))
+    }
+}
+
+
+module.exports.surgicalprocedure = class SurgicalProcedure extends module.exports.encounter {
+    constructor(options = {}) {
+        options.labelTop = true
+        super(options)
+
+        this.addField(new DateTimeField(
+            'end_time',
+            {
+                label: 'End Time',
+                labelTop: true,
+                narrow: true
+            }
+        ))
+        
+        this.addField(new DoctorField(
+            'personnel',
+            {
+                label: 'Operating Surgeon'
+            }
+        ))
+
+        this.addField(new TextField(
+            'assistant',
+            {
+                label: 'Assistant(s)',
+            }
+        ))
+
+        this.addField(new TextField(
+            'anesthetist',
+            {
+                label: 'Anesthetist(s)',
+            }
+        ))
+
+        this.addField(new TextField(
+            'nurse',
+            {
+                label: 'Nurse(s)',
+            }
+        ))
+        
+        /*
+        this.addField(new TextField(
+            'emergency',
+            {
+                label: 'Emergancy(true/false)',
+            }
+        ))*/
+
+        this.addField(new TextField(
+            'preoperative_diagnosis',
+            {
+                label: 'Preoperative Diagnosis',
+                type: 'textarea',
+                grow: true
+            }
+        ))
+
+        this.addField(new TextField(
+            'postoperative_diagnosis',
+            {
+                label: 'Postoperative Diagnosis',
+                type: 'textarea',
+                grow: true
+            }
+        ))
+
+        this.addField(new TextField(
+            'procedure_name',
+            {
+                label: 'Procedure Name',
+                type: 'textarea',
+                grow: true
+            }
+        ))
+
+        this.addField(new TextField(
+            'findings',
+            {
+                label: 'Findings',
+                type: 'textarea',
+                grow: true
+            }
+        ))
+
+        this.addField(new TextField(
+            'steps',
+            {
+                label: 'Steps',
+                type: 'textarea',
+                grow: true
+            }
+        ))
     }
 }
 
@@ -344,14 +587,14 @@ module.exports.othertest = class OtherTest extends module.exports.investigation 
         this.addField(new TextField(
             'name',
             {
-                label: 'Name'
+                placeholder: 'Name'
             }
         ))
 
         this.addField(new TextField(
             'value',
             {
-                label: 'Value',
+                placeholder: 'Value',
                 narrow: true
             }
         ))

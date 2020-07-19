@@ -19,6 +19,29 @@ class SurgicalProcedure(Encounter):
     }
 
     label = "Surgical Procedure"
+    
+    serialized_attrs = [
+        'id',
+        'label',
+        'type',
+        'start_time',
+        'end_time',
+        'personnel',
+        'assistant',
+        'anesthetist',
+        'nurse',
+        'emergency',
+        'preoperative_diagnosis',
+        'postoperative_diagnosis',
+        'procedure_name',
+        'procedure_name',
+        'findings',
+        'steps'
+    ]
+
+    required_attrs = [
+        'start_time'
+    ]
 
     assistant = db.Column(db.Text())
     anesthetist = db.Column(db.Text())

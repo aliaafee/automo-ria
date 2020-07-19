@@ -28,7 +28,7 @@ class Encounter(SerializerMixin, ValidatorMixin, db.Model):
         'start_time',
         'end_time',
         'children',
-        'personnel_id',
+        'personnel',
         'problems'
     ]
 

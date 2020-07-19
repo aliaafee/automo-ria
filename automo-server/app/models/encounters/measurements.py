@@ -13,6 +13,16 @@ class Measurements(Encounter):
         'polymorphic_identity': 'measurements'
     }
 
+    serialized_attrs = [
+        'id',
+        'label',
+        'type',
+        'start_time',
+        'personnel',
+        'weight',
+        'height'
+    ]
+
     label = "Measurement"
 
     def set_record_time(self, record_time):

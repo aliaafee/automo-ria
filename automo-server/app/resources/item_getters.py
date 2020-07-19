@@ -56,13 +56,14 @@ def get_one_query_result(query, fields=None, additional_data={}):
     return jsonify(data)
 
 
-def post_one_query_result(query):
+def post_one_query_result(query, data=None, other_keys=[]):
     item = query.first()
 
     if item is None:
         return errors.resource_not_found("Item not found.")
 
-    data = request.get_json()
+    if data is None:
+        data = request.get_json()
 
     try:
         result = item.validate_and_update(data)
@@ -76,7 +77,9 @@ def post_one_query_result(query):
         db.session.rollback()
         return errors.unprocessable("Databse Error: {}".format(e))
 
-    return item.get_serialized(data.keys())
+    other_keys.extend(data.keys())
+
+    return item.get_serialized(other_keys)
 
 
 def get_items_list(model, api_route, fields=None):

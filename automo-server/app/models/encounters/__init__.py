@@ -27,8 +27,7 @@ ENCOUNTER_MODELS = [
     Measurements, 
     VitalSigns, 
     VitalSignsExtended, 
-    SurgicalProcedure, 
-    Investigation, 
+    SurgicalProcedure,
     Imaging,
     Endoscopy,
     Histopathology,
@@ -36,7 +35,9 @@ ENCOUNTER_MODELS = [
     CompleteBloodCount,
     RenalFunctionTest,
     LiverFunctionTest,
-    OtherTest
+    OtherTest,
+    Progress,
+    OtherEncounter
 ]
 
 ENCOUNTER_MODEL_TYPES = {}

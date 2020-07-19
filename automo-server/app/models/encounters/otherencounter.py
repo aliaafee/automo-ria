@@ -14,6 +14,17 @@ class OtherEncounter(Encounter):
         'polymorphic_identity':'otherencounter'
     }
 
+    serialized_attrs = [
+        'id',
+        'label',
+        'type',
+        'start_time',
+        'end_time',
+        'personnel',
+        'title',
+        'note'
+    ]
+
     label = "Other Encounter"
 
     title = db.Column(db.String(255))

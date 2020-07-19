@@ -899,7 +899,7 @@ def register_random_patient(conn):
 def register_and_admit_random_patient(conn, no_discharge=False):
     problems_count = 5
     admissions_count = 5
-    encounters_count = 5
+    encounters_count = 20
     precription_count = 5
 
     index = conn.get(conn.index_url)
@@ -938,7 +938,9 @@ def register_and_admit_random_patient(conn, no_discharge=False):
             'completebloodcount',
             'renalfunctiontest',
             'liverfunctiontest',
-            'othertest'
+            'othertest',
+            'otherencounter',
+            'progress'
         ]
         result = {
             'type': types[i] if i else choice(types),
@@ -1016,6 +1018,14 @@ def register_and_admit_random_patient(conn, no_discharge=False):
             result['name'] = choice(['Spam', 'Cheez', 'Donuts', 'Calrity'])
             result['value'] = str(random() * 100)
             result['unit'] = choice(['cm/L', 'eggs/banana', 'tomatoes/m^3'])
+        elif result['type'] == 'otherencounter':
+            result['title'] = fake.paragraph()
+            result['note'] = fake.paragraph()
+        elif result['type'] == 'progress':
+            result['subjective'] = fake.paragraph()
+            result['objective'] = fake.paragraph()
+            result['assessment'] = fake.paragraph()
+            result['plan'] = fake.paragraph()
 
         return result
 

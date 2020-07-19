@@ -7,6 +7,9 @@ const EncounterPanel = require("./encounter-panel")
 module.exports = class EncountersList extends CollapsePanel {
     constructor (options={}) {
         super(options);
+        /* Options
+         *  encounters_type= investigations | procedures | vitalsigns
+         */
 
         this.spinner = new Spinner()
 
@@ -16,6 +19,10 @@ module.exports = class EncountersList extends CollapsePanel {
     }
 
     setValue(value) {
+        if (this.options.encounters_type) {
+            this.setEncounterListUrl(value['encounters'][this.options.encounters_type])
+            return
+        }
         this.setEncounterListUrl(value['encounters_url'])
     }
 

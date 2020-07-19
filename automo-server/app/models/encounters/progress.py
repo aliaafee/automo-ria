@@ -11,6 +11,19 @@ class Progress(Encounter):
         'polymorphic_identity':'progress'
     }
 
+    serialized_attrs = [
+        'id',
+        'label',
+        'type',
+        'start_time',
+        'end_time',
+        'personnel',
+        'subjective',
+        'objective',
+        'assessment',
+        'plan'
+    ]
+
     label = "Progress Note"
 
     def set_examination_time(self, examination_time):

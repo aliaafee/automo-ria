@@ -233,7 +233,26 @@ module.exports = class AdmissionPanel extends Control {
         this._panels.push(
             new EncountersList(
                 {
-                    title: 'Encounters'
+                    title: 'Investigations',
+                    encounters_type: 'investigations'
+                }
+            )
+        )
+
+        this._panels.push(
+            new EncountersList(
+                {
+                    title: 'Procedure Notes',
+                    encounters_type: 'procedures'
+                }
+            )
+        )
+
+        this._panels.push(
+            new EncountersList(
+                {
+                    title: 'Progress Notes',
+                    encounters_type: 'progress'
                 }
             )
         )
