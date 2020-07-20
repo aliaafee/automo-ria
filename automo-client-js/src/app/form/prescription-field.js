@@ -20,7 +20,7 @@ module.exports = class PrescriptionField extends Field {
                 console.log(drug)
             },
             {
-                resourceIndex: ['drugs'],
+                resourceName: 'drugs',
                 displaySelected: true
             }
         )

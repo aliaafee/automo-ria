@@ -9,6 +9,7 @@ module.exports = class Form extends Control {
          *  //flexDirection='column|row'
          *  title='Heading title'
          *  compact=false
+         *  hideTitle=false
          */
         super(options);
 
@@ -147,7 +148,7 @@ module.exports = class Form extends Control {
             this.element.classList.add("compact")
         }
 
-        if (this.options.title) {
+        if (this.options.title && !this.options.hideTitle) {
             var title = document.createElement('h1')
             title.innerHTML = this.options.title
             this.element.appendChild(title)

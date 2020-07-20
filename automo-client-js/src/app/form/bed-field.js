@@ -49,7 +49,7 @@ module.exports = class BedField extends Field {
                 placeholder: 'Ward',
                 displaySelected: true,
                 displayNull: true,
-                resourceIndex: ['wards'],
+                resourceName: 'wards',
                 popupHeight: '20%'
             }
         )

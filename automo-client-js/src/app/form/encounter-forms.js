@@ -9,6 +9,7 @@ module.exports.encounter = class Encounter extends Form {
     constructor(options = {}) {
         options.labelTop = true
         super(options)
+        options.title = 'Encounter'
 
         this.addField(new DateTimeField(
             'start_time',
@@ -25,8 +26,8 @@ module.exports.encounter = class Encounter extends Form {
 
 module.exports.measurements = class Measurements extends module.exports.encounter {
     constructor(options = {}) {
-        options.labelTop = true
         super(options)
+        options.title = 'Measurements'
 
         this.getFieldByName('start_time').setLabel("Record Time")
 
@@ -48,8 +49,8 @@ module.exports.measurements = class Measurements extends module.exports.encounte
 
 module.exports.vitalsigns = class VitalSigns extends module.exports.encounter {
     constructor(options = {}) {
-        options.labelTop = true
         super(options)
+        options.title = 'Vital Signs'
 
         this.getFieldByName('start_time').setLabel("Record Time")
 
@@ -92,8 +93,8 @@ module.exports.vitalsigns = class VitalSigns extends module.exports.encounter {
 
 module.exports.otherencounter = class OtherEncounter extends module.exports.encounter {
     constructor(options = {}) {
-        options.labelTop = true
         super(options)
+        options.title = 'Other Encounter'
 
         this.addField(new TextField(
             'title',
@@ -116,8 +117,8 @@ module.exports.otherencounter = class OtherEncounter extends module.exports.enco
 
 module.exports.progress = class Progress extends module.exports.encounter {
     constructor(options = {}) {
-        options.labelTop = true
         super(options)
+        options.title = 'Progress Note'
 
         this.getFieldByName('start_time').setLabel("Examination Time")
 
@@ -169,8 +170,8 @@ module.exports.progress = class Progress extends module.exports.encounter {
 
 module.exports.surgicalprocedure = class SurgicalProcedure extends module.exports.encounter {
     constructor(options = {}) {
-        options.labelTop = true
         super(options)
+        options.title = 'Surgical Procedure'
 
         this.addField(new DateTimeField(
             'end_time',
@@ -267,8 +268,8 @@ module.exports.surgicalprocedure = class SurgicalProcedure extends module.export
 
 module.exports.investigation = class InvestigationForm extends module.exports.encounter {
     constructor(options = {}) {
-        options.labelTop = true
         super(options)
+        options.title = 'Investigation'
 
         this.getFieldByName('start_time').setLabel("Report Time")
     }
@@ -278,6 +279,7 @@ module.exports.investigation = class InvestigationForm extends module.exports.en
 module.exports.imaging = class ImagingForm extends module.exports.investigation {
     constructor(options={}) {
         super(options)
+        options.title = 'Imaging'
 
         this.addField(new TextField(
             'site',
@@ -330,6 +332,7 @@ module.exports.imaging = class ImagingForm extends module.exports.investigation 
 module.exports.endoscopy = class EndoscopyForm extends module.exports.investigation {
     constructor(options={}) {
         super(options)
+        options.title = 'Endoscopy'
 
         this.addField(new TextField(
             'site',
@@ -373,6 +376,7 @@ module.exports.endoscopy = class EndoscopyForm extends module.exports.investigat
 module.exports.histopathology = class HistopathologyForm extends module.exports.investigation {
     constructor(options={}) {
         super(options)
+        options.title = 'Histopathology'
 
         this.addField(new TextField(
             'site',
@@ -416,6 +420,7 @@ module.exports.histopathology = class HistopathologyForm extends module.exports.
 module.exports.otherreport = class OtherReportForm extends module.exports.investigation {
     constructor(options={}) {
         super(options)
+        options.title = 'Other Report'
 
         this.addField(new TextField(
             'name',
@@ -459,6 +464,7 @@ module.exports.otherreport = class OtherReportForm extends module.exports.invest
 module.exports.completebloodcount = class CompleteBloodCount extends module.exports.investigation {
     constructor(options={}) {
         super(options)
+        options.title = 'Complete Blood Count'
 
         this.addField(new FloatField(
             'hemoglobin',
@@ -519,6 +525,7 @@ module.exports.completebloodcount = class CompleteBloodCount extends module.expo
 module.exports.renalfunctiontest = class RenalFunctionTest extends module.exports.investigation {
     constructor(options={}) {
         super(options)
+        options.title = 'Renal Function Test'
 
         this.addField(new FloatField(
             'urea',
@@ -541,6 +548,7 @@ module.exports.renalfunctiontest = class RenalFunctionTest extends module.export
 module.exports.liverfunctiontest = class LiverFunctionTest extends module.exports.investigation {
     constructor(options={}) {
         super(options)
+        options.title = 'Liver Function Test'
 
         this.addField(new FloatField(
             't_bil',
@@ -583,6 +591,7 @@ module.exports.liverfunctiontest = class LiverFunctionTest extends module.export
 module.exports.othertest = class OtherTest extends module.exports.investigation {
     constructor(options={}) {
         super(options)
+        options.title = 'Other Test'
 
         this.addField(new TextField(
             'name',

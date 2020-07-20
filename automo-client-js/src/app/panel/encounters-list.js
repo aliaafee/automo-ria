@@ -50,7 +50,6 @@ module.exports = class EncountersList extends CollapsePanel {
 
             this.encountersListElement.appendChild(panel.createElement())
 
-            panel.setTitle(item.label)
             panel.setValue(item)
 
             this._panels.push(panel)

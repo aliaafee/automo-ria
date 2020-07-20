@@ -19,7 +19,7 @@ module.exports = class DoctorField extends Field {
                 placeholder: this.options.placeholder,
                 displaySelected: true,
                 displayNull: true,
-                resourceIndex: ['personnel','doctors'],
+                resourceName: 'personnel.doctors',
                 popupHeight: '20%'
             }
         )

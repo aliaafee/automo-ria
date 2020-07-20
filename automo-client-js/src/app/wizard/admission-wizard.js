@@ -45,7 +45,7 @@ class PatientPage extends WizardForm {
                 displaySelected: true,
                 displayNull: true,
                 nullLabel: '[New Patient]',
-                resourceIndex: ['patients'],
+                resourceName: 'patients',
                 popupHeight: '50%'
             }
         )

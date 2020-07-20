@@ -13,8 +13,11 @@ module.exports = class EncounterPanel extends ResourcePanel {
         } else {
             var form = new EncounterForms.encounter()
         }
+
+        form.options.hideTitle = true;
+        options.title = form.options.title;
         
-        super(form, onSaved ,options);
+        super(form, onSaved, options);
 
         this.btnDelete = new Button(
             'Delete',

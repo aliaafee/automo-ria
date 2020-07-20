@@ -30,14 +30,14 @@ module.exports = class Connection {
         )
     }
 
-    resourceFromPath(pathList) {
-        var result = this.resource_index
-        pathList.forEach((key) => {
-            result = result[key]
-        })
-        return result
-    }
+    resourceFromName(path) {
+        const deepPick = (fields, object = {}) => {
+            const [first, ...remaining] = fields.split(".");
+            return remaining.length ? deepPick(remaining.join("."), object[first]) : object[first];
+        };
 
+        return deepPick(path, this.resource_index);
+    }
 
     logout(on_success, on_failed) {
         this.user = null;

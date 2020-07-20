@@ -22,7 +22,7 @@ module.exports = class ResourceSearchBox extends Control {
          *  displaySelected
          *  displayNull
          *  nullLabel
-         *  resourceIndex = ['path','to','index']
+         *  resourceName = "path.to.resource"
          */
         super(options);
         this.idFunction = idFunction;
@@ -101,8 +101,8 @@ module.exports = class ResourceSearchBox extends Control {
 
         this._showPopup();
 
-        if (this.options.resourceIndex) {
-            this.resourceUrl = connection.resourceFromPath(this.options.resourceIndex)
+        if (this.options.resourceName) {
+            this.resourceUrl = connection.resourceFromName(this.options.resourceName)
         }
 
         var parts = url.parse(this.resourceUrl, true);
