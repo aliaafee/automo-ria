@@ -19,6 +19,8 @@ module.exports = class EncounterPanel extends ResourcePanel {
         
         super(form, onSaved, options);
 
+        this._isDeleted = false;
+
         this.btnDelete = new Button(
             'Delete',
             () => {
@@ -50,6 +52,7 @@ module.exports = class EncounterPanel extends ResourcePanel {
     _delete() {
         if (this._data ? !this._data.url : true ) {
             this.hide();
+            this._isDeleted = true;
             return
         }
 
@@ -86,6 +89,28 @@ module.exports = class EncounterPanel extends ResourcePanel {
             },
             () => {}
         )
+    }
+
+    value() {
+        if (this._isDeleted) {
+            return null
+        }
+
+        if (this._data) {
+            return this._data
+        }
+
+        return {
+            type: this.options.type,
+            ...this.form.value()
+        }
+    }
+
+    validate() {
+        if (this._isDeleted) {
+            return true
+        }
+        return super.validate()
     }
 
     createElement() {

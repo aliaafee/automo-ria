@@ -184,7 +184,14 @@ module.exports = class ResourcePanel extends CollapsePanel {
     }
 
     value() {
-        this.form.value()
+        if (this._data) {
+            return this._data
+        }
+        return this.form.value()
+    }
+
+    validate() {
+        return this.form.validate();
     }
 
     createElement() {

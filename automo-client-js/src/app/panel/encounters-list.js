@@ -118,15 +118,26 @@ module.exports = class EncountersList extends CollapsePanel {
     }
 
     value() {
-        result = {
-            'encounters': []
+        console.log(this._panels)
+        return {
+            'encounters': this._panels
+                            .map((panel) => panel.value())
+                            .filter((value) => value)
         }
+    }
 
-        this._panels.forEach((panel) => {
-            result['encounters'].push(panel.value())
-        })
-
-        return result
+    validate() {
+        return this._panels.map(
+            (panel) => panel.validate()
+        ).reduce(
+            (prev, curr) => {
+                if (!curr) {
+                    return false
+                }
+                return prev
+            },
+            true
+        )
     }
 
     _createEncounterTypes() {
@@ -175,6 +186,7 @@ module.exports = class EncountersList extends CollapsePanel {
         )
 
         this.encountersListElement.prepend(newPanel.createElement())
+        this._panels.push(newPanel)
 
         newPanel.unlock()
     }

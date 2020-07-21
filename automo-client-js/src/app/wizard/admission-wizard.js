@@ -10,6 +10,7 @@ const ProblemsForm = require('../form/problems-form')
 const AdmissionNotesForm = require('../form/admission-notes-form')
 const DischargeNotesForm = require('../form/discharge-notes-form')
 const PrescriptionForm = require('../form/prescription-form')
+const EncountersList = require('../panel/encounters-list')
 
 const StatusDialog = require("../../controls/dialog/status-dialog")
 
@@ -163,6 +164,39 @@ class ProceduresReports extends WizardPage {
     }
 }
 
+class Encounters extends WizardPage {
+    constructor(options = {}) {
+        options.title = "Encounters"
+        super(options)
+
+        this._encounters = new EncountersList(
+            {
+                encounter_types: options.encounter_types
+            }
+        )
+    }
+
+    setValue(value) {
+        this._encounters.setValue()
+    }
+
+    value() {
+        return this._encounters.value()
+    }
+
+    validate() {
+        return this._encounters.validate()
+    }
+    
+    createElement() {
+        super.createElement()
+
+        this.element.appendChild(this._encounters.createElement())   
+        
+        return this.element;
+    }
+}
+
 class DischargeNotes extends WizardForm {
     constructor(options = {}) {
         options.title = "Discharge Notes"
@@ -239,8 +273,25 @@ module.exports = class AdmissionWizard extends Wizard {
         this.admissionDetails = new AdmissionDetails()
         this.problems = new Problems()
         this.admissionNotes = new AdmissionNotes()
-        this.investigations = new Investigations()
+        
+        this.investigations = new Encounters(
+            {
+                encounter_types: [
+                    'imaging',
+                    'endoscopy',
+                    'histopathology',
+                    'otherreport',
+                    'completebloodcount',
+                    'renalfunctiontest',
+                    'othertest'
+                ]
+            }
+        )
+        
+        
         this.proceduresReports = new ProceduresReports()
+        
+        
         this.dischargeNotes = new DischargeNotes()
         this.prescription = new Prescription()
         this.reviewPage = new ReviewPage()
@@ -275,7 +326,8 @@ module.exports = class AdmissionWizard extends Wizard {
         })
 
         admission['patient'] = this.newPatient.value()
-        admission['encounters'] = this.investigations.value().concat(this.proceduresReports.value())
+        //admission['encounters'] = this.investigations.value().concat(this.proceduresReports.value())
+        admission['encounters'] = this.investigations.value()['encounters']
         admission['prescription'] = this.prescription.value().prescription
 
         return admission
