@@ -437,6 +437,12 @@ button.clear.alert:hover {
     flex-grow: 1;
 }
 
+.field .toolbar {
+    border: solid 1px var(--border);
+    border-radius: var(--border-radius);
+    margin-bottom: 15px;
+}
+
 .field.locked .toolbar {
     display: none;
 }
@@ -510,6 +516,17 @@ button.clear.alert:hover {
 
 .collapse-panel > .body {
     border-top: solid 1px var(--border);
+}
+
+.collapse-panel > .body > .toolbar {
+    margin: 15px 15px 0 15px;
+    display: block;
+    border: solid 1px var(--border);
+    border-radius: var(--border-radius);
+}
+
+.collapse-panel > .body > .toolbar button {
+    display: inline;
 }
 
 .resource-panel > .body > .form {

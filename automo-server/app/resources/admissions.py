@@ -58,6 +58,7 @@ def get_serialized_admission(admission):
 
     """
     encounters = {};
+    
     for child_encounter_type in md.encounters.ENCOUNTER_MODEL_TYPES.keys():
         encounters[child_encounter_type] = url_for(
             'api.get_patient_admission_encounters',
@@ -65,6 +66,7 @@ def get_serialized_admission(admission):
             type=child_encounter_type,
             _external = True
         )
+    """
     """
     encounters = {
         'investigations': url_for(
@@ -92,8 +94,9 @@ def get_serialized_admission(admission):
             _external = True
         )
     }
+    """
 
-    additional_data['encounters'] = encounters
+    #additional_data['encounters'] = encounters
 
     additional_data['encounters_url'] = url_for(
         'api.get_patient_admission_encounters',

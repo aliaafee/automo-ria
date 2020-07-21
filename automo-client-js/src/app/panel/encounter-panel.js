@@ -48,6 +48,11 @@ module.exports = class EncounterPanel extends ResourcePanel {
     }
 
     _delete() {
+        if (this._data ? !this._data.url : true ) {
+            this.hide();
+            return
+        }
+
         this.spinner.show()
         this.transient()
         connection.delete(

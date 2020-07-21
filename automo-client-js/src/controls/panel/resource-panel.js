@@ -57,14 +57,58 @@ module.exports = class ResourcePanel extends CollapsePanel {
         this.lock()
     }
 
+    _createNew() {
+        if (!this.options.newUrl) {
+            this.statusElem.innerHTML = "New URL not specified"
+        }
+
+        var _data = this.form.value();
+        _data['type'] = this.options.type;
+
+        this.transient();
+        this.spinner.show()
+        this.statusElem.innerHTML = "Creating New..."
+        connection.post(
+            this.options.newUrl,
+            _data,
+            (response) => {
+                console.log(response)
+                if (response.error) {
+                    this.unlock()
+                    this.statusElem.innerHTML = response.error
+                    if (response.invalid_fields) {
+                        this.statusElem.innerHTML = "Marked fields are not valid"
+                        this.form.markInvalidFields(response.invalid_fields)
+                    } else {
+                        this.statusElem.innerHTML = response.message
+                    }
+                    return
+                }
+                this.statusElem.innerHTML = "Saved"
+                this.setValue(response)
+                if (this.onSaved) {
+                    this.onSaved(response)
+                }
+                this.lock()
+            },
+            (error) => {
+                this.statusElem.innerHTML = `Could Not Create New`
+                this.unlock()
+            },
+            () => {
+                this.spinner.hideSoft()
+            }
+        )
+    }
+
     _onSave() {
         if (!this.form.validate()) {
             this.statusElem.innerHTML = "Marked fields are not valid"
             return
         }
 
-        if (!this._data.url) {
-            this.statusElem.innerHTML = "No target URL found"
+        if (this._data ? !this._data.url : true ) {
+            this._createNew();
             return
         }
 

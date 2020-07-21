@@ -234,7 +234,15 @@ module.exports = class AdmissionPanel extends Control {
             new EncountersList(
                 {
                     title: 'Investigations',
-                    encounters_type: 'investigations'
+                    encounter_types: [
+                        'imaging',
+                        'endoscopy',
+                        'histopathology',
+                        'otherreport',
+                        'completebloodcount',
+                        'renalfunctiontest',
+                        'othertest'
+                    ]
                 }
             )
         )
@@ -243,7 +251,9 @@ module.exports = class AdmissionPanel extends Control {
             new EncountersList(
                 {
                     title: 'Procedure Notes',
-                    encounters_type: 'procedures'
+                    encounter_types: [
+                        'surgicalprocedure'
+                    ]
                 }
             )
         )
@@ -252,7 +262,12 @@ module.exports = class AdmissionPanel extends Control {
             new EncountersList(
                 {
                     title: 'Progress Notes',
-                    encounters_type: 'progress'
+                    encounter_types: [
+                        'progress',
+                        //'vitalsigns',
+                        'measurements',
+                        //'vitalsignsextended'
+                    ]
                 }
             )
         )
