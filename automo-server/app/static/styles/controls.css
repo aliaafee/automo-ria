@@ -437,7 +437,8 @@ button.clear.alert:hover {
     flex-grow: 1;
 }
 
-.field .toolbar {
+.field .toolbar,
+.form > .toolbar {
     border: solid 1px var(--border);
     border-radius: var(--border-radius);
     margin-bottom: 15px;

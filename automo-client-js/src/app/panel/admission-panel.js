@@ -3,17 +3,15 @@ const datetime = require('../../controls/datetime');
 
 const Control = require("../../controls/control");
 const Button = require('../../controls/button')
-const ResourcePanel = require('../../controls/panel/resource-panel');
-const CollapsePanel = require('../../controls/panel/collapse-panel')
+const ResourcePanel = require('../../controls/panel/resource-panel')
 const Spinner = require('../../controls/spinner')
 
-const Form = require("../../controls/form/form")
 const AdmissionDetailsForm = require('../form/admission-details-form')
 const ProblemsForm = require('../form/problems-form')
 const AdmissionNotesForm = require('../form/admission-notes-form')
 const DischargeNotesForm = require('../form/discharge-notes-form')
 const PrescriptionForm = require('../form/prescription-form')
-const EncountersList = require('./encounters-list')
+const EncounterListPanel = require('./encounter-list-panel')
 
 class AdmissionsList extends Control {
     constructor(options={}) {
@@ -231,7 +229,7 @@ module.exports = class AdmissionPanel extends Control {
         )
 
         this._panels.push(
-            new EncountersList(
+            new EncounterListPanel(
                 {
                     title: 'Investigations',
                     encounter_types: [
@@ -248,7 +246,7 @@ module.exports = class AdmissionPanel extends Control {
         )
 
         this._panels.push(
-            new EncountersList(
+            new EncounterListPanel(
                 {
                     title: 'Procedure Notes',
                     encounter_types: [
@@ -259,7 +257,7 @@ module.exports = class AdmissionPanel extends Control {
         )
 
         this._panels.push(
-            new EncountersList(
+            new EncounterListPanel(
                 {
                     title: 'Progress Notes',
                     encounter_types: [
@@ -271,16 +269,6 @@ module.exports = class AdmissionPanel extends Control {
                 }
             )
         )
-
-        /*
-        this._panels.push(
-            new CollapsePanel(
-                {
-                    title: 'Procedures/ Reports/ Other Notes'
-                }
-            )
-        )
-        */
 
         this._panels.push(
             new ResourcePanel(
@@ -330,7 +318,6 @@ module.exports = class AdmissionPanel extends Control {
                     panel.setValue(admission)
                     panel.expand()
                 })
-                //this._bodyElement.style.display = ''
                 this._bodyElement.classList.remove('locked')
 
                 this.admissionList.setAdmission(admission)
@@ -406,7 +393,6 @@ module.exports = class AdmissionPanel extends Control {
             this._bodyElement.appendChild(panel.createElement())
         })
 
-        //this._bodyElement.style.display = 'none'
         this._bodyElement.classList.add('locked')
 
         return this.element

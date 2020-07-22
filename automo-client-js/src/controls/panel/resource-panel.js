@@ -160,6 +160,12 @@ module.exports = class ResourcePanel extends CollapsePanel {
 
     lock() {
         this.form.lock()
+        if ((this._data ? !this._data.url : true) && !this.options.newUrl) {
+            this.btnEdit.hide()
+            this.btnSave.hide()
+            this.btnCancel.hide()
+            return
+        }
         this.btnEdit.show()
         this.btnSave.hide()
         this.btnCancel.hide()
@@ -167,6 +173,12 @@ module.exports = class ResourcePanel extends CollapsePanel {
 
     unlock() {
         this.form.unlock()
+        if ((this._data ? !this._data.url : true ) && !this.options.newUrl ) {
+            this.btnEdit.hide()
+            this.btnSave.hide()
+            this.btnCancel.hide()
+            return
+        }
         this.btnEdit.hide()
         this.btnSave.show()
         this.btnCancel.show()
@@ -176,11 +188,14 @@ module.exports = class ResourcePanel extends CollapsePanel {
         this._data = value
 
         this.form.setValue(this._data)
-        this.form.lock()
-        this.btnEdit.show()
-        this.btnSave.hide()
-        this.btnCancel.hide()
         this.statusElem.innerHTML = ""
+
+        if (this._data ? !this._data.url : true ) {
+            this.unlock()
+            return
+        }
+
+        this.lock()
     }
 
     value() {

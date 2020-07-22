@@ -275,35 +275,21 @@
     color: transparent;
 }
 
-/*
-li.admission-item .root-item-head {
-    padding: 0 0 0 0 !important;
-    display: flex;
+
+.encounter-list-form {
+    display: block;
 }
 
-li.admission-item .root-item-head div {
-    padding: 5px 15px 5px 15px;
+.encounter-list-form .encounter-types {
+    display: block;
 }
 
-li.admission-item .root-item-head div.label {
-    font-weight: bold;
+.encounter-list-form .encounter-types button {
+    display: inline;
 }
-
-li.admission-item .root-item-head div.date {
-    min-width: 40%;
-}
-
-li.admission-item .root-item-head div.duration {
-
-}
-
-li.admission-item .root-item-head div.doctor {
-    font-weight: bold;
-    min-width: 30%;
-}*/
 
 .encounters-list {
-    padding: 15px;
+    /*padding: 15px;*/
 }
 
 .encounters-list .collapse-panel {

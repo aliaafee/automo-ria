@@ -10,7 +10,8 @@ const ProblemsForm = require('../form/problems-form')
 const AdmissionNotesForm = require('../form/admission-notes-form')
 const DischargeNotesForm = require('../form/discharge-notes-form')
 const PrescriptionForm = require('../form/prescription-form')
-const EncountersList = require('../panel/encounters-list')
+//const EncountersList = require('../panel/encounters-list')
+const EncounterListForm = require("../form/encounter-list-form")
 
 const StatusDialog = require("../../controls/dialog/status-dialog")
 
@@ -142,28 +143,7 @@ class AdmissionNotes extends WizardForm {
 }
 
 
-class Investigations extends WizardPage {
-    constructor(options = {}) {
-        options.title = "Investigations"
-        super(options)
-    }
-
-    value() {
-        return []
-    }
-}
-
-class ProceduresReports extends WizardPage {
-    constructor(options = {}) {
-        options.title = "Procedures/ Reports/ Other Notes"
-        super(options)
-    }
-
-    value() {
-        return []
-    }
-}
-
+/*
 class Encounters extends WizardPage {
     constructor(options = {}) {
         options.title = "Encounters"
@@ -195,6 +175,17 @@ class Encounters extends WizardPage {
         
         return this.element;
     }
+}*/
+
+class Encounters extends WizardForm {
+    constructor(options = {}) {
+        super(
+            new EncounterListForm({
+                encounter_types: options.encounter_types
+            }),
+            options
+        )
+    }
 }
 
 class DischargeNotes extends WizardForm {
@@ -221,8 +212,15 @@ class ReviewPage extends WizardPage {
         this.admissionDetails = new AdmissionDetailsForm({title: "Admission Details"})
         this.problems = new ProblemsForm({title: "Diagnosis"})
         this.admissionNotes = new AdmissionNotesForm({title: "Admission Notes"})
-        this.investigations = new Form({title: "Investigations"})
-        this.proceduresReports = new Form({title: "Procedures/ Reports/ Other Notes"})
+        this.investigations = new EncounterListForm({title: "Investigations", encounter_types: [
+            'imaging',
+            'endoscopy',
+            'histopathology',
+            'otherreport',
+            'completebloodcount',
+            'renalfunctiontest',
+            'othertest'
+        ]})
         this.dischargeNotes = new DischargeNotesForm({title: "Discharge Prescription"})
         this.prescription = new PrescriptionForm({title: "Prescription"})
     }
@@ -235,7 +233,6 @@ class ReviewPage extends WizardPage {
         this.problems.setValue(wizard.problems.value())
         this.admissionNotes.setValue(wizard.admissionNotes.value())
         this.investigations.setValue(wizard.investigations.value())
-        this.proceduresReports.setValue(wizard.proceduresReports.value())
         this.dischargeNotes.setValue(wizard.dischargeNotes.value())
         this.prescription.setValue(wizard.prescription.value())
 
@@ -243,8 +240,7 @@ class ReviewPage extends WizardPage {
         this.admissionDetails.lock()
         this.problems.lock()
         this.admissionNotes.lock()
-        this.investigations.lock()
-        this.proceduresReports.lock()
+        this.investigations.lockAll()
         this.dischargeNotes.lock()
         this.prescription.lock()
     }
@@ -257,7 +253,6 @@ class ReviewPage extends WizardPage {
         this.element.appendChild(this.problems.createElement())
         this.element.appendChild(this.admissionNotes.createElement())
         this.element.appendChild(this.investigations.createElement())
-        this.element.appendChild(this.proceduresReports.createElement())
         this.element.appendChild(this.dischargeNotes.createElement())
         this.element.appendChild(this.prescription.createElement())
 
@@ -276,6 +271,7 @@ module.exports = class AdmissionWizard extends Wizard {
         
         this.investigations = new Encounters(
             {
+                title: 'Investigations',
                 encounter_types: [
                     'imaging',
                     'endoscopy',
@@ -289,7 +285,7 @@ module.exports = class AdmissionWizard extends Wizard {
         )
         
         
-        this.proceduresReports = new ProceduresReports()
+        //this.proceduresReports = new ProceduresReports()
         
         
         this.dischargeNotes = new DischargeNotes()
@@ -301,7 +297,7 @@ module.exports = class AdmissionWizard extends Wizard {
         this.addPage(this.problems)
         this.addPage(this.admissionNotes)
         this.addPage(this.investigations)
-        this.addPage(this.proceduresReports)
+        //this.addPage(this.proceduresReports)
         this.addPage(this.dischargeNotes)
         this.addPage(this.prescription)
         this.addPage(this.reviewPage)
