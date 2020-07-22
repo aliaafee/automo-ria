@@ -8,7 +8,7 @@ from .. import db
 from . import api
 from . import errors
 from .success import success_response
-from .item_getters import get_query_result, get_one_query_result, post_one_query_result, problems_data_to_problems, prescription_data_to_prescription
+from .item_getters import get_query_result, get_one_query_result, post_one_query_result, problems_data_to_problems, prescription_data_to_prescription, encounter_data_to_encounter
 
 
 def get_admission_from_start_time(patient, start_time, ignore_admission=None):
@@ -273,8 +273,15 @@ def new_admission():
         encounters = []
         encounters_data = admission_data.pop('encounters', None)
         if encounters_data:
-            #TODO
-            print("Adding encounters")
+            invalid_encounters = []
+            for encounter_data in encounters_data:
+                try:
+                    encounters.append(encounter_data_to_encounter(encounter_data))
+                except md.dbexception.FieldValueError as e:
+                    invalid_encounters.append(e.invalid_fields)
+            if invalid_encounters:
+                invalid_fields['encounters'] = invalid_encounters
+
 
         prescription = []
         prescription_data = admission_data.pop('prescription', None)
@@ -306,6 +313,9 @@ def new_admission():
 
         for item in prescription:
             admission.prescription.append(item)
+
+        for encounter in encounters:
+            admission.add_child_encounter(encounter)
 
         for problem in problems:
             patient.problems.append(problem)

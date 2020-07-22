@@ -177,7 +177,7 @@ class Encounters extends WizardPage {
     }
 
     setValue(value) {
-        this._encounters.setValue()
+        this._encounters.setValue(value)
     }
 
     value() {
@@ -338,7 +338,7 @@ module.exports = class AdmissionWizard extends Wizard {
         this.admissionDetails.setValue(data)
         this.admissionNotes.setValue(data)
         this.dischargeNotes.setValue(data)
-        //this.encounters.setValue(data)
+        this.investigations.setValue(data)
         this.problems.setValue(data)
         this.prescription.setValue(data)
     }

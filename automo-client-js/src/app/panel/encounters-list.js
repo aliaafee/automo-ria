@@ -100,6 +100,8 @@ module.exports = class EncountersList extends CollapsePanel {
     setValue(value) {
         this.lock();
 
+        this._clear();
+
         if (value ? value['encounters_url'] : true) {
             this.setEncounterListUrl(
                 value['encounters_url'] + '?' + querystring.stringify({
@@ -114,7 +116,7 @@ module.exports = class EncountersList extends CollapsePanel {
             return
         }
 
-        console.log(value['encounters'])
+        this._appendData(value['encounters'])
     }
 
     value() {

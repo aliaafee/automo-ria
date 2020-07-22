@@ -242,3 +242,36 @@ def prescription_data_to_prescription(data):
         raise md.dbexception.FieldValueError('Invalid fields', invalid_items)
 
     return processed_items
+
+
+
+def encounter_data_to_encounter(data):
+    if not isinstance(data, dict):
+        raise md.dbexception.FieldValueError("Invalid Data")
+
+    invalid_fields = {}
+
+    personnel_data = data.pop('personnel', None)
+    if personnel_data:
+        personnel_id = personnel_data.pop('id', None)
+        if personnel_id:
+            data['personnel_id'] = personnel_id 
+
+    encounter_type = data.pop('type', None)
+
+    if not encounter_type:
+        invalid_fields['encounter_type'] = "Required"
+
+    if encounter_type not in md.encounters.ENCOUNTER_MODEL_TYPES:
+        invalid_fields['encounter_type'] = "Invalid type"
+
+    encounter_model = md.encounters.ENCOUNTER_MODEL_TYPES[encounter_type]
+
+    encounter = encounter_model()
+
+    invalid_fields.update(encounter.validate_and_insert(data))
+
+    if invalid_fields:
+        raise md.dbexception.FieldValueError("Invalid Fields", invalid_fields)
+
+    return encounter
