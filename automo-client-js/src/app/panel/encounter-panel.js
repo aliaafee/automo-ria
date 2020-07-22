@@ -61,7 +61,6 @@ module.exports = class EncounterPanel extends ResourcePanel {
         connection.delete(
             this._data.url,
             (response) => {
-                console.log(response)
                 this.lock()
                 this.hide()
             },
@@ -70,15 +69,12 @@ module.exports = class EncounterPanel extends ResourcePanel {
                 this.unlock()
             },
             () => {
-                console.log("Finally")
                 this.spinner.hideSoft()
             }
         )
     }
 
     _onDelete() {
-        console.log("Delete")
-
         var confirm = new ConfirmDialog()
 
         confirm.show(

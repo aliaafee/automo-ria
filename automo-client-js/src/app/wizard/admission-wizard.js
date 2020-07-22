@@ -3,14 +3,12 @@ const WizardPage = require('../../controls/wizard/wizard-page')
 const WizardForm = require('../../controls/wizard/wizard-form')
 const ResourceSearchBox = require('../../controls/resource-search-box')
 
-const Form = require("../../controls/form/form")
 const PatientForm = require('../form/patient-form')
 const AdmissionDetailsForm = require('../form/admission-details-form')
 const ProblemsForm = require('../form/problems-form')
 const AdmissionNotesForm = require('../form/admission-notes-form')
 const DischargeNotesForm = require('../form/discharge-notes-form')
 const PrescriptionForm = require('../form/prescription-form')
-//const EncountersList = require('../panel/encounters-list')
 const EncounterListForm = require("../form/encounter-list-form")
 
 const StatusDialog = require("../../controls/dialog/status-dialog")
@@ -349,8 +347,6 @@ module.exports = class AdmissionWizard extends Wizard {
 
         var data = JSON.parse(localStorage.getItem('wizard_draft'))
 
-        console.log(data)
-
         if (data) {
             this.setValue(data)
         }
@@ -365,7 +361,6 @@ module.exports = class AdmissionWizard extends Wizard {
         }
         var result = `<ul>`
         for (const [field_name, message] of Object.entries(invalid_fields)) {
-            console.log(message)
             result += `<li><b>${field_name}</b>: ${this._invalidFieldsList(message)}</li>`
         }
         result += `</ul>`
@@ -409,7 +404,6 @@ module.exports = class AdmissionWizard extends Wizard {
                 )
             },
             (error) => {
-                console.log(error)
                 statusDialog.setTitle("Failed")
                 statusDialog.setMessage(
                     `An error occured while saving ${error}.`

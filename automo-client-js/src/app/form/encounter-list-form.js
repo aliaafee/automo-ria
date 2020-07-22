@@ -56,7 +56,6 @@ module.exports = class EncounterListForm extends Form {
     }
 
     value() {
-        console.log(this._panels)
         return {
             'encounters': this._panels
                             .map((panel) => panel.value())
@@ -91,8 +90,6 @@ module.exports = class EncounterListForm extends Form {
         }
 
         data.forEach((item) => {
-            console.log(item.type)
-
             let panel = new EncounterPanel(
                 () => {},
                 {

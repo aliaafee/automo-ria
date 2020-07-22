@@ -62,7 +62,6 @@ module.exports = class Wizard extends Dialog {
         var currentPage = this.getCurrentPage()
 
         if (!currentPage.validate()) {
-            console.log("Invalid input")
             var statusDialog = new StatusDialog()
             statusDialog.show(
                 'Invalid Fields',
@@ -70,8 +69,6 @@ module.exports = class Wizard extends Dialog {
             )
             return false
         }
-
-        console.log(currentPage.value())
 
         this.gotoNextPage()
     }
@@ -87,15 +84,12 @@ module.exports = class Wizard extends Dialog {
         if (!currentPage.validate()) {
             console.log("Invalid input")
             return false
-        }
-
-        console.log(currentPage.value())*/
+        }*/
 
         this.onSave(this.value())
     }
 
     onSave(data) {
-        console.log(data)
         this.afterSave(data)
     }
 

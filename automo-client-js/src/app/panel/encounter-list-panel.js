@@ -80,7 +80,6 @@ module.exports = class EncounterListPanel extends CollapsePanel {
         }
 
         if (value ? !value['encounters'] : false) {
-            console.log("No encounters")
             return
         }
 
@@ -99,7 +98,6 @@ module.exports = class EncounterListPanel extends CollapsePanel {
         connection.get(
             this.encountersUrl,
             (response) => {
-                console.log(response)
                 this._encountersList.setValue({
                     'encounters': response.items,
                     'encounters_url': url
@@ -112,7 +110,6 @@ module.exports = class EncounterListPanel extends CollapsePanel {
                     'encounters_url': url
                 })
                 if (error.status == 404) {
-                    console.log("No encounters found")
                     return
                 }
                 this.statusElem.innerHTML = "Error Loading Encounters"
