@@ -2,6 +2,7 @@ const Field = require("../../controls/form/field")
 const Button = require("../../controls/button")
 const TextBox = require("../../controls/text-box")
 const ResourceSearchBox = require("../../controls/resource-search-box")
+const AutocompleteBox = require("../../controls/autocomplete-box")
 
 module.exports = class PrescriptionField extends Field {
     constructor(name, options={}) {
@@ -9,7 +10,7 @@ module.exports = class PrescriptionField extends Field {
 
         this._data = [];
 
-        this.txtDrug = new ResourceSearchBox(
+        this.txtDrug = new AutocompleteBox(
             (drug) => {
                 return drug.id
             },
@@ -20,27 +21,30 @@ module.exports = class PrescriptionField extends Field {
                 console.log(drug)
             },
             {
-                resourceName: 'drugs',
-                displaySelected: true
+                resourceName: 'drugs'
             }
         )
 
         this.txtOrder = new TextBox()
-
+        
         this.btnAdd = new Button(
             'Add',
             (event) => {
-                this._data.push({
-                    'drug': this.txtDrug.value(),
-                    'drug_order': this.txtOrder.value(),
-                    'active': true
-                })
-                this.txtDrug.setValue(null)
-                this.txtOrder.setValue("")
-                this.txtDrug.focus()
-                this.displayData()
+                this._onAdd(event)
             }
         )
+    }
+
+    _onAdd(event) {
+        this._data.push({
+            'drug': this.txtDrug.value(),
+            'drug_order': this.txtOrder.value(),
+            'active': true
+        })
+        this.txtDrug.setValue(null)
+        this.txtOrder.setValue("")
+        this.txtDrug.focus()
+        this.displayData()
     }
 
     _clearDisplay() {
@@ -150,6 +154,12 @@ module.exports = class PrescriptionField extends Field {
 
         this._listElement = document.createElement('ol');
         this._placeholderElement.appendChild(this._listElement);
+
+        this.txtOrder.element.addEventListener("keyup", (event) => {
+            if (event.code == "Enter") {
+                this._onAdd()
+            }
+        })
 
         return this.element;
     }

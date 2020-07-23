@@ -107,6 +107,11 @@ module.exports = class Control {
         this.element.classList.remove('locked')
     }
 
+    setValue(value) {
+        console.log(value)
+        this.element.innerHTML = value
+    }
+
     show() {
         if (this._display) {
             if (this._display != 'none') {

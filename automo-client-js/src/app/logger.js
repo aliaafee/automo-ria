@@ -15,7 +15,7 @@ module.exports = class Logger {
             console.log(message);
             return;
         }
-        this.statusElement.innerHtml = message;
+        this.statusElement.innerHTML = message;
     }
 
     log_spinner(message) {
@@ -23,7 +23,7 @@ module.exports = class Logger {
             //console.log(message);
             return;
         }
-        this.statusElement.innerHtml = message;
+        this.statusElement.innerHTML = message;
     }
 
     log_success(message) {
@@ -31,7 +31,7 @@ module.exports = class Logger {
             //console.log(message);
             return;
         }
-        this.statusElement.innerHtml = message;
+        this.statusElement.innerHTML = message;
     }
 
     log_error(message) {
@@ -39,6 +39,6 @@ module.exports = class Logger {
             console.log(message);
             return;
         }
-        this.statusElement.innerHtml = message;
+        this.statusElement.innerHTML = message;
     }
 }

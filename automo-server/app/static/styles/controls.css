@@ -308,6 +308,29 @@ button.clear.alert:hover {
     flex-grow: 1;
 }
 
+
+.autocomplete-box {
+    border: solid 1px var(--border);
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+}
+
+.autocomplete-box input {
+    background-color: transparent;
+    z-index: 2;
+    border: none;
+    margin: -1px;
+}
+
+.autocomplete-box .shadow-text-box {
+    position: absolute;
+    color: var(--mid-light);
+    background-color: transparent;
+    padding: var(--input-padding);
+    margin: -1px;
+    z-index: 1;
+}
+
 .list-box {
     background-color: var(--white);
     border: 1px solid var(--border);

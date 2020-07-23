@@ -10,17 +10,20 @@ from .item_getters import get_items_list, get_item, post_item, get_query_result
 @api.route("/drugs/")
 def get_drugs():
     str_search = request.args.get('q', "", type=str)
+    str_starts_with = request.args.get('s', "", type=str)
 
     query_result = md.Drug.query
 
-    and_filters = []
-    
+    if str_starts_with:
+        query_result = query_result.filter(md.Drug.name.like("{}%".format(str_starts_with)))
+
     if str_search:
+        and_filters = []
         for word in str_search.split():
             if word:
                 and_filters.append(md.Drug.name.like("%{}%".format(word)))
 
-    query_result = query_result.filter(and_(*and_filters))
+        query_result = query_result.filter(and_(*and_filters))
 
     query_result.order_by(md.Drug.name)
     
