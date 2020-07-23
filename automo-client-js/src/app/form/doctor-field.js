@@ -20,7 +20,7 @@ module.exports = class DoctorField extends Field {
                 displaySelected: true,
                 displayNull: true,
                 resourceName: 'personnel.doctors',
-                popupHeight: '20%'
+                popupHeight: '150px'
             }
         )
     }

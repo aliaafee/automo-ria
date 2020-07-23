@@ -460,8 +460,20 @@ button.side-bar-item:focus {
 
 
 @media only screen and (max-width: 768px) {
+    body {
+        overflow: unset;
+        position: unset;
+    }
+
+    .menu-bar {
+        position: fixed;
+        z-index: 100;
+    }
+
     .main-panel-body {
-        flex-direction: column-reverse;
+        /*flex-direction: column-reverse;*/
+        max-height: unset;
+        height: unset;
     }
     .side-bar {
         flex-direction: row;
@@ -470,7 +482,7 @@ button.side-bar-item:focus {
     }
 
     .main-content {
-        height: calc(100% - 47px);
+        /*height: calc(100% - 47px);*/
         width: 100%;
     }
 
@@ -478,6 +490,9 @@ button.side-bar-item:focus {
         background-color: var(--light);
         border-top: solid 1px var(--border);
         justify-content: space-between;
+        position: fixed;
+        z-index: 100;
+        top: calc(100% - 47px);
     }
 
     .side-bar-spacer {
@@ -518,6 +533,10 @@ button.side-bar-item:focus {
 
     #patient-list {
         display: flex !important;
+        position: fixed;
+        top: 30px;
+        z-index: 100;
+        max-height: calc(100% - 30px);
     }
 
     #patient-list.active-pane {
@@ -538,11 +557,14 @@ button.side-bar-item:focus {
 
     #patient-panel {
         border: none;
+        overflow: auto;
     }
 
     #patient-panel .container {
         margin-right: 0;
         margin-left: 0;
+        margin-top: 67px;
+        margin-bottom: 47px;
         width: 100%;
         max-width: unset;
     }

@@ -23,7 +23,7 @@ module.exports = class BedField extends Field {
                 placeholder: 'Bed',
                 displaySelected: true,
                 displayNull: true,
-                popupHeight: '20%'
+                popupHeight: '150px'
             }
         )
 
@@ -50,7 +50,7 @@ module.exports = class BedField extends Field {
                 displaySelected: true,
                 displayNull: true,
                 resourceName: 'wards',
-                popupHeight: '20%'
+                popupHeight: '150px'
             }
         )
 

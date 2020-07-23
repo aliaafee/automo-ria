@@ -250,7 +250,7 @@ button.clear.alert:hover {
 }
 
 .popup {
-    z-index: 2000;
+    z-index: 50;
     position: absolute;
     display: flex;
 }
