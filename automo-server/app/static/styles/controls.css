@@ -280,6 +280,7 @@ button.clear.alert:hover {
     position: relative;
     overflow-x: none;
     overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
 ::-webkit-scrollbar {
@@ -633,7 +634,7 @@ button.clear.alert:hover {
 .foreground,
 .foreground-centered,
 .foreground-centered-small {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -781,6 +782,7 @@ button.clear.alert:hover {
 .dialog-body-padded {
     height: calc(100% - 107px);
     overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
 .dialog-body .form {
