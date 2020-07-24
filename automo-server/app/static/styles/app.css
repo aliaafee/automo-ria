@@ -493,7 +493,7 @@ button.side-bar-item:focus {
         justify-content: space-between;
         position: fixed;
         z-index: 100;
-	bottom: 0;
+	    bottom: 0;
     }
 
     .side-bar-spacer {
