@@ -10,6 +10,7 @@ module.exports = class UserDialog extends FormDialog {
             {
                 title: 'User',
                 okLabel: 'Save',
+                ...options
             }
         );
     }

@@ -1,33 +1,35 @@
 const Dialog = require("./dialog");
 const Button = require("../button");
-
+const Control = require("../control")
 
 module.exports = class ConfirmDialog extends Dialog {
     constructor(options={}) {
-        options.noCloseButton = true
-        options.centered = true
-        super(options)
+        super(
+            {
+                centered: true,
+                noFooter: true,
+                ...options
+            }
+        )
 
         this.btnOk = new Button(
-            options.okLabel != null ? options.okLabel : 'Yes',
+            options.okLabel != null ? options.okLabel : 'Ok',
             (ev) => {
                 this._onOk(ev);
-                this.hide()
+                this.hide();
             },
             {
-                width: '80px'
+                style: 'clear',
+                icon: 'check',
+                className: 'hide-label'
             }
         );
 
-        this.btnCancel = new Button(
-            options.cancelLabel != null ? options.cancelLabel : 'No',
-            (ev) => {
-                this._onCancel(ev);
-            },
+        this.message = new Control(
             {
-                width: '80px'
+                className: 'message'
             }
-        );
+        )
     }
 
     show(title, message, onOk, onCancel) {
@@ -35,22 +37,30 @@ module.exports = class ConfirmDialog extends Dialog {
         this._onOk = onOk
 
         this.setTitle(title)
-        this.messageElement.innerHTML = message
+        this.message.setValue(message)
+    }
+
+    createHeaderElement() {
+        let header = super.createHeaderElement();
+
+        header.appendChild(this.btnOk.createElement())
+
+        return header
+    }
+
+    createBodyElement() {
+        let body = super.createBodyElement()
+
+        body.appendChild(this.message.createElement())
+
+        return body
     }
 
     createElement() {
-        super.createElement()
+        let elem = super.createElement()
 
-        this.element.className = 'foreground-centered-small'
+        elem.className = 'foreground-centered-small'
 
-        this.footerElement.appendChild(this.btnOk.createElement())
-        this.footerElement.appendChild(this.btnCancel.createElement())
-
-        this.messageElement = document.createElement('div')
-        this.messageElement.className = 'message'
-        this.bodyElement.appendChild(this.messageElement)
-
-        return this.element
-    
+        return elem
     }
 }

@@ -4,31 +4,28 @@ const Button = require("../button");
 
 module.exports = class FormDialog extends Dialog {
     constructor(form, options={}) {
-        super(options)
+        super(
+            {
+                noFooter: true,
+                ...options
+            }
+        )
 
         this.form = form;
 
         this.onOk = null;
 
         this.btnOk = new Button(
-            options.okLabel != null ? options.okLabel : 'Ok',
+            options.okLabel ? options.okLabel : 'Ok',
             (ev) => {
                 this._onOk(ev);
             },
             {
-                icon: options.okIcon
+                style: 'clear',
+                icon: options.okIcon ? options.okIcon : 'check',
+                className: 'hide-icon'
             }
         );
-
-        this.btnCancel = new Button(
-            options.cancelLabel != null ? options.cancelLabel : 'Cancel',
-            (ev) => {
-                this._onCancel(ev);
-            },
-            {
-                icon: options.cancelIcon
-            }
-        )
     }
 
     value() {
@@ -48,16 +45,20 @@ module.exports = class FormDialog extends Dialog {
         //super._onOk(ev);
     }
 
-    createElement() {
-        super.createElement();
+    createBodyElement() {
+        let body = super.createBodyElement();
 
-        this.bodyElement.className = 'dialog-body-padded';
-        this.bodyElement.appendChild(this.form.createElement());
+        body.className = 'dialog-body-padded';
+        body.appendChild(this.form.createElement())
 
-        this.footerElement.appendChild(this.btnCancel.createElement());
-        this.footerElement.appendChild(this.btnOk.createElement());
-
-        return this.element;
+        return body
     }
 
+    createHeaderElement() {
+        let header = super.createHeaderElement();
+
+        header.appendChild(this.btnOk.createElement());
+
+        return header
+    }
 }

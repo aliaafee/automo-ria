@@ -431,8 +431,8 @@ button.menu-bar-item:focus {
 }
 
 .side-bar-item .icon {
-    width: 20px;
-    height: 20px;
+    width: var(--icon-size-l);
+    height: var(--icon-size-l);
 }
 
 .side-bar-item:hover {

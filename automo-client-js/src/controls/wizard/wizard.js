@@ -5,11 +5,12 @@ const StatusDialog = require('../dialog/status-dialog')
 
 module.exports = class Wizard extends Dialog {
     constructor(options) {
-        /* Options
-         *  
-         */
-        options.groupButtons = true;
-        super(options);
+        super(
+            {
+                noFooter: true,
+                ...options
+            }
+        )
 
         this.pages = []
 
@@ -21,6 +22,11 @@ module.exports = class Wizard extends Dialog {
             'Back',
             (event) => {
                 this._onBack(event)
+            },
+            {
+                style: 'clear',
+                icon: 'arrow-left',
+                className: 'hide-label'
             }
         )
 
@@ -28,6 +34,11 @@ module.exports = class Wizard extends Dialog {
             'Next',
             (event) => {
                 this._onNext(event)
+            },
+            {
+                style: 'clear',
+                icon: 'arrow-right',
+                className: 'hide-icon'
             }
         )
 
@@ -37,7 +48,9 @@ module.exports = class Wizard extends Dialog {
                 this._onSave(event)
             },
             {
-                style: 'primary'
+                style: 'clear',
+                icon: 'check',
+                className: 'hide-icon'
             }
         )
     }
@@ -106,17 +119,19 @@ module.exports = class Wizard extends Dialog {
         this.pages[this._currentPage].show(this)
 
         if (this._currentPage == 0) {
-            this.btnBack.lock()
+            this.btnBack.hide()
+            this.showCloseButton()
         } else {
-            this.btnBack.unlock()
+            this.btnBack.show()
+            this.hideCloseButton()
         }
 
         if (this._currentPage == this.pages.length - 1) {
-            this.btnNext.lock()
-            this.btnSave.unlock()
+            this.btnNext.hide()
+            this.btnSave.show()
         } else {
-            this.btnNext.unlock()
-            this.btnSave.lock()
+            this.btnNext.show()
+            this.btnSave.hide()
         }
     }
 
@@ -140,25 +155,33 @@ module.exports = class Wizard extends Dialog {
         return this.pages[this._currentPage]
     }
 
-    createElement() {
-        super.createElement()
-
-        this._dialogElement.classList.add("wizard")
-        
+    createBodyElement() {
+        let body = super.createBodyElement()
 
         this.pages.forEach((page) => {
-            this.bodyElement.appendChild(page.createElement());
+            body.appendChild(page.createElement());
         })
 
-        var btns = [
-            this.btnBack,
-            this.btnNext,
-            this.btnSave
-        ]
-        
-        btns.forEach((button) => {
-            this.footerElement.appendChild(button.createElement())
-        })
+        return body
+    }
+
+    createHeaderElement() {
+        let header = super.createHeaderElement()
+
+        header.prepend(this.btnBack.createElement())
+        header.appendChild(this.btnNext.createElement())
+        header.appendChild(this.btnSave.createElement())
+
+        this.btnSave.hide()
+        this.btnBack.hide()
+
+        return header;
+    }
+
+    createElement() {
+        let elem = super.createElement()
+
+        elem.classList.add("wizard")
 
         this.gotoPage(0)
 

@@ -1,13 +1,21 @@
 const Dialog = require("./dialog");
 const Button = require("../button");
 const Spinner = require("../spinner")
+const Control = require("../control")
 
 
 module.exports = class StatusDialog extends Dialog {
     constructor(options={}) {
         options.noCloseButton = true
         options.centered = true
-        super(options)
+        super(
+            {
+                noCloseButton: true,
+                centered: true,
+                noFooter: true,
+                ...options
+            }
+        )
 
         this.btnOk = new Button(
             options.okLabel != null ? options.okLabel : 'Ok',
@@ -15,17 +23,24 @@ module.exports = class StatusDialog extends Dialog {
                 this._onOk(ev);
             },
             {
-                width: '80px'
+                style: 'clear',
+                icon: 'check',
+                className: 'hide-label'
             }
         );
 
         this._afterDismiss = null
 
         this.spinner = new Spinner()
+        this.message = new Control(
+            {
+                className: 'message'
+            }
+        )
     }
 
     setMessage(message) {
-        this.messageElement.innerHTML = message
+        this.message.setValue(message)
     }
 
     showSpinner() {
@@ -57,7 +72,7 @@ module.exports = class StatusDialog extends Dialog {
         super.show(() => {})
 
         this.setTitle(title)
-        this.messageElement.innerHTML = message
+        this.setMessage(message)
 
         if (!dissmissable) {
             this.btnOk.hide()
@@ -66,19 +81,28 @@ module.exports = class StatusDialog extends Dialog {
         }
     }
 
+    createBodyElement() {
+        let body = super.createBodyElement()
+
+        body.appendChild(this.spinner.createElement())
+        body.appendChild(this.message.createElement())
+
+        return body
+    }
+
+    createHeaderElement() {
+        let header = super.createHeaderElement()
+
+        header.appendChild(this.btnOk.createElement())
+
+        return header
+    }
+
     createElement() {
-        super.createElement()
+        let elem = super.createElement()
 
-        this.element.className = 'foreground-centered-small'
+        elem.className = 'foreground-centered-small'
 
-        this.footerElement.appendChild(this.btnOk.createElement())
-
-        this.bodyElement.appendChild(this.spinner.createElement())
-
-        this.messageElement = document.createElement('div')
-        this.messageElement.className = 'message'
-        this.bodyElement.appendChild(this.messageElement)
-
-        return this.element
+        return elem
     }
 }

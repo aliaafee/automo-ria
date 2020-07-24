@@ -5,6 +5,7 @@ module.exports = class Control {
          *  widht, height =  css size
          *  className = class name of the element
          *  id = html id of element
+         *  tabIndex = the tab index
          */
         this.element = null;
         this.options = options;
@@ -45,6 +46,10 @@ module.exports = class Control {
         if (this.options.className) {
             this.element.classList.add(this.options.className)
         }
+        if (this.options.tabIndex) {
+            this.element.tabIndex = this.options.tabIndex
+        }
+
         this.element.style.userSelect = "none";
         this.element.style.width = this.options.width;
         this.element.style.height = this.options.height;

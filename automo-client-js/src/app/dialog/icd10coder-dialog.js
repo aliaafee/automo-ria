@@ -11,7 +11,11 @@ const SelectField = require('../../controls/form/select-field');
 
 module.exports = class Icd10CoderDialog extends Dialog {
     constructor(options = {}) {
-        super(options);
+        super(
+            {
+                title: 'ICD-10 Code'
+            }
+        );
 
         this.onOk = null
         this.onCancel = null
@@ -46,7 +50,10 @@ module.exports = class Icd10CoderDialog extends Dialog {
                 this.hide()
             },
             {
-                width: '80px'
+                width: '80px',
+                style: 'clear',
+                icon: 'plus',
+                className: 'hide-icon'
             }
         );
 
@@ -311,28 +318,37 @@ module.exports = class Icd10CoderDialog extends Dialog {
         `
     }
 
-    createElement() {
-        super.createElement();
+    createHeaderElement() {
+        let header = super.createHeaderElement();
 
-        //this.element.classList.add('icd10coder');
-        this.element.id = 'icd10coder';
+        header.appendChild(this.searchBox.createElement());
+        header.appendChild(this.btnOk.createElement());
 
-        this.headerElement.appendChild(this.searchBox.createElement());
-        //this.searchBox.element.style.flexGrow = 1;
+        return header
+    }
 
-        this.bodyElement.appendChild(this.categoryList.createElement());
-        this.categoryList.element.classList.add('category-list');
+    createBodyElement() {
+        let body = super.createBodyElement();
 
-        this.bodyElement.appendChild(this.form.createElement());
-        this.form.element.classList.add('form');
-        //this.form.element.style.width = '200px';
-        //this.form.element.style.minWidth = '200px';
+        let catList = this.categoryList.createElement()
+        catList.classList.add('category-list')
+        body.appendChild(catList)
+
+        let form = this.form.createElement()
+        form.classList.add('form')
+        body.appendChild(form)
 
         this.form.hideField('icd10modifier_class');
         this.form.hideField('icd10modifier_extra_class');
 
-        this.footerElement.appendChild(this.btnOk.createElement());
+        return body
+    }
 
-        return this.element;
+    createElement() {
+        let elem = super.createElement();
+
+        elem.id = 'icd10coder';
+
+        return elem;
     }
 }

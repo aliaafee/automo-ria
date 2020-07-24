@@ -28,6 +28,7 @@
     --header-height: 35px;
     --focus-outline: 0.2rem;
     --icon-size: 16px;
+    --icon-size-l: 24px;
     --scrollbar-size: 10px;
     --scrollbar-size-s: 5px;
     --arrow-thickness: 2px;
@@ -172,10 +173,19 @@ button:hover {
 button > span {
     margin: auto;
     display: flex;
+    align-items: center;
 }
 
 button > span .label {
     margin-left: var(--input-padding);
+}
+
+button.hide-label >span .label {
+    display: none
+}
+
+button.hide-icon >span .icon {
+    display: none
 }
 
 button > span *:only-child {
@@ -210,8 +220,6 @@ button.clear:hover,
     color: var(--primary);
     text-decoration: underline;
 }
-
-
 
 button.clear:focus,
 .toolbar button:focus {
@@ -665,7 +673,7 @@ button.clear.alert:hover {
 }
 
 .foreground-centered-small .dialog {
-    width: 250px;
+    width: 300px;
     max-height: 100%;
 }
 
@@ -718,24 +726,55 @@ button.clear.alert:hover {
 
 .dialog-header {
     border-bottom: solid 1px var(--border);
-    align-content: center;
-}
-
-.dialog-header-content {
+    justify-content: space-between;
     display: flex;
     flex-grow: 1;
 }
 
-.dialog-header-content .search-box {
+.dialog-header .search-box {
     padding: 15px;
     flex-grow: 1;
 }
 
-.dialog-header-content h1 {
-    padding: 20px;
+.dialog-header h1 {
+    padding-top: 20px;
+    padding-bottom: 20px;
     margin: 0;
     font-size: 12pt;
     font-weight: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    flex: 1 1 auto;
+}
+
+.dialog-header h1:first-child {
+    padding-left: 20px;
+}
+
+.dialog-header h1:last-child {
+    padding-right: 20px;
+}
+
+.dialog-header button .icon {
+    width: var(--icon-size-l);
+    height: var(--icon-size-l);
+}
+
+.dialog-header button .label {
+    font-size: 12pt;
+    text-transform: uppercase;
+}
+/*
+.dialog-header button {
+    color: var(--mid-light);
+}
+
+.dialog-header button:hover {
+    color: var(--dark);
+}*/
+
+.dialog-header button:focus {
+    box-shadow: none;
 }
 
 .dialog-header .spinner-container {
@@ -785,8 +824,8 @@ button.clear.alert:hover {
     overscroll-behavior: contain;
 }
 
-.dialog-body .form {
-    /*margin: 15px;*/
+.dialog:last-child .dialog-body {
+    height: calc(100% - 60px);
 }
 
 .dialog-footer {
@@ -896,7 +935,7 @@ button.clear.alert:hover {
     color: grey;
 }
 
-.wizard {
+.wizard .dialog {
     width: 700px;
 }
 

@@ -29,7 +29,8 @@ module.exports = class Button extends Control {
     }
 
     createElement() {
-        this.element = document.createElement('button');
+        let elem = super.createElement('button');
+        
         this.element.style.minWidth = this.options.width;
         this.element.style.minHeight = this.options.height;
 

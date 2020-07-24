@@ -2,6 +2,7 @@ const Form = require('../../controls/form/form');
 const TextField = require('../../controls/form/text-field');
 const FormDialog = require('../../controls/dialog/form-dialog');
 const Spinner = require('../../controls/spinner');
+const Control = require('../../controls/control')
 
 
 module.exports = class LoginDialog extends FormDialog {
@@ -38,16 +39,20 @@ module.exports = class LoginDialog extends FormDialog {
         super(
             form, 
             {
-                title: 'Login',
+                title: 'AutoMO',
                 okLabel: 'Login',
                 okIcon: 'log-in',
-                centered: true
+                centered: true,
+                noCloseButton: true
             }
         );
 
         this.spinner = new Spinner();
-
-        this.statusElement = null;
+        this.status = new Control(
+            {
+                className: 'dialog-status'
+            }
+        );
     }
 
 
@@ -70,7 +75,7 @@ module.exports = class LoginDialog extends FormDialog {
                         onSuccess();
                     },
                     (error) => {
-                        this.statusElement.innerText = error.message;
+                        this.status.setValue(error.message)
                         this.form._fields[1].focus();
                     },
                     () => {
@@ -84,24 +89,23 @@ module.exports = class LoginDialog extends FormDialog {
         )
     }
 
+    createBodyElement() {
+        let body = super.createBodyElement()
+
+        body.className = 'dialog-body';
+        body.prepend(this.spinner.createElement())
+        body.append(this.status.createElement())
+
+        this.spinner.hide()
+
+        return body
+    }
 
     createElement() {
-        super.createElement();
+        let elem = super.createElement();
 
-        this.element.id = 'login-dialog';
+        elem.id = 'login-dialog';
 
-        this.bodyElement.className = 'dialog-body'
-
-        this.bodyElement.prepend(this.spinner.createElement());
-        this.spinner.hideSoft();
-
-        this.statusElement = document.createElement('div');
-        this.statusElement.className = 'dialog-status';
-        this.bodyElement.appendChild(this.statusElement);
-
-        this.btnCancel.hide();
-        this._closeElement.style.display = 'none';
-
-        return this.element;
+        return elem;
     }
 }
