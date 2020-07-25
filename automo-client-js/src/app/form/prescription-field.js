@@ -21,11 +21,16 @@ module.exports = class PrescriptionField extends Field {
                 console.log(drug)
             },
             {
-                resourceName: 'drugs'
+                resourceName: 'drugs',
+                placeholder: "Medication"
             }
         )
 
-        this.txtOrder = new TextBox()
+        this.txtOrder = new TextBox(
+            {
+                placeholder: "Instructions"
+            }
+        )
         
         this.btnAdd = new Button(
             'Add',

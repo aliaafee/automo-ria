@@ -31,7 +31,7 @@ module.exports = class ResourcePanel extends CollapsePanel {
                 this._onSave()
             },
             {
-                icon: 'save',
+                icon: 'check',
                 style: 'clear'
             }
         )
