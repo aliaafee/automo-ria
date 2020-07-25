@@ -3,6 +3,7 @@ const DateTimeField = require('../../controls/form/date-time-field')
 const TextField = require('../../controls/form/text-field')
 const FloatField = require('../../controls/form/float-field')
 const DoctorField = require('../form/doctor-field')
+const VitalSignsField = require('./vitalsigns-field')
 
 
 module.exports.encounter = class Encounter extends Form {
@@ -54,40 +55,24 @@ module.exports.vitalsigns = class VitalSigns extends module.exports.encounter {
 
         this.getFieldByName('start_time').setLabel("Record Time")
 
-        this.addField(new FloatField(
-            'pulse_rate',
-            {
-                label: 'Weight (kg)'
-            }
+        this.addField(new VitalSignsField(
+            'vital-signs'
         ))
+    }
 
-        this.addField(new FloatField(
-            'respiratory_rate',
-            {
-                label: 'Height (m)'
-            }
-        ))
+    setValue(value) {
+        super.setValue({
+            'start_time': value['start_time'],
+            'vital-signs': value
+        })
+    }
 
-        this.addField(new FloatField(
-            'diastolic_bp',
-            {
-                label: 'Weight (kg)'
-            }
-        ))
-
-        this.addField(new FloatField(
-            'systolic_bp',
-            {
-                label: 'Height (m)'
-            }
-        ))
-
-        this.addField(new FloatField(
-            'temperature',
-            {
-                label: 'Height (m)'
-            }
-        ))
+    value() {
+        let {start_time, ...value} = super.value()
+        return {
+            'start_time': start_time,
+            ...value['vital-signs']
+        }
     }
 }
 

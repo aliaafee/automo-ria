@@ -261,9 +261,9 @@ module.exports = class AdmissionPanel extends Control {
                 {
                     title: 'Progress Notes',
                     encounter_types: [
-                        'progress',
-                        //'vitalsigns',
+                        'vitalsigns',
                         'measurements',
+                        'progress',
                         //'vitalsignsextended'
                     ]
                 }

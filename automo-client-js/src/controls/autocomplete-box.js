@@ -114,7 +114,7 @@ module.exports = class AutocompleteBox extends Control {
             return this._selectedValue
         }
 
-        if (!this._textBox.value) {
+        if (!this._textBox.value()) {
             return null
         }
 

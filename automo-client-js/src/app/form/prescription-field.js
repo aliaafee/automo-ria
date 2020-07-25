@@ -36,11 +36,24 @@ module.exports = class PrescriptionField extends Field {
             'Add',
             (event) => {
                 this._onAdd(event)
+            },
+            {
+                icon:'plus'
             }
         )
     }
 
     _onAdd(event) {
+        if (!this.txtDrug.value()) {
+            this.txtDrug.focus()
+            return
+        }
+
+        if (!this.txtOrder.value()) {
+            this.txtOrder.focus()
+            return
+        }
+
         this._data.push({
             'drug': this.txtDrug.value(),
             'drug_order': this.txtOrder.value(),

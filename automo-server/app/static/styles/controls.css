@@ -324,11 +324,16 @@ button.clear.alert:hover {
     border-radius: var(--border-radius);
 }
 
+.autocomplete-box:focus {
+    box-shadow: 0 0 0 var(--focus-outline) var(--hover);
+}
+
 .autocomplete-box input {
     background-color: transparent;
     z-index: 2;
     border: none;
-    margin: -1px;
+    height: unset;
+    padding: 0 var(--input-padding) 0 var(--input-padding);
 }
 
 .autocomplete-box .shadow-text-box {
@@ -336,8 +341,8 @@ button.clear.alert:hover {
     color: var(--mid-light);
     background-color: transparent;
     padding: var(--input-padding);
-    margin: -1px;
     z-index: 1;
+    overflow: hidden;
 }
 
 .list-box {
@@ -475,6 +480,27 @@ button.clear.alert:hover {
     border-radius: var(--border-radius);
     margin-bottom: 15px;
 }
+
+.field .toolbar *:not(:first-child):not(:last-child) {
+    border-top: none;
+    border-bottom: none;
+    border-radius: 0;
+}
+
+.field .toolbar *:first-child {
+    border: none;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.field .toolbar *:last-child {
+    border: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+
+
 
 .field.locked .toolbar {
     display: none;
@@ -1043,6 +1069,11 @@ button.clear.alert:hover {
     }
 
     .collapse-panel > .header > .toolbar button .label {
+        display: none;
+    }
+
+    .field .toolbar button .label,
+    .form > .toolbar button .label{
         display: none;
     }
 }
