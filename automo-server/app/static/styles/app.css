@@ -363,6 +363,38 @@
     display: none;
 }
 
+.precription-field ol {
+    padding-left: 20px;
+    list-style: none;
+    counter-reset: li
+}
+
+.precription-field ol li::before {
+    content: "."counter(li);
+    color: var(--mid);
+    display: inline-block;
+    width: 1em;
+    margin-left: -1.5em;
+    margin-right: 0.5em;
+    text-align:right;
+    direction: rtl
+}
+
+.precription-field ol li {
+    counter-increment: li;
+    display: flex;
+    align-items: top;
+    margin-bottom: 15px;
+}
+
+.precription-field ol li > button {
+    padding: 0;
+}
+
+.precription-field ol li > div {
+    flex: 1 1 auto
+}
+
 .main-panel {
     flex-direction: column;
     width: 100%;
@@ -593,14 +625,18 @@ button.side-bar-item:focus {
         width:  100%;
         flex-grow: 1;
     }
-
-    .problems-field li button .label{
-        display: none;
-    }
 }
 
 @media only screen and (max-width: 576px) {
     #patient-panel .patient-banner .number {
         flex-direction: column;
+    }
+
+    .problems-field li button .label{
+        display: none;
+    }
+
+    .precription-field li button .label{
+        display: none;
     }
 }

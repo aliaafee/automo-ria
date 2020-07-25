@@ -73,12 +73,12 @@ module.exports = class PrescriptionField extends Field {
 
     _getItemLabel(item) {
         if (item.drug) {
-            return `${item.drug.name} ${item.drug_order}`
+            return `<div>${item.drug.name} ${item.drug_order}</div>`
         }
         if (item.drug_str) {
-            return `${item.drug_str} ${item.drug_order}`
+            return `<div>${item.drug_str} ${item.drug_order}</div>`
         }
-        return `${item.drug_order}`
+        return `<div>${item.drug_order}</div>`
     }
 
     displayData() {
@@ -92,10 +92,25 @@ module.exports = class PrescriptionField extends Field {
             var item = this._data[i]
             var elem = document.createElement('li');
             this._listElement.appendChild(elem);
-
-            
+ 
             elem.innerHTML = this._getItemLabel(item)
 
+            var deleteButton = new Button(
+                'Delete', 
+                (event) => {
+                    this._deleteItem(
+                        event.currentTarget.getAttribute('item-index')
+                    )
+                },
+                {
+                    icon: 'trash',
+                    style: 'clear',
+                    className: 'alert'
+                }
+            )
+            elem.appendChild(deleteButton.createElement())
+            deleteButton.element.setAttribute('item-index', i)
+            /*
             var deleteElem = document.createElement('button')
             deleteElem.innerHTML = 'Delete'
             deleteElem.setAttribute('item-index', i)
@@ -105,7 +120,7 @@ module.exports = class PrescriptionField extends Field {
                 )
             })
 
-            elem.appendChild(deleteElem)
+            elem.appendChild(deleteElem)*/
         }
     }
 
