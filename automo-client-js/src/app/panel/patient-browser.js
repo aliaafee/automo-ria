@@ -159,6 +159,7 @@ module.exports = class PatientBrowser extends Splitter {
 
     setPatient(patient, onDone, onFailed, admission) {
         this.pane2.setPatient(patient, onDone, onFailed, admission)
+        this.setPane2Active()
     }
 
     createElement() {

@@ -10,7 +10,7 @@ module.exports = class MainPanel extends Control {
         this._menuItems = [];
         this._sidebarItems = [];
 
-        this._main = new PatientBrowser();
+        this._patientBrowser = new PatientBrowser();
 
         this._userButton = new Button(
             'Username',
@@ -53,7 +53,7 @@ module.exports = class MainPanel extends Control {
                     admitWizard.show(
                         (admission) => {
                             console.log(admission)
-                            this._main.setPatient(
+                            this._patientBrowser.setPatient(
                                 admission.patient,
                                 () => {},
                                 () => {},
@@ -166,7 +166,7 @@ module.exports = class MainPanel extends Control {
         //this._menuBarElement.innerHTML = `<div class="menu-bar-spacer"></div><div class="menu-bar-item">Dr Ali Aafee</div><div class="menu-bar-item">Logout</div>`;
         //this._sideBarElement.innerHTML = "side";
         //this._mainElement.innerHTML = "main";
-        this._mainElement.appendChild(this._main.createElement());
+        this._mainElement.appendChild(this._patientBrowser.createElement());
 
         
 
