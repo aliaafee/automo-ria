@@ -108,6 +108,8 @@ class PatientPage extends WizardForm {
         this.element.prepend(this._searchBox.createElement())
         this._searchBox._textBox.element.tabIndex = -1
 
+        this._searchBox.setValue(null)
+
         return this.element
     }
 }
@@ -339,16 +341,29 @@ module.exports = class AdmissionWizard extends Wizard {
 
     _onNext() {
         super._onNext()
-        localStorage.setItem('wizard_draft', JSON.stringify(this.value()))
+        //localStorage.setItem('wizard_draft', JSON.stringify(this.value()))
+        this._saveWizardDraft(this.value())
+    }
+
+    _saveWizardDraft(draftValue) {
+        localStorage.setItem('wizard_draft', JSON.stringify(draftValue))
+    }
+
+    _getWizardDraft() {
+        return JSON.parse(localStorage.getItem('wizard_draft'))
+    }
+
+    _deleteWizardDraft() {
+        localStorage.removeItem('wizard_draft')
     }
 
     show(afterSave, onCancel) {
         super.show(afterSave, onCancel)
 
-        var data = JSON.parse(localStorage.getItem('wizard_draft'))
+        var draftData = this._getWizardDraft()
 
-        if (data) {
-            this.setValue(data)
+        if (draftData) {
+            this.setValue(draftData)
         }
     }
 
@@ -391,7 +406,7 @@ module.exports = class AdmissionWizard extends Wizard {
                     statusDialog.showDismiss()
                     return
                 }
-
+                this._deleteWizardDraft()
                 statusDialog.setTitle("Success")
                 statusDialog.setMessage(
                     `Successfully saved Admission  details of ${data.patient.name} (${data.patient.national_id_no}).`

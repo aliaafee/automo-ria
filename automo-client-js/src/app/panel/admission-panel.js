@@ -112,6 +112,7 @@ class AdmissionsList extends Control {
 
         if (admission.prev) {
             this.prevButton.show()
+            this.prevButton.setTitle(`${admission.prev_count} Previous Admission(s)`)
             this.prevCountElement.innerHTML = admission.prev_count
         } else {
             this.prevButton.hideSoft()
@@ -120,6 +121,7 @@ class AdmissionsList extends Control {
 
         if (admission.next) {
             this.nextButton.show()
+            this.nextButton.setTitle(`${admission.next_count} Admission(s) Ahead`)
             this.nextCountElement.innerHTML = admission.next_count
         } else {
             this.nextButton.hideSoft()

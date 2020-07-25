@@ -113,7 +113,6 @@ module.exports = class ResourcePanel extends CollapsePanel {
         }
 
         var _data = this.form.value();
-        console.log(this.form.value())
 
         this.transient()
         this.spinner.show()

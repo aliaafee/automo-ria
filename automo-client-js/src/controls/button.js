@@ -28,6 +28,10 @@ module.exports = class Button extends Control {
         }
     }
 
+    setTitle(title) {
+        this.element.setAttribute('title', title)
+    }
+
     createElement() {
         let elem = super.createElement('button');
         
@@ -61,7 +65,11 @@ module.exports = class Button extends Control {
         this.labelElement.className = 'label'
         this._displayElement.appendChild(this.labelElement)
         
-        this.element.setAttribute('title', this.label)
+        if (this.options.title) {
+            this.element.setAttribute('title', this.options.title)
+        } else {
+            this.element.setAttribute('title', this.label)
+        }
         this.labelElement.innerHTML = this.label
 
         this.element.addEventListener('click', (ev) => {
