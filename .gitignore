@@ -4,7 +4,6 @@ venv
 *.swp
 patient-data*.sqlite
 *.log
-*.spec
 .vscode
 __pycache__
 .directory
