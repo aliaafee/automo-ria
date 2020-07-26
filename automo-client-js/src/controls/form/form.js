@@ -14,6 +14,7 @@ module.exports = class Form extends Control {
         super(options);
 
         this._fields = [];
+        this._buttons = [];
         this._fieldNames = [];
     }
 
@@ -27,6 +28,10 @@ module.exports = class Form extends Control {
 
         this._fields.push(field);
         this._fieldNames.push(field.name);
+    }
+
+    addButton(button) {
+        this._buttons.push(button)
     }
 
     setValue(value) {
@@ -139,8 +144,8 @@ module.exports = class Form extends Control {
         }
     }
 
-    createElement() {
-        super.createElement('div');
+    createElement(elem='div') {
+        super.createElement(elem);
 
         this.element.classList.add("form")
 
@@ -157,6 +162,10 @@ module.exports = class Form extends Control {
 
         this._fields.forEach((field) => {
             this.element.appendChild(field.createElement());
+        })
+
+        this._buttons.forEach((button) => {
+            this.element.appendChild(button.createElement())
         })
 
         return this.element;

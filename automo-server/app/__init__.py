@@ -15,15 +15,15 @@ migrate = Migrate()
 #bootstrap = Bootstrap()
 
 
-def create_app(config_name):
+def create_app(config_object):
     app = Flask(__name__)
 
     app.json_encoder = CustomJSONEncoder
 
     register_filters(app)
 
-    app.config.from_object(config[config_name])
-    config[config_name].init_app(app)
+    app.config.from_object(config_object)
+    config_object.init_app(app)
 
     db.init_app(app)
     migrate.init_app(app, db)

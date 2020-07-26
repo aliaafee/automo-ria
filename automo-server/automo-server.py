@@ -7,9 +7,12 @@ from app import create_app, db
 from app import models
 from app import resources
 from app import utilities
+from config import config
 
+app = create_app(
+    config[os.getenv('FLASK_CONFIG') or 'default']
+)
 
-app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
 
 def make_shell_context():

@@ -2,7 +2,8 @@ const Form = require('../../controls/form/form');
 const TextField = require('../../controls/form/text-field');
 const FormDialog = require('../../controls/dialog/form-dialog');
 const Spinner = require('../../controls/spinner');
-const Control = require('../../controls/control')
+const Control = require('../../controls/control');
+const Button = require('../../controls/button');
 
 
 module.exports = class LoginDialog extends FormDialog {
@@ -35,6 +36,16 @@ module.exports = class LoginDialog extends FormDialog {
                 required: true
             }
         ));
+
+        form.addButton(new Button(
+            'Login',
+            (event) => {
+                this._onOk(event)
+            },
+            {
+                icon: 'log-in'
+            }
+        ))
 
         super(
             form, 

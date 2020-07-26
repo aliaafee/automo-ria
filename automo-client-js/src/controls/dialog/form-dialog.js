@@ -49,7 +49,7 @@ module.exports = class FormDialog extends Dialog {
         let body = super.createBodyElement();
 
         body.className = 'dialog-body-padded';
-        body.appendChild(this.form.createElement())
+        body.appendChild(this.form.createElement('form'))
 
         return body
     }
