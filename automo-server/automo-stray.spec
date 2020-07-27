@@ -2,12 +2,36 @@
 
 block_cipher = None
 
+from PyInstaller.utils.hooks import collect_data_files
+
+def collect_module_data_files(modules):
+    result = []
+    for module in modules:
+        result.extend(collect_data_files(module))
+    return result
+
+def collect_weasyprint_files():
+    weasyprint_files_src = collect_data_files('weasyprint')
+    first_file, remaining_files = weasyprint_files_src[0], weasyprint_files_src[1:]
+    return [(first_file[0], '.')] + [(k, v.split('weasyprint/')[1]) for k, v in remaining_files]
+
+extra_imports = ['weasyprint', 'pystray._gtk']
+extra_imports_with_files = ['tinycss2', 'cairocffi', 'pyphen', 'cssselect2']
+data_files = [
+    ('app/templates', 'app/templates/'),
+    ('app/static', 'app/static/')
+
+]
+
+datas = data_files + collect_module_data_files(extra_imports_with_files)
+datas += collect_weasyprint_files()
+
 
 a = Analysis(['automo-stray.py'],
-             pathex=['/home/ali/Projects/automo-ria/automo-server'],
+             pathex=['automo-stray'],
              binaries=[],
-             datas=[],
-             hiddenimports=["pystray._gtk"],
+             datas=datas,
+             hiddenimports=extra_imports + extra_imports_with_files,
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
@@ -35,3 +59,4 @@ coll = COLLECT(exe,
                upx=True,
                upx_exclude=[],
                name='automo-stray')
+
