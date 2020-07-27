@@ -138,7 +138,7 @@ module.exports = class ResourceSearchBox extends Control {
         if (this.options.displaySelected == true) {
             var value = this._selelctedItem;
             if (value) {
-                this._textBox.setValue(this.labelFunction(this._selelctedItem))
+                this._textBox.setValue(this.labelFunction(this._selelctedItem).textContent)
                 return
             }
             this._textBox.setValue('')

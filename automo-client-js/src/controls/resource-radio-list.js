@@ -38,7 +38,7 @@ module.exports = class ResourceRadioList extends ResourceList {
         this._selectedItem = null;
     }
 
-    _createListItem(itemid, label) {
+    _createListItem(itemid, labelElement) {
         var item = document.createElement('li');
         item.setAttribute('item-id', itemid);
 
@@ -47,9 +47,7 @@ module.exports = class ResourceRadioList extends ResourceList {
         //radio.tabIndex = -1;
         item.appendChild(radio);
 
-        var labelElement = document.createElement('div');
         item.appendChild(labelElement);
-        labelElement.innerHTML = label;
 
         radio.addEventListener('change', this._onItemClicked);
 

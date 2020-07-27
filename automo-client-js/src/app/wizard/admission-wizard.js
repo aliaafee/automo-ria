@@ -27,7 +27,7 @@ class PatientPage extends WizardForm {
                 return item.id
             },
             (item) => {
-                return `${item.name} (${item.national_id_no})`
+                return document.createTextNode(`${item.name} (${item.national_id_no})`)
             },
             (item) => {
                 this._selectedPatient = item

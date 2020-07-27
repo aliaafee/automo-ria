@@ -31,7 +31,7 @@ module.exports = class Icd10CoderDialog extends Dialog {
                 return item.code;
             },
             (item) => {
-                return `${item.code} ${item.preferred_plain}`;
+                return document.createTextNode(`${item.code} ${item.preferred_plain}`);
             },
             (item) => {
                 this._onSelectSearchResult(item);
@@ -302,20 +302,22 @@ module.exports = class Icd10CoderDialog extends Dialog {
         if (category.preferred_long != null) {
             preferred_long = `<div class="preferred-long">(${category.preferred_long})</div>`
         }
-        return `
-            <div class="category-label">
-                <div class="code" code="${category.code}">
-                    ${category.code}
-                </div>
-                <div class="text">
-                    <div class="preferred">
-                        ${category.preferred}
-                    </div>
-                    ${preferred_long}
-                    <div class="lusions">${lusion}</div>
-                </div>
+
+        let label = document.createElement('div');
+        label.className = "category-label"
+
+        label.innerHTML = `
+            <div class="code" code="${category.code}">
+                ${category.code}
             </div>
-        `
+            <div class="text">
+                <div class="preferred">
+                    ${category.preferred}
+                </div>
+                ${preferred_long}
+                <div class="lusions">${lusion}</div>
+            </div>`
+        return label
     }
 
     createHeaderElement() {

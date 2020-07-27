@@ -52,22 +52,22 @@ class PatientList extends Control {
     }
 
     _getPatientLabel(patient) {
-        return `
-            <div class="patient-label">
-                <div class="patient-id-number">
-                    ${patient.national_id_no}
-                </div>
-                <div class="patient-name">
-                    ${patient.name}
-                </div>
-                <div class="patient-age">
-                    ${patient.age}
-                </div>
-                <div class="patient-sex">
-                    ${patient.sex}
-                </div>
-            </div>
-        `
+        let label = document.createElement('div')
+        label.className = "patient-label"
+        
+        label.append(...[
+            [patient.national_id_no, "patient-id-number"],
+            [patient.name, "patient-name"],
+            [patient.age, "patient-age"],
+            [patient.sex, "patient-sex"]
+        ].map(([value, className]) => {
+            let elem = document.createElement('div');
+            elem.className = className
+            elem.appendChild(document.createTextNode(value))
+            return elem
+        }))
+
+        return label
     }
 
     _search() {

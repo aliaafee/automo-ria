@@ -10,7 +10,7 @@ module.exports = class DoctorField extends Field {
                 return item.id
             },
             (item) => {
-                return item.name
+                return document.createTextNode(item.name)
             },
             (item) => {
                 this._value = item

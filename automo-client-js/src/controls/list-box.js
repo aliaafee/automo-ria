@@ -3,7 +3,7 @@ const Scrolled = require("./scrolled");
 module.exports = class ListBox extends Scrolled {
     constructor(idFunction, labelFunction, onSelectItem, options) {
         /* idFunction(result) { return result.unique_id }
-         * labelFunction(result) { return result.label }
+         * labelFunction(result) { return result.label as element }
          * onResultClicked(result) { do something using result }
          * 
          */
@@ -52,10 +52,11 @@ module.exports = class ListBox extends Scrolled {
         this.element.classList.remove('locked')
     }
 
-    _createListItem(itemid, label) {
+    _createListItem(itemid, labelElement) {
         var item = document.createElement('li');
         item.setAttribute('item-id', itemid);
-        item.innerHTML = label;
+
+        item.appendChild(labelElement)
 
         item.addEventListener('click', this._onItemClicked);
 

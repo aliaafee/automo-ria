@@ -14,7 +14,7 @@ module.exports = class BedField extends Field {
                 return item.id
             },
             (item) => {
-                return `Bed ${item.number}`
+                return document.createTextNode(`Bed ${item.number}`)
             },
             (item) => {
                 this._value = item
@@ -33,7 +33,7 @@ module.exports = class BedField extends Field {
                 return item.id
             },
             (item) => {
-                return item.name
+                return document.createTextNode(item.name)
             },
             (item) => {
                 this._value = null

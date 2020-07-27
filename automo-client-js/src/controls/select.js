@@ -7,6 +7,7 @@ module.exports = class Select extends Control {
          *  placeholder=""
          *  data = [ {name: a, value: b} ,  ]
          *  onlyId=value returned/set is only id
+         *  labelFunction should return a string
          *  
          */
         super(options);
