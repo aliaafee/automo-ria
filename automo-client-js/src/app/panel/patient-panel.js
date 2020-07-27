@@ -12,13 +12,21 @@ class PatientBanner extends Control {
     constructor(options={}) {
         super(options)
 
-        this._fieldElements = {}
+        //this._fieldElements = {}
+        this._fields = {
+            'name': new Control(),
+            'sex': new Control(),
+            'age': new Control(),
+            'national_id_no': new Control(),
+            'hospital_no': new Control(),
+            'phone_no': new Control()
+        }
     }
 
     setValue(data) {
-        for (const [key, elem] of Object.entries(this._fieldElements)) {
+        for (const [key, field] of Object.entries(this._fields)) {
             if (data[key]) {
-                elem.innerHTML = data[key]
+                field.setValue(data[key])
             }
         }
     }
@@ -32,17 +40,17 @@ class PatientBanner extends Control {
         detailsElement.className = 'details'
         this.element.appendChild(detailsElement)
 
-        this._fieldElements['name'] = document.createElement('h1');
-        detailsElement.appendChild(this._fieldElements['name']);
+        ///this._fieldElements['name'] = document.createElement('h1');
+        detailsElement.appendChild(this._fields['name'].createElement('h1'));
 
-        this._fieldElements['sex'] = document.createElement('span');
-        detailsElement.appendChild(this._fieldElements['sex']);
+        //this._fieldElements['sex'] = document.createElement('span');
+        detailsElement.appendChild(this._fields['sex'].createElement('span'));
 
         var slash = document.createTextNode(' / ')
         detailsElement.appendChild(slash)
 
-        this._fieldElements['age'] = document.createElement('span');
-        detailsElement.appendChild(this._fieldElements['age']);
+        //this._fieldElements['age'] = document.createElement('span');
+        detailsElement.appendChild(this._fields['age'].createElement('span'));
 
         var numberElement = document.createElement('div');
         numberElement.className = 'number';
@@ -58,14 +66,14 @@ class PatientBanner extends Control {
         col3.innerHTML = "Phone No.: "
         numberElement.appendChild(col3)
 
-        this._fieldElements['national_id_no'] = document.createElement('span');
-        col1.appendChild(this._fieldElements['national_id_no']);
+        //this._fieldElements['national_id_no'] = document.createElement('span');
+        col1.appendChild(this._fields['national_id_no'].createElement('span'));
 
-        this._fieldElements['hospital_no'] = document.createElement('span');
-        col2.appendChild(this._fieldElements['hospital_no'])
+        //this._fieldElements['hospital_no'] = document.createElement('span');
+        col2.appendChild(this._fields['hospital_no'].createElement('span'))
 
-        this._fieldElements['phone_no'] = document.createElement('span');
-        col3.appendChild(this._fieldElements['phone_no']);
+        //this._fieldElements['phone_no'] = document.createElement('span');
+        col3.appendChild(this._fields['phone_no'].createElement('span'));
 
         return this.element
     }

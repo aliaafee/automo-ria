@@ -25,10 +25,6 @@ module.exports = class DoctorField extends Field {
         )
     }
 
-    _displayData() {
-        this._displayElement.innerHTML = this._value.name;
-    }
-
     isBlank() {
         if (this.value() == null) {
             return true
@@ -45,7 +41,6 @@ module.exports = class DoctorField extends Field {
         super.setValue(data);
         this._data = data;
         this._searchBox.setValue(data);
-        //this._displayData();
     }
 
     setResourceUrl(url) {

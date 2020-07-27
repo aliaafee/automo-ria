@@ -73,12 +73,12 @@ module.exports = class PrescriptionField extends Field {
 
     _getItemLabel(item) {
         if (item.drug) {
-            return `<div>${item.drug.name} ${item.drug_order}</div>`
+            return `${item.drug.name} ${item.drug_order}`
         }
         if (item.drug_str) {
-            return `<div>${item.drug_str} ${item.drug_order}</div>`
+            return `${item.drug_str} ${item.drug_order}`
         }
-        return `<div>${item.drug_order}</div>`
+        return `${item.drug_order}`
     }
 
     displayData() {
@@ -93,7 +93,10 @@ module.exports = class PrescriptionField extends Field {
             var elem = document.createElement('li');
             this._listElement.appendChild(elem);
  
-            elem.innerHTML = this._getItemLabel(item)
+            //elem.appendChild(document.createTextNode(this._getItemLabel(item)))
+            let label = document.createElement('div')
+            label.innerText = this._getItemLabel(item)
+            elem.appendChild(label)
 
             var deleteButton = new Button(
                 'Delete', 
