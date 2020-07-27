@@ -56,16 +56,14 @@ module.exports = class SelectField extends Field {
         this._select.unlock();
     }
 
-    createElement() {
-        super.createElement()
+    createFieldBody() {
+        let body = super.createFieldBody();
 
-        this._placeholderElement.appendChild(
+        body.appendChild(
             this._select.createElement()
         );
 
-        //this._select.element.style.flexGrow = 1;
-
-        return this.element;
+        return body
     }
 
 }

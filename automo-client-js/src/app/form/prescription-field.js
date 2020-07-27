@@ -172,21 +172,19 @@ module.exports = class PrescriptionField extends Field {
         super.unlock()
     }
 
-    createElement() {
-        super.createElement();
-
-        this.element.classList.add('precription-field')
+    createFieldBody() {
+        let body = super.createFieldBody();
 
         this._toolbarElement = document.createElement('div')
         this._toolbarElement.className = 'toolbar'
-        this._placeholderElement.appendChild(this._toolbarElement)
+        body.appendChild(this._toolbarElement)
 
         this._toolbarElement.appendChild(this.txtDrug.createElement())
         this._toolbarElement.appendChild(this.txtOrder.createElement())
         this._toolbarElement.appendChild(this.btnAdd.createElement())
 
         this._listElement = document.createElement('ol');
-        this._placeholderElement.appendChild(this._listElement);
+        body.appendChild(this._listElement);
 
         this.txtOrder.element.addEventListener("keyup", (event) => {
             if (event.code == "Enter") {
@@ -194,6 +192,15 @@ module.exports = class PrescriptionField extends Field {
             }
         })
 
-        return this.element;
+        return body
+    }
+
+
+    createElement() {
+        let elem = super.createElement();
+
+        elem.classList.add('precription-field')
+
+        return elem;
     }
 }

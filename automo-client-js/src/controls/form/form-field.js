@@ -73,12 +73,11 @@ module.exports = class FormField extends Field {
         this.form.unlock()
     }
 
-    createElement() {
-        super.createElement()
+    createFieldBody() {
+        let body = super.createFieldBody();
 
-        this._placeholderElement.appendChild(this.form.createElement())
+        body.appendChild(this.form.createElement())
 
-        return this.element
+        return body
     }
-
 }

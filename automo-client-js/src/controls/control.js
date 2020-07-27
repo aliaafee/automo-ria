@@ -113,8 +113,11 @@ module.exports = class Control {
     }
 
     setValue(value) {
-        console.log(value)
-        this.element.innerHTML = value
+        if (!this.element) {
+            return
+        }
+        this.element.innerHTML = ""
+        this.element.appendChild(document.createTextNode(value))
     }
 
     show() {

@@ -93,19 +93,19 @@ module.exports = class BedField extends Field {
         }
     }
 
-    createElement() {
-        super.createElement()
+    createFieldBody() {
+        let body = super.createFieldBody();
 
         //this._displayElement = document.createElement('div');
         //this._displayElement.className = 'locked-text-box';
         //this._placeholderElement.appendChild(this._displayElement);
 
-        this._placeholderElement.classList.add('input-group-row')
-        this._placeholderElement.appendChild(this._wardSearchBox.createElement())
-        this._placeholderElement.appendChild(this._bedSearchBox.createElement())
+        body.classList.add('input-group-row')
+        body.appendChild(this._wardSearchBox.createElement())
+        body.appendChild(this._bedSearchBox.createElement())
 
         this._bedSearchBox.lock()
 
-        return this.element
+        return body
     }
 }

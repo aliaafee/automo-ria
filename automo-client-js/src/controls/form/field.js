@@ -17,10 +17,24 @@ module.exports = class Field extends Control {
         this.name = name;
         //this.label = label;
 
-        this._labelElement = null;
-        this._placeholderElement = null;
-        this._helpElement = null;
-        this._invalidElement = null;
+        this._label = new Control(
+            {
+                width: this.options.labelSize
+            }
+        );
+
+        this._helpText = new Control(
+            {
+                className:'help-text'
+            }
+        );
+
+        this._invalidFeedback = new Control(
+            {
+                className:'invalid-feedback'
+            }
+        );
+
 
         this._locked = false;
     }
@@ -41,8 +55,8 @@ module.exports = class Field extends Control {
 
     setLabel(text) {
         this.options.label = text
-        if (this._labelElement != null) {
-            this._labelElement.innerText = text;
+        if (this.labelElement != null) {
+            this.labelElement.innerText = text;
         }
     }
 
@@ -80,11 +94,7 @@ module.exports = class Field extends Control {
     markInvalid(message) {
         this.element.classList.add('invalid');
         if (message) {
-            if (!this._invalidElement) {
-                this._createInvalidElement(message)
-            } else {
-                this._invalidElement.innerHTML = message
-            }
+            this.setInvalidFeedback(message)
         }
     }
 
@@ -106,19 +116,30 @@ module.exports = class Field extends Control {
         this.element.classList.remove('locked')
     }
 
-    _createInvalidElement(message) {
-        var displayMessage = ""
-        if (message) {
-            displayMessage += message
+    setHelpText(message) {
+        if (!message) {
+            this._helpText.setValue("")
+            return
         }
-        if (this.options.invalidFeedback) {
-            displayMessage += this.options.invalidFeedback
-        }
+        this._helpText.setValue(message)
+    }
 
-        this._invalidElement = document.createElement('div');
-        this._invalidElement.className = 'invalid-feedback';
-        this._invalidElement.innerHTML = displayMessage;
-        this._content.appendChild(this._invalidElement);
+    setInvalidFeedback(message) {
+        if (!message) {
+            this._invalidFeedback.setValue("")
+            return
+        }
+        this._invalidFeedback.setValue(
+            message
+        )
+    }
+
+    createFieldBody() {
+        let body = document.createElement('div');
+        
+        body.className = 'input-placeholder'
+
+        return body
     }
 
     createElement() {
@@ -130,51 +151,35 @@ module.exports = class Field extends Control {
             this.element.classList.add('narrow')
         }
 
+        let labelElement = null
         if (this.options.label != null) {
-            var label = this.options.label
-            if (this.options.required == true) {
-                label += " *"
-            }
-            this._labelElement = document.createElement('label');
-            this._labelElement.innerHTML = label;
-            this._labelElement.style.width = this.options.labelSize;
-            //this.element.appendChild(this._labelElement);
+            labelElement = this._label.createElement('label');
+            this._label.setValue(this.options.label + (this.options.required ? "*" : ""))
+            labelElement.style.width = this.options.labelSize;
         }
         
         this._content = document.createElement('div');
         this._content.className = 'content';
-        //this._content.style.display = 'flex';
-        //this._content.style.flexDirection = 'column';
-        //this._content.style.flexGrow = 1;
-        //this.element.appendChild(content);
 
         if (this.options.label == null) {
             this.element.appendChild(this._content);
         } else if (this.options.labelTop == true) {
-            this._content.appendChild(this._labelElement);
+            this._content.appendChild(labelElement);
             this.element.appendChild(this._content);
         } else {
-            this.element.appendChild(this._labelElement);
+            this.element.appendChild(labelElement);
             this.element.appendChild(this._content);
         }
 
-        this._placeholderElement = document.createElement('div');
-        this._placeholderElement.className = "input-placeholder"
-        //this._placeholderElement.style.display = 'flex';
-        //this._placeholderElement.style.flexGrow = 1;
-        this._content.appendChild(this._placeholderElement);
+        this._content.append(
+            this.createFieldBody(),
+            this._helpText.createElement(),
+            this._invalidFeedback.createElement()
+        )
 
-        if (this.options.helpText != null) {
-            this._helpElement = document.createElement('div');
-            this._helpElement.className = 'help-text';
-            this._helpElement.innerHTML = this.options.helpText;
-            this._content.appendChild(this._helpElement);
-        }
+        this.setHelpText(this.options.helpText);
+        this.setInvalidFeedback(this.options.invalidFeedback);
 
-        if (this.options.invalidFeedback != null) {
-            this._createInvalidElement()
-        }
-        
         return this.element
     }
 }

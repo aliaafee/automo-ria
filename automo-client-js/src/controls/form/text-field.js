@@ -1,5 +1,6 @@
 const TextBox = require("../text-box");
 const Field = require("./field");
+const Control = require("../control");
 
 
 module.exports = class TextField extends Field {
@@ -14,6 +15,10 @@ module.exports = class TextField extends Field {
             grow: options.grow,
             maxGrow: options.maxGrow
         });
+
+        this._lockedView = new Control({
+            className: 'locked-text-box'
+        })
     }
 
     focus() {
@@ -35,42 +40,32 @@ module.exports = class TextField extends Field {
     setValue(value) {
         super.setValue(value);
         this._textBox.setValue(value);
-        if (this._lockedView.style.display != 'none') {
-            this._lockedView.innerHTML = this.displayValue();
-        }
+        this._lockedView.setValue(this.displayValue());
     }
 
     lock() {
         super.lock();
-        //this._textBox.lock();
-        //this._textBox.element.style.display = 'none';
         this._textBox.hide()
-        this._lockedView.style.display = 'flex';
-        this._lockedView.innerHTML = this.displayValue();
+        this._lockedView.show()
+        this._lockedView.setValue(this.displayValue())
     }
 
     unlock() {
         super.unlock();
-        //this._textBox.unlock();
-        //this._textBox.element.style.display = 'flex';
         this._textBox.show()
-        this._lockedView.style.display = 'none';
+        this._lockedView.hide()
     }
 
-    createElement() {
-        super.createElement()
+    createFieldBody() {
+        let body = super.createFieldBody();
 
-        this._placeholderElement.appendChild(
-            this._textBox.createElement()
-        );
+        body.append(
+            this._textBox.createElement(),
+            this._lockedView.createElement()
+        )
 
-        this._lockedView = document.createElement('div');
-        this._lockedView.className = 'locked-text-box';
-        this._lockedView.style.display = 'none';
-        this._placeholderElement.appendChild(this._lockedView)
+        this._lockedView.hide();
 
-        //this._textBox.element.style.flexGrow = 1;
-
-        return this.element;
+        return body
     }
 }

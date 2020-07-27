@@ -16,6 +16,8 @@ module.exports = class Form extends Control {
         this._fields = [];
         this._buttons = [];
         this._fieldNames = [];
+
+        this._title = new Control();
     }
 
     addField(field) {
@@ -154,11 +156,9 @@ module.exports = class Form extends Control {
         }
 
         if (this.options.title && !this.options.hideTitle) {
-            var title = document.createElement('h1')
-            title.innerHTML = this.options.title
-            this.element.appendChild(title)
+            this.element.appendChild(this._title.createElement('h1'))
+            this._title.setValue(this.options.title)
         }
-
 
         this._fields.forEach((field) => {
             this.element.appendChild(field.createElement());

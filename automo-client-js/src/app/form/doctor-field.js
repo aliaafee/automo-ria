@@ -62,15 +62,12 @@ module.exports = class DoctorField extends Field {
         this._searchBox.unlock()
     }
 
-    createElement() {
-        super.createElement();
+    createFieldBody() {
+        let body = super.createFieldBody();
 
-        //this._displayElement = document.createElement('div');
-        //this._displayElement.className = 'locked-text-box';
-        //this._placeholderElement.appendChild(this._displayElement);
-        this._placeholderElement.appendChild(this._searchBox.createElement())
+        body.appendChild(this._searchBox.createElement())
 
 
-        return this.element;
+        return body;
     }
 }
