@@ -7,11 +7,38 @@ from datetime import datetime
 
 from flask_script import Command, Option
 
+from waitress import serve
+
 from .icd10import import import_icd10
 from .models import User, Role, Patient, Address, Admission, Problem, Ward, Bed, Doctor, VitalSigns, SurgicalProcedure, RenalFunctionTest, ClinicalEncounter, PhoneNumber
 from . import models as md 
 
 from . import db
+
+
+class Serve(Command):
+    """
+        Serve with Waitress
+    """
+    def get_options(self):
+        #TODO: Add all Waitress Serve Options
+        return (
+            Option('-h', '--host',
+                    dest='host',
+                    default='127.0.0.1'),
+            Option('-p', '--port',
+                    dest='port',
+                    default='8080')
+        )
+    
+    def __call__(self, app, host, port):
+         serve(
+             app,
+             host=host,
+             port=port
+         )
+
+
 
 
 class InstallCommand(Command):

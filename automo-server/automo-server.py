@@ -20,13 +20,15 @@ def make_shell_context():
         app=app,
         db=db,
         md=models,
-        util=utilities
+        util=utilities,
+        exit=exit
     )
 
 manager.add_command("shell", Shell(make_context=make_shell_context))
 manager.add_command("db", MigrateCommand)
 manager.add_command("install", utilities.InstallCommand)
 manager.add_command("fake", utilities.FakeData)
+manager.add_command("serve", utilities.Serve)
 
 if __name__ == '__main__':
     manager.run()
