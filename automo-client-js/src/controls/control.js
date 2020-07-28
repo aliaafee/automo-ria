@@ -116,8 +116,7 @@ module.exports = class Control {
         if (!this.element) {
             return
         }
-        this.element.innerHTML = ""
-        this.element.appendChild(document.createTextNode(value))
+        this.element.innerText = value;
     }
 
     show() {

@@ -179,7 +179,7 @@ module.exports = class ResourceList extends ListBox {
             this._nextElement = document.createElement('li');
             this._nextElement.setAttribute('next-url', this.resource_data.next);
             this._nextElement.className = 'button'
-            this._nextElement.innerHTML = label;
+            this._nextElement.innerText = label;
             this._nextElement.addEventListener('click', (event) => { 
                 this._onLoadNextClicked(event) 
             } )
@@ -198,7 +198,7 @@ module.exports = class ResourceList extends ListBox {
         
         this._nullElement = document.createElement('li')
         this._nullElement.setAttribute('item-id', '');
-        this._nullElement.innerHTML = label
+        this._nullElement.innerText = label
         this._nullElement.addEventListener('click', this._onItemClicked)
         this._listElement.prepend(this._nullElement)
     }
@@ -223,7 +223,7 @@ module.exports = class ResourceList extends ListBox {
         }
         this._failedElement = document.createElement('li')
         this._failedElement.className = 'button';
-        this._failedElement.innerHTML = label;
+        this._failedElement.innerText = label;
         this._listElement.appendChild(this._failedElement);
     }
 

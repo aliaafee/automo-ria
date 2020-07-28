@@ -59,7 +59,7 @@ module.exports = class ResourcePanel extends CollapsePanel {
 
     _createNew() {
         if (!this.options.newUrl) {
-            this.statusElem.innerHTML = "New URL not specified"
+            this.statusElem.innerText = "New URL not specified"
         }
 
         var _data = this.form.value();
@@ -67,7 +67,7 @@ module.exports = class ResourcePanel extends CollapsePanel {
 
         this.transient();
         this.spinner.show()
-        this.statusElem.innerHTML = "Creating New..."
+        this.statusElem.innerText = "Creating New..."
         connection.post(
             this.options.newUrl,
             _data,
@@ -75,16 +75,16 @@ module.exports = class ResourcePanel extends CollapsePanel {
                 console.log(response)
                 if (response.error) {
                     this.unlock()
-                    this.statusElem.innerHTML = response.error
+                    this.statusElem.innerText = response.error
                     if (response.invalid_fields) {
-                        this.statusElem.innerHTML = "Marked fields are not valid"
+                        this.statusElem.innerText = "Marked fields are not valid"
                         this.form.markInvalidFields(response.invalid_fields)
                     } else {
-                        this.statusElem.innerHTML = response.message
+                        this.statusElem.innerText = response.message
                     }
                     return
                 }
-                this.statusElem.innerHTML = "Saved"
+                this.statusElem.innerText = "Saved"
                 this.setValue(response)
                 if (this.onSaved) {
                     this.onSaved(response)
@@ -92,7 +92,7 @@ module.exports = class ResourcePanel extends CollapsePanel {
                 this.lock()
             },
             (error) => {
-                this.statusElem.innerHTML = `Could Not Create New`
+                this.statusElem.innerText = `Could Not Create New`
                 this.unlock()
             },
             () => {
@@ -103,7 +103,7 @@ module.exports = class ResourcePanel extends CollapsePanel {
 
     _onSave() {
         if (!this.form.validate()) {
-            this.statusElem.innerHTML = "Marked fields are not valid"
+            this.statusElem.innerText = "Marked fields are not valid"
             return
         }
 
@@ -116,7 +116,7 @@ module.exports = class ResourcePanel extends CollapsePanel {
 
         this.transient()
         this.spinner.show()
-        this.statusElem.innerHTML = "Saving.."
+        this.statusElem.innerText = "Saving.."
         connection.post(
             this._data.url,
             _data,
@@ -124,16 +124,16 @@ module.exports = class ResourcePanel extends CollapsePanel {
                 console.log(response)
                 if (response.error) {
                     this.unlock()
-                    this.statusElem.innerHTML = response.error
+                    this.statusElem.innerText = response.error
                     if (response.invalid_fields) {
-                        this.statusElem.innerHTML = "Marked fields are not valid"
+                        this.statusElem.innerText = "Marked fields are not valid"
                         this.form.markInvalidFields(response.invalid_fields)
                     } else {
-                        this.statusElem.innerHTML = response.message
+                        this.statusElem.innerText = response.message
                     }
                     return
                 }
-                this.statusElem.innerHTML = "Saved"
+                this.statusElem.innerText = "Saved"
                 this.setValue(response)
                 if (this.onSaved) {
                     this.onSaved(response)
@@ -141,7 +141,7 @@ module.exports = class ResourcePanel extends CollapsePanel {
                 this.lock()
             },
             (error) => {
-                this.statusElem.innerHTML = `Could Not Save`
+                this.statusElem.innerText = `Could Not Save`
                 this.unlock()
             },
             () => {
@@ -187,7 +187,7 @@ module.exports = class ResourcePanel extends CollapsePanel {
         this._data = value
 
         this.form.setValue(this._data)
-        this.statusElem.innerHTML = ""
+        this.statusElem.innerText = ""
 
         if (this._data ? !this._data.url : true ) {
             this.unlock()

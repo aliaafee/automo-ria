@@ -148,27 +148,17 @@ module.exports = class MainPanel extends Control {
 
         this.element.appendChild(this._createMenuBarElement())
 
-        //this._sideBarElement = document.createElement('div')
-        //this._sideBarElement.className = 'side-bar';
-
         var bodyElem = document.createElement('div');
         bodyElem.className = 'main-panel-body';
-        //bodyElem.style.display = 'flex';
         this.element.appendChild(bodyElem);
 
         bodyElem.appendChild(this._createSideBarElement())
 
         this._mainElement = document.createElement('div')
         this._mainElement.className = 'main-content';
-        //this._mainElement.style.display = 'flex';
         bodyElem.appendChild(this._mainElement)
 
-        //this._menuBarElement.innerHTML = `<div class="menu-bar-spacer"></div><div class="menu-bar-item">Dr Ali Aafee</div><div class="menu-bar-item">Logout</div>`;
-        //this._sideBarElement.innerHTML = "side";
-        //this._mainElement.innerHTML = "main";
-        this._mainElement.appendChild(this._patientBrowser.createElement());
-
-        
+        this._mainElement.appendChild(this._patientBrowser.createElement());        
 
         return this.element;
     }

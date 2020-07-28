@@ -24,7 +24,7 @@ module.exports = class Button extends Control {
     setLabel(label) {
         this.label = label
         if (this.labelElement) {
-            this.labelElement.innerHTML = label
+            this.labelElement.innerText = label
         }
     }
 
@@ -50,15 +50,21 @@ module.exports = class Button extends Control {
         this.element.appendChild(this._displayElement)
 
         if (this.options.icon) {
-            this.iconElement = document.createElement('template')
-            this.iconElement.innerHTML = feather.icons[this.options.icon].toSvg(
-                {
-                    class: 'icon',
-                    width: '',
-                    height: ''
-                }
-            )
-            this._displayElement.appendChild(this.iconElement.content.firstChild)
+            if (this.options.icon == 'arrow') {
+                this.iconElement = document.createElement('span')
+                this.iconElement.className = 'arrow'
+                this._displayElement.appendChild(this.iconElement)
+            } else {
+                this.iconElement = document.createElement('template')
+                this.iconElement.innerHTML = feather.icons[this.options.icon].toSvg(
+                    {
+                        class: 'icon',
+                        width: '',
+                        height: ''
+                    }
+                )
+                this._displayElement.appendChild(this.iconElement.content.firstChild)
+            }
         }
 
         this.labelElement = document.createElement('span')
@@ -70,7 +76,7 @@ module.exports = class Button extends Control {
         } else {
             this.element.setAttribute('title', this.label)
         }
-        this.labelElement.innerHTML = this.label
+        this.labelElement.innerText = this.label
 
         this.element.addEventListener('click', (ev) => {
             ev.preventDefault();

@@ -93,7 +93,6 @@ module.exports = class PrescriptionField extends Field {
             var elem = document.createElement('li');
             this._listElement.appendChild(elem);
  
-            //elem.appendChild(document.createTextNode(this._getItemLabel(item)))
             let label = document.createElement('div')
             label.innerText = this._getItemLabel(item)
             elem.appendChild(label)
@@ -113,17 +112,6 @@ module.exports = class PrescriptionField extends Field {
             )
             elem.appendChild(deleteButton.createElement())
             deleteButton.element.setAttribute('item-index', i)
-            /*
-            var deleteElem = document.createElement('button')
-            deleteElem.innerHTML = 'Delete'
-            deleteElem.setAttribute('item-index', i)
-            deleteElem.addEventListener('click', (event) => {
-                this._deleteItem(
-                    event.currentTarget.getAttribute('item-index')
-                )
-            })
-
-            elem.appendChild(deleteElem)*/
         }
     }
 

@@ -61,7 +61,7 @@ module.exports = class ProblemsField extends Field {
                         elem.className = className
                         return elem
                     }
-                }).reduce((p, n) => { if(n) {p.push(n)} return p;}, [])
+                }).filter(v => v)
             )
 
             text.append(
@@ -75,7 +75,7 @@ module.exports = class ProblemsField extends Field {
                         elem.className = className
                         return elem
                     }
-                }).reduce((p, n) => { if(n) {p.push(n)} return p; }, [])
+                }).filter(v => v)
             )
         } else {
             code.innerText = 'UNCODED'

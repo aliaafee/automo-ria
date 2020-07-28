@@ -22,22 +22,24 @@ class AdmissionsList extends Control {
         this._admission = null
 
         this.nextButton = new Button(
-            `<span class="arrow right"></span>`,
+            "",
             () => {
                 this._onNext()
             },
             {
-                style: 'clear'
+                style: 'clear',
+                icon: 'arrow-right'
             }
         )
 
         this.prevButton = new Button(
-            `<span class="arrow left"></span>`,
+            "",
             () => {
                 this._onPrev()
             },
             {
-                style: 'clear'
+                style: 'clear',
+                icon: 'arrow-left'
             }
         )
 
@@ -76,20 +78,22 @@ class AdmissionsList extends Control {
     }
 
     setError(message) {
-        this.labelElement.innerHTML = message
+        this.labelElement.innerText = message
     }
 
     setAdmission(admission) {
         this._admission = admission
 
         if (!admission) {
-            this.prevCountElement.innerHTML = ""
-            this.nextCountElement.innerHTML = ""
+            //this.prevCountElement.innerText = ""
+            //this.nextCountElement.innerText = ""
             this.prevButton.hideSoft()
             this.nextButton.hideSoft()
-            this.labelElement.innerHTML = "No Admissions"
+            this.labelElement.innerText = "No Admissions"
             return
         }
+
+        this.labelElement.innerText = ""
 
         var from = ''
         if (admission.start_time) {
@@ -103,29 +107,39 @@ class AdmissionsList extends Control {
             to = datetime.toLocalDateFormatted(admission.end_time)
         }
 
-        this.labelElement.innerHTML = `
-            <h1>Admission</h1>
-            <div>${from} to ${to} </div>
-            <div>${admission.personnel.complete_name}</div>
-            <div>${admission.personnel.department.name}</div>
-        `
+        let titleElement = document.createElement('h1')
+        titleElement.innerText = "Admission"
+        this.labelElement.appendChild(titleElement)
+        this.labelElement.append(
+            ...[
+                `${from} to ${to}`,
+                admission.personnel.complete_name,
+                admission.personnel.department.name
+            ].map((label) => {
+                let elem = document.createElement('div')
+                elem.innerText = label;
+                return elem
+            })
+        )
 
         if (admission.prev) {
             this.prevButton.show()
             this.prevButton.setTitle(`${admission.prev_count} Previous Admission(s)`)
-            this.prevCountElement.innerHTML = admission.prev_count
+            this.prevButton.setLabel(admission.prev_count)
+            //this.prevCountElement.innerText = admission.prev_count
         } else {
             this.prevButton.hideSoft()
-            this.prevCountElement.innerHTML = ""
+            //this.prevCountElement.innerText = ""
         }
 
         if (admission.next) {
             this.nextButton.show()
             this.nextButton.setTitle(`${admission.next_count} Admission(s) Ahead`)
-            this.nextCountElement.innerHTML = admission.next_count
+            this.nextButton.setLabel(admission.next_count)
+            //this.nextCountElement.innerText = admission.next_count
         } else {
             this.nextButton.hideSoft()
-            this.nextCountElement.innerHTML = ""
+            //this.nextCountElement.innerText = ""
         }
     }
 
@@ -134,8 +148,8 @@ class AdmissionsList extends Control {
 
         this.element.appendChild(this.prevButton.createElement())
 
-        this.prevCountElement = document.createElement('span')
-        this.prevButton.element.appendChild(this.prevCountElement)
+        //this.prevCountElement = document.createElement('span')
+        //this.prevButton.element.appendChild(this.prevCountElement)
 
         this.labelElement = document.createElement('div')
         this.labelElement.className = 'label'
@@ -143,8 +157,8 @@ class AdmissionsList extends Control {
 
         this.element.appendChild(this.nextButton.createElement())
 
-        this.nextCountElement = document.createElement('span')
-        this.nextButton.element.prepend(this.nextCountElement)
+        //this.nextCountElement = document.createElement('span')
+        //this.nextButton.element.prepend(this.nextCountElement)
 
         this.prevButton.hideSoft()
         this.nextButton.hideSoft()

@@ -235,6 +235,15 @@
     margin: 0;
 }
 
+#admission-panel > .admissions-list > button:last-child > span {
+    flex-direction: row-reverse;
+}
+
+#admission-panel > .admissions-list > button:last-child > span > .label {
+    margin-right: var(--input-padding);
+    margin-left: 0;
+}
+
 #admission-panel > .admissions-list > .label {
     flex: 1 1 auto;
     text-align: center;

@@ -4,7 +4,7 @@ const ListBox = require('./list-box');
 module.exports = class RadioListBox extends ListBox {
     constructor(idFunction, labelFunction, onSelectItem, options) {
         /* idFunction(result) { return result.unique_id }
-         * labelFunction(result) { return result.label }
+         * labelFunction(result) { return result.label as element node }
          * onResultClicked(result) { do something using result }
          * 
          * Options:
@@ -68,8 +68,9 @@ module.exports = class RadioListBox extends ListBox {
         item.appendChild(radio);
 
         var labelElement = document.createElement('div');
+        labelElement.appendChild(label)
         item.appendChild(labelElement);
-        labelElement.innerHTML = label;
+        
 
         radio.addEventListener('click', this._onItemClicked);
 

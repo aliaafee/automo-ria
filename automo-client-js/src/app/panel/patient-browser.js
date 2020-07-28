@@ -63,7 +63,7 @@ class PatientList extends Control {
         ].map(([value, className]) => {
             let elem = document.createElement('div');
             elem.className = className
-            elem.appendChild(document.createTextNode(value))
+            elem.innerText = value
             return elem
         }))
 

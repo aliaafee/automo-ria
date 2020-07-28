@@ -7,13 +7,14 @@ module.exports = class CollapsePanel extends Control {
         super(options);
 
         this.btnExpand = new Button(
-            '<span class="arrow"></span>',
+            '',
             (event) => {
                 this._onToggleExpand()
             },
             {
                 className: 'expand-button',
-                style: 'clear'
+                style: 'clear',
+                icon: 'arrow'
             }
         )
 
@@ -40,7 +41,7 @@ module.exports = class CollapsePanel extends Control {
     }
 
     setTitle(title) {
-        this.titleElement.innerHTML = title
+        this.titleElement.innerText = title
     }
 
     createElement() {
@@ -57,7 +58,7 @@ module.exports = class CollapsePanel extends Control {
         this.titleElement = document.createElement('div')
         this.titleElement.className = 'title'
         if (this.options.title) {
-            this.titleElement.innerHTML = this.options.title
+            this.titleElement.innerText = this.options.title
         }
         this.headerElement.appendChild(this.titleElement)
 

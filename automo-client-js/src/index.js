@@ -40,7 +40,7 @@ tryLogin = () =>{
 }
 
 logout = () => {
-    document.body.innerHTML = "";
+    document.body.innerText = "";
     connection.logout(
         () => {
             tryLogin();
@@ -74,7 +74,6 @@ dlgIcd10 = new Icd10CoderDialog();
 showMainWindow = () => {
     document.body.appendChild(mainPanel.createElement());
 }
-
 
 tryLogin();
 
@@ -328,7 +327,6 @@ p1.setData(data);
 p1.element.style.border = 'none';
 p1.element.style.borderRadius = '0';
 
-//p2.element.innerHTML = "LoL";
 */
 
 

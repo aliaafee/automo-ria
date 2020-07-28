@@ -1,5 +1,6 @@
 const querystring = require('querystring');
 
+const SanitizeHTML =  require('../../controls/sanitize-html');
 const Dialog = require('../../controls/dialog/dialog');
 const ResourceSearchBox = require('../../controls/resource-search-box');
 const Button = require('../../controls/button');
@@ -7,6 +8,7 @@ const ResourceRadioList = require('../../controls/resource-radio-list');
 const Form = require('../../controls/form/form');
 const TextField = require('../../controls/form/text-field');
 const SelectField = require('../../controls/form/select-field');
+const sanitizeHtml = require('../../controls/sanitize-html');
 
 
 module.exports = class Icd10CoderDialog extends Dialog {
@@ -277,46 +279,54 @@ module.exports = class Icd10CoderDialog extends Dialog {
     }
 
     _getCategoryLabel(category) {
-        var lusion = ""
-        if (category.inclusion != null) {
-            lusion += `
-                <div class="lusion d-flex">
-                    <div >${category.inclusion}</div>
-                </div>`
-        }
-        if (category.exclusion != null) {
-            lusion += `
-                <div class="lusion d-flex">
-                    <div class="label">Excl.:</div>
-                    <div>${category.exclusion}</div>
-                </div>`
-        }
-        if (category.note != null) {
-            lusion += `
-                <div class="lusion d-flex">
-                    <div class="label">Note:</div>
-                    <div>${category.note}</div>
-                </div>`
-        }
-        var preferred_long = ""
-        if (category.preferred_long != null) {
-            preferred_long = `<div class="preferred-long">(${category.preferred_long})</div>`
-        }
-
         let label = document.createElement('div');
         label.className = "category-label"
 
-        label.innerHTML = `
-            <div class="code" code="${category.code}">
-                ${category.code}
-            </div>
-            <div class="text">
-                <div class="preferred">
-                    ${category.preferred}
-                </div>
-                ${preferred_long}
-                <div class="lusions">${lusion}</div>
-            </div>`
+        let code = document.createElement('div')
+        code.className = "code"
+        code.setAttribute("code", category.code)
+        code.innerText = category.code
+        label.appendChild(code)
+
+        let text = document.createElement('div')
+        text.className = "text"
+        label.appendChild(text)
+
+        let pref = sanitizeHtml(category.preferred, ['A'], ['href']);
+        pref.className = "preferred"
+        text.appendChild(pref)
+
+        if (category.preferred_long) {
+            let prefL = sanitizeHtml(category.preferred_long, ['A'], ['href']);
+            prefL.className = 'preferred-long'
+            text.appendChild(prefL)
+        }
+
+        let lusion = document.createElement('div')
+        lusion.className = "lusions"
+        lusion.append(
+            ...[
+                ['inclusion', ''],
+                ['exclusion', 'Excl.:'],
+                ['note', 'Note:']
+            ].map(([key, label]) => {
+                if (category[key]) {
+                    let elem = document.createElement('div')
+                    elem.className = 'lusion'
+                    if (label) {
+                        let lbl = document.createElement('div')
+                        lbl.className = 'label'
+                        lbl.innerText = label
+                        elem.appendChild(lbl)
+                    }
+                    let content = sanitizeHtml(category[key], ['DIV', 'SPAN', 'A'], ['href'])
+                    elem.appendChild(content)
+                    return elem
+                }
+            }).filter( v => v)
+        )
+        text.appendChild(lusion)
+
         return label
     }
 

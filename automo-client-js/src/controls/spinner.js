@@ -11,7 +11,7 @@ module.exports = class Spinner extends Control {
     }
 
     setLabel(label) {
-        this._labelElement.innerHTML = label;
+        this._labelElement.innerText = label;
     }
 
     reset() {

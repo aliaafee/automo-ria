@@ -65,7 +65,7 @@ module.exports = class EncounterPanel extends ResourcePanel {
                 this.hide()
             },
             (error) => {
-                this.statusElem.innerHTML = `Could Not Delete`
+                this.statusElem.innerText = `Could Not Delete`
                 this.unlock()
             },
             () => {

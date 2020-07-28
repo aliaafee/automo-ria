@@ -57,13 +57,13 @@ class PatientBanner extends Control {
         this.element.appendChild(numberElement);
 
         var col1 = document.createElement('div')
-        col1.innerHTML = "NIC No.: "
+        col1.innerText = "NIC No.: "
         numberElement.appendChild(col1)
         var col2 = document.createElement('div')
-        col2.innerHTML = "Hosp No.: "
+        col2.innerText = "Hosp No.: "
         numberElement.appendChild(col2)
         var col3 = document.createElement('div')
-        col3.innerHTML = "Phone No.: "
+        col3.innerText = "Phone No.: "
         numberElement.appendChild(col3)
 
         //this._fieldElements['national_id_no'] = document.createElement('span');
@@ -152,10 +152,10 @@ module.exports = class PatientPanel extends Scrolled {
                 this._errorElement.style.display = ''
                 onFailed();
                 if (error.status == 404) {
-                    this._errorElement.innerHTML = 'Patient Not Found'
+                    this._errorElement.innerText = 'Patient Not Found'
                     return
                 }
-                this._errorElement.innerHTML = `Failed to load patient: ${error.message}`
+                this._errorElement.innerText = `Failed to load patient: ${error.message}`
             },
             () => {
                 this.spinner.hideSoft();

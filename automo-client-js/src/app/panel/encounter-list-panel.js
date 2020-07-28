@@ -112,7 +112,7 @@ module.exports = class EncounterListPanel extends CollapsePanel {
                 if (error.status == 404) {
                     return
                 }
-                this.statusElem.innerHTML = "Error Loading Encounters"
+                this.statusElem.innerText = "Error Loading Encounters"
             },
             () => {
                 this.spinner.hide()
