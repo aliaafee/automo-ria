@@ -1,5 +1,6 @@
 const Field = require("../../controls/form/field")
-const Button = require("../../controls/button")
+const Button = require("../../controls/button");
+const { lang } = require("moment");
 
 module.exports = class ProblemsField extends Field {
     constructor(name, options={}) {
@@ -34,53 +35,60 @@ module.exports = class ProblemsField extends Field {
     }
 
     _getProblemLabel(problem) {
-        var code = ""
-        var preferred_plain = ""
-        var preferred_long = ""
-        var modifier = ""
-        var modifier_extra = ""
-        var comment = ""
+        let label = document.createElement('div')
+        label.className = "category-label"
+
+        let code = document.createElement('div')
+        code.className = 'code'
+        label.appendChild(code)
+
+        let text = document.createElement('div')
+        text.className = 'text'
+        label.appendChild(text)
 
         if (problem.icd10class) {
-            code = problem.icd10class.code
-            preferred_plain = `<div class="preferred-plain">${problem.icd10class.preferred_plain}</div>`
+            code.innerText = problem.icd10class.code
+            code.setAttribute('code', problem.icd10class.code)
 
-            if (problem.icd10class.preferred_long != null) {
-                preferred_long = `<div class="preferred-long">(${problem.icd10class.preferred_long})</div>`
-            }
-    
-            
-            if (problem.icd10modifier_class != null) {
-                modifier = `<div class="modifier">${problem.icd10modifier_class.code_short} - ${problem.icd10modifier_class.preferred}</div>`
-            }
-    
-            
-            if (problem.icd10modifier_extra_class != null) {
-                modifier_extra = `<div class="modifier-extra">${problem.icd10modifier_extra_class.code_short} - ${problem.icd10modifier_extra_class.preferred}</div>`
-            }
+            text.append(
+                ...[
+                    ['preferred_plain', 'preferred-plain'],
+                    ['preferred_long', 'preferred-long'],
+                ].map(([key, className]) => {
+                    if (problem.icd10class[key]) {
+                        let elem = document.createElement('div')
+                        elem.innerText = problem.icd10class[key]
+                        elem.className = className
+                        return elem
+                    }
+                }).reduce((p, n) => { if(n) {p.push(n)} return p;}, [])
+            )
+
+            text.append(
+                ...[
+                    ['icd10modifier_class', 'modifier'],
+                    ['icd10modifier_extra_class', 'modifier-extra']
+                ].map(([key, className]) => {
+                    if (problem[key]) {
+                        let elem = document.createElement('div')
+                        elem.innerText = `${problem[key].code_short} - ${problem[key].preferred}`
+                        elem.className = className
+                        return elem
+                    }
+                }).reduce((p, n) => { if(n) {p.push(n)} return p; }, [])
+            )
         } else {
-            code = "Uncoded"
-        }
-        
-        if (problem.comment != null) {
-            
-            comment = `<div class="comment">${problem.comment}</div>`
+            code.innerText = 'UNCODED'
         }
 
-        return `
-            <div class="category-label">
-                <div class="code" code="${code}">
-                    ${code}
-                </div>
-                <div class="text">
-                    ${preferred_plain}
-                    ${preferred_long}
-                    ${modifier}
-                    ${modifier_extra}
-                    ${comment}
-                </div>
-            </div>
-        `
+        if (problem.comment) {
+            let elem = document.createElement('div')
+            elem.className = 'comment'
+            elem.innerText = problem.comment
+            text.appendChild(elem)
+        }
+
+        return label
     }
 
     displayData() {
@@ -95,7 +103,7 @@ module.exports = class ProblemsField extends Field {
             var elem = document.createElement('li');
             this._listElement.appendChild(elem);
 
-            elem.innerHTML = this._getProblemLabel(item)
+            elem.appendChild(this._getProblemLabel(item))
 
             var deleteButton = new Button(
                 'Delete', 
