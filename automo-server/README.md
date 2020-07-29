@@ -28,4 +28,20 @@ Basic Usage
    gunicorn --certfile certificates/cert.pem --keyfile certificates/key.pem -c gunicorn.conf.py automo-server:app
 
 
+Windows Installation Notes
+--------------------------
+
+1) pip install win-requirements.txt
+
+2) Install weasy print as explained at https://weasyprint.readthedocs.io/en/stable/install.html
+
+Important: Following packages need to be installed in this order, or it does not work.
+
+3) pip install cffi
+
+4) pip install cairocffi
+
+5) pip install weasyprint
+
+6) pip install flask_weasyprint
 
