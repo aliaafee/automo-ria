@@ -35,7 +35,7 @@ Windows Installation Notes
 
 2) Install weasy print as explained at https://weasyprint.readthedocs.io/en/stable/install.html
 
-Important: Following packages need to be installed in this order, or it does not work.
+Important: Following packages need to be installed in this order, or it does not work. Testd on Python 3.8.5 64bit
 
 3) pip install cffi
 
@@ -44,4 +44,6 @@ Important: Following packages need to be installed in this order, or it does not
 5) pip install weasyprint
 
 6) pip install flask_weasyprint
+
+7) install GTK+
 
