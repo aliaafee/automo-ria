@@ -145,7 +145,7 @@ def get_rubrics(tag):
 def import_icd10(filename, session):
     """Import ClaMl file to database"""
     try:
-        with open(filename) as xmlfile:
+        with open(filename, encoding="utf-8") as xmlfile:
             print("Creating Soup")
             soup = BeautifulSoup(xmlfile, "lxml-xml")
 
