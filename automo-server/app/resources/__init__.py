@@ -1,8 +1,7 @@
 from flask import Blueprint, g
-#from flask_restful import Api
+from flask_graphql import GraphQLView
 
 api = Blueprint('api', __name__, url_prefix="/api")
-#api = Api(api_blueprint)
 
 from . import users,\
               authentication,\
@@ -20,6 +19,13 @@ from . import users,\
               personnel,\
               prescription,\
               drugs
+
+from ..graphql import schema
+
+api.add_url_rule(
+    "/graphql",
+    view_func=GraphQLView.as_view("graphql", schema=schema, graphiql=True)
+)
 
 @api.before_request
 @authentication.auth.login_required

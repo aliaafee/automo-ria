@@ -57,7 +57,8 @@ class Icd10Class(SerializerMixin, db.Model):
 
     code = db.Column(db.String(10), primary_key=True)
 
-    kind = db.Column(db.Enum("chapter", "block", "category"))
+    #kind = db.Column(Enum("chapter", "block", "category"))
+    kind = db.Column(db.String(10))
 
     preferred_plain = db.Column(db.String(250))
 
@@ -69,7 +70,8 @@ class Icd10Class(SerializerMixin, db.Model):
     note = db.Column(db.Text())
     coding_hint = db.Column(db.Text())
 
-    usage = db.Column(db.Enum("dagger", "aster"), name="usage")
+    #usage = db.Column(Enum("dagger", "aster"), name="usage")
+    usage = db.Column(db.String(10))
 
     modifier_code = db.Column(db.String(10), db.ForeignKey('icd10modifier.code'))
     modifier = db.relationship("Icd10Modifier", foreign_keys=[modifier_code])
