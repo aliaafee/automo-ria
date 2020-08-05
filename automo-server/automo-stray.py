@@ -1,33 +1,39 @@
-import os
+import os.path
 import sys
 import logging
 from waitress import serve
-from multiprocessing import Process
+from multiprocessing import Process, freeze_support
 import pystray
 import webbrowser
 from PIL import Image, ImageDraw
 
 from app import create_app, db
+from app.install_db import install_db
 from config import Config
+
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 SERVER_HOST = "127.0.0.1"
 SERVER_PORT = "8080"
 SERVER_THREADS = 4
+DATABASE_PATH = os.path.join(basedir, 'patient-data.sqlite')
 
-
-basedir = os.path.abspath(os.path.dirname(__file__))
 
 class AppConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'patient-data.sqlite')
+        'sqlite:///' + DATABASE_PATH
 
 logging.basicConfig(filename='automo-stray.log',level=logging.INFO)
 #logger = logging.getLogger('waitress')
 #logger.setLevel(logging.INFO)
 
+app = create_app(AppConfig)
+
 
 def runserver():
-    app = create_app(AppConfig)
+    print("Starting Server Process...")
+    
+    webbrowser.open('http://{}:{}'.format(SERVER_HOST, SERVER_PORT), new=2)
 
     serve(
         app,
@@ -41,6 +47,7 @@ server_process = Process(target=runserver)
 def on_menu_exit(icon):
     print("Stopping Server")
     server_process.terminate()
+    icon.stop()
     exit()
 
 
@@ -50,7 +57,7 @@ def on_open_site(incon):
 
 def create_icon():
     icon = pystray.Icon('AutoMO')
-    icon.icon = Image.open(os.path.join(basedir, 'app', 'static', 'images', 'icons-96.png'))
+    icon.icon = Image.open(os.path.join(basedir, 'app', 'static', 'images', 'icon.ico'))
     icon.menu = pystray.Menu(
         pystray.MenuItem(
             'Open {}:{}'.format(SERVER_HOST, SERVER_PORT),
@@ -70,7 +77,16 @@ def create_icon():
 
 
 if __name__ == '__main__':
-    print("Starting Server Process...")
+    print("Starting App")
+    
+    # This is needed to make multiprocessing work on windows
+    freeze_support()
+
+    if not os.path.isfile(DATABASE_PATH):
+        print("Database does not exit")
+        with app.app_context():
+            install_db('admin', 'a', os.path.join(basedir, 'icd10', 'icdClaML2016ens.xml'))
+
     server_process.start()
 
     icon = create_icon()

@@ -13,6 +13,8 @@ from .icd10import import import_icd10
 from .models import User, Role, Patient, Address, Admission, Problem, Ward, Bed, Doctor, VitalSigns, SurgicalProcedure, RenalFunctionTest, ClinicalEncounter, PhoneNumber
 from . import models as md 
 
+from .install_db import install_db
+
 from . import db
 
 
@@ -54,27 +56,17 @@ class InstallCommand(Command):
         return options
 
     def run(self, icd10_filename):
-        print("Installing")
-        print("----------")
-        print("")
 
-        db.create_all()
-        Role.insert_roles()
+        username = click.prompt("Administrator Username", type=str, default="admin", show_default=True)
+        password = click.prompt("Administrator Password", hide_input=True)
 
-        root = User()
-        root.username = click.prompt("Administrator Username", type=str, default="admin", show_default=True)
-        root.password = click.prompt("Administrator Password", hide_input=True)
-        root.role = Role.query.filter_by(permissions=0xff).first()
-        db.session.add(root)
-        db.session.commit()
-        print("Administrator Account Added")
-        print("")
-        if icd10_filename:
-            print("Adding ICD10 Codes from {}".format(icd10_filename))
-            import_icd10(icd10_filename, db.session)
-            print("Done")
-            print("")
-        print("Installation Complete")
+        install_db(
+            username,
+            password,
+            icd10_filename
+        )
+
+        return
 
 
 class FakeData(Command):

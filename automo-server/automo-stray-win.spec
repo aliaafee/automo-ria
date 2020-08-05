@@ -20,8 +20,9 @@ extra_imports = ['weasyprint', 'pystray._win32', 'pkg_resources.py2_warn']
 extra_imports_with_files = ['tinycss2', 'cairocffi', 'pyphen', 'cssselect2']
 data_files = [
     ('app/templates', 'app/templates/'),
-    ('app/static', 'app/static/')
-
+    ('app/static', 'app/static/'),
+    ('icd10/icd2016ens-category-modifiers.csv', 'icd10/'),
+    ('icd10/icdClaML2016ens.xml', 'icd10/')
 ]
 
 datas = data_files + collect_module_data_files(extra_imports_with_files)
@@ -51,7 +52,8 @@ exe = EXE(pyz,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          console=True )
+          console=False,
+          icon="app/static/images/icon.ico" )
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,

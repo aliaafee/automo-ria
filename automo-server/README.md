@@ -1,7 +1,7 @@
 Basic Usage
 -----------
 
-1) Install Pip requirements.txt
+1) Install Pip win-requirements.txt
 
 2) python automo-cli.py db init
 
@@ -31,7 +31,7 @@ Basic Usage
 Windows Installation Notes
 --------------------------
 
-1) pip install win-requirements.txt
+1) pip install win-requirements.txt, flask_graphql, graphene, graphene_sqlalchemy
 
 2) Install weasy print as explained at https://weasyprint.readthedocs.io/en/stable/install.html
 
@@ -46,4 +46,7 @@ Important: Following packages need to be installed in this order, or it does not
 6) pip install flask_weasyprint
 
 7) install GTK+
+
+8) PyInstaller Notes: Multiprocessing on Windows to get the tray icon working is convoluted, current code works with --one-dir,
+   For --one-file see here: https://stackoverflow.com/questions/24944558/pyinstaller-built-windows-exe-fails-with-multiprocessing TODO: Implement this
 
