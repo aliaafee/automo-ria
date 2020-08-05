@@ -469,6 +469,10 @@ button.clear.alert:hover {
     padding: 5px 10px 5px 5px;
 }
 
+.compact .field .input-placeholder {
+    margin: -1px;
+}
+
 .field .help-text,
 .field .invalid-feedback {
     padding: 2px 5px 0 5px;

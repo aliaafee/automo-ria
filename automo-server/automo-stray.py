@@ -20,8 +20,7 @@ DATABASE_PATH = os.path.join(basedir, 'patient-data.sqlite')
 
 
 class AppConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'sqlite:///' + DATABASE_PATH
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DATABASE_PATH
 
 logging.basicConfig(filename='automo-stray.log',level=logging.INFO)
 #logger = logging.getLogger('waitress')
