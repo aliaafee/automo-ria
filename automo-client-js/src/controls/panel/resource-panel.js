@@ -72,7 +72,6 @@ module.exports = class ResourcePanel extends CollapsePanel {
             this.options.newUrl,
             _data,
             (response) => {
-                console.log(response)
                 if (response.error) {
                     this.unlock()
                     this.statusElem.innerText = response.error

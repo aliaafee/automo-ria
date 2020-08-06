@@ -441,6 +441,10 @@ button.clear.alert:hover {
     margin-bottom: 15px;
 }
 
+.form-list > .subform-list > .collapse-panel:last-child {
+    margin-bottom: 0;
+}
+
 .field {
     /*margin-bottom: 5px;*/
     grid-column: 1 / 3;
