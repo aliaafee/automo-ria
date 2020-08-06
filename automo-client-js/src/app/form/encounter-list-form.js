@@ -1,117 +1,35 @@
-//const querystring = require('querystring');
-
-const Form = require('../../controls/form/form')
-const Button = require('../../controls/button')
-const EncounterPanel = require("../panel/encounter-panel")
 const EncounterForms = require("./encounter-forms")
+const ListForm = require("../../controls/form/list-form")
 
 
-module.exports = class EncounterListForm extends Form {
-    constructor(options = {}) {
-        super(options)
+module.exports = class EncounterListForm extends ListForm {
+    constructor(options={}) {
         /* Options
-         *  encounter-types = 
-         */
-        /* This form has just one field with name encounters
-         * setValue also excepts encouters_url if available
-         * value return encounters field as list
+         *  encounter_types = ['name', 'name']
+         *
          */
 
-        this._panels = []
-    }
-
-    lock() {
-        this.encounterTypesElement.style.display = "none"
-    }
-
-    lockAll() {
-        this.lock()
-        this._panels.forEach((panel) => {
-            panel.lock()
-        })
-    }
-
-    unlock() {
-        this.encounterTypesElement.style.display = ""
-    }
-
-    unlockAll() {
-
-    }
-
-    setValue(value) {
-        this._clear();
-
-        if (!value) {
-            return
-        }
-
-        this.encountersUrl = value['encounters_url']
-
-        if (!value['encounters']) {
-            return
-        }
-
-        this._appendData(value['encounters'])
-    }
-
-    value() {
-        return {
-            'encounters': this._panels
-                            .map((panel) => panel.value())
-                            .filter((value) => value)
-        }
-    }
-
-    validate() {
-        return this._panels.map(
-            (panel) => panel.validate()
-        ).reduce(
-            (prev, curr) => {
-                if (!curr) {
-                    return false
-                }
-                return prev
+        super(
+            'encounters',
+            (item) => {
+                //console.log(item)
             },
-            true
+            (items) => {
+                //console.log(items)
+            },
+            options
         )
     }
 
-    _clear() {
-        while (this.encountersListElement.firstChild) {
-            this.encountersListElement.firstChild.remove();
+    setValue(value) {
+        if (value) {
+            this.resourceUrl = value['encounters_url']
         }
-        this._panels = []
+        super.setValue(value)
     }
 
-    _appendData(data) {
-        if (data == null) {
-            return
-        }
-
-        data.forEach((item) => {
-            let panel = new EncounterPanel(
-                () => {},
-                {
-                    type: item.type
-                }
-            )
-
-            this.encountersListElement.appendChild(panel.createElement())
-
-            panel.setValue(item)
-
-            this._panels.push(panel)
-        })
-    }
-
-    _createEncounterTypes() {
-        this.encounterTypesElement = document.createElement('div')
-        this.encounterTypesElement.classList.add('encounter-types')
-        this.encounterTypesElement.classList.add('toolbar')
-        this.element.prepend(this.encounterTypesElement)
-
-        const encounter_types = this.options.encounter_types.map(
+    getFormTypes() {
+        return this.options.encounter_types.map(
             (type_name, i) => {
                 const form = new EncounterForms[type_name]()
                 return {
@@ -120,54 +38,15 @@ module.exports = class EncounterListForm extends Form {
                 };
             }
         )
-
-        this.encounterTypesElement.append(
-            ...encounter_types.map(
-                ({name, label}) => {
-                    let btn = new Button(
-                        label,
-                        () => {
-                            this._addNewEncounter(name)
-                        },
-                        {
-                            icon: 'plus',
-                            style: 'clear'
-                        }
-                    )
-                    return btn.createElement();
-                }
-            )
-        )
-
     }
 
-    _addNewEncounter(encounter_type) {
-        let newPanel = new EncounterPanel(
-            () => {},
-            {
-                type: encounter_type,
-                newUrl: this.encountersUrl
-            }
-        )
+    generateSubForm(typeName) {
+        var EncounterClass = EncounterForms[typeName]
 
-        this.encountersListElement.prepend(newPanel.createElement())
-        this._panels.push(newPanel)
-
-        newPanel.unlock()
+        if (EncounterClass) {
+            return new EncounterClass()
+        }
+        
+        return new EncounterForms.encounter()
     }
-
-    createElement() {
-        super.createElement()
-
-        this.element.classList.add('encounter-list-form')
-
-        this.encountersListElement = document.createElement('div')
-        this.encountersListElement.className = 'encounters-list'
-        this.element.appendChild(this.encountersListElement)
-
-        this._createEncounterTypes()
-
-        return this.element
-    }
-
 }

@@ -284,31 +284,6 @@
     color: transparent;
 }
 
-
-.encounter-list-form {
-    display: block;
-}
-
-.encounter-list-form .encounter-types {
-    display: block;
-}
-
-.encounter-list-form .encounter-types button {
-    display: inline;
-}
-
-.encounters-list {
-    /*padding: 15px;*/
-}
-
-.encounters-list .collapse-panel {
-    margin-bottom: 15px;
-}
-
-.encounters-list .collapse-panel:last-child {
-    margin-bottom: 0;
-}
-
 .field-buttons button {
     margin: 0;
 }

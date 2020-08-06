@@ -425,6 +425,22 @@ button.clear.alert:hover {
     grid-column: span 1;
 }
 
+.form-list {
+    display: block;
+}
+
+.form-list > .toolbar {
+    display: block;
+}
+
+.form-list > .toolbar button {
+    display: inline-block;
+}
+
+.form-list > .subform-list > .collapse-panel {
+    margin-bottom: 15px;
+}
+
 .field {
     /*margin-bottom: 5px;*/
     grid-column: 1 / 3;
