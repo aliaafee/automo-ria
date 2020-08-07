@@ -1110,4 +1110,8 @@ button.clear.alert:hover {
     .form > .toolbar button .label{
         display: none;
     }
+
+    .form-list > .toolbar button .label {
+        display: unset;
+    }
 }

@@ -205,7 +205,7 @@ module.exports = class ListForm extends Form {
     }
 
     setValue(value) {
-        this._clear()
+        this.clear()
 
         if (!value) {
             return
@@ -253,7 +253,7 @@ module.exports = class ListForm extends Form {
         return new Form();
     }
 
-    _clear() {
+    clear() {
         while (this.formListElement.firstChild) {
             this.formListElement.firstChild.remove()
         }

@@ -4,6 +4,7 @@ const datetime = require('../../controls/datetime');
 const Control = require("../../controls/control");
 const Button = require('../../controls/button')
 const ResourcePanel = require('../../controls/panel/resource-panel')
+const ResourceListPanel = require("../../controls/panel/resource-list-panel")
 const Spinner = require('../../controls/spinner')
 
 const AdmissionDetailsForm = require('../form/admission-details-form')
@@ -12,6 +13,7 @@ const AdmissionNotesForm = require('../form/admission-notes-form')
 const DischargeNotesForm = require('../form/discharge-notes-form')
 const PrescriptionForm = require('../form/prescription-form')
 const EncounterListPanel = require('./encounter-list-panel')
+const EncounterListForm = require('../form/encounter-list-form')
 
 class AdmissionsList extends Control {
     constructor(options={}) {
@@ -245,43 +247,58 @@ module.exports = class AdmissionPanel extends Control {
         )
 
         this._panels.push(
-            new EncounterListPanel(
+            new ResourceListPanel(
+                new EncounterListForm (
+                    {
+                        resourceTypes: [
+                            'imaging',
+                            'endoscopy',
+                            'histopathology',
+                            'otherreport',
+                            'completebloodcount',
+                            'renalfunctiontest',
+                            'othertest'
+                        ]
+                    }
+                ),
+                'encounters_url',
                 {
-                    title: 'Investigations',
-                    encounter_types: [
-                        'imaging',
-                        'endoscopy',
-                        'histopathology',
-                        'otherreport',
-                        'completebloodcount',
-                        'renalfunctiontest',
-                        'othertest'
-                    ]
+                    title: 'Investigations'
                 }
             )
         )
 
         this._panels.push(
-            new EncounterListPanel(
+            new ResourceListPanel(
+                new EncounterListForm (
+                    {
+                        resourceTypes: [
+                            'surgicalprocedure'
+                        ]
+                    }
+                ),
+                'encounters_url',
                 {
-                    title: 'Procedure Notes',
-                    encounter_types: [
-                        'surgicalprocedure'
-                    ]
+                    title: 'Procedure Notes'
                 }
             )
         )
 
         this._panels.push(
-            new EncounterListPanel(
+            new ResourceListPanel(
+                new EncounterListForm (
+                    {
+                        resourceTypes: [
+                            'vitalsigns',
+                            'measurements',
+                            'progress',
+                            //'vitalsignsextended'
+                        ]
+                    }
+                ),
+                'encounters_url',
                 {
-                    title: 'Progress Notes',
-                    encounter_types: [
-                        'vitalsigns',
-                        'measurements',
-                        'progress',
-                        //'vitalsignsextended'
-                    ]
+                    title: 'Progress Notes'
                 }
             )
         )

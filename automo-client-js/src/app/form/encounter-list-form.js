@@ -19,25 +19,24 @@ module.exports = class EncounterListForm extends ListForm {
             },
             options
         )
-    }
 
-    setValue(value) {
-        if (value) {
-            this.resourceUrl = value['encounters_url']
-        }
-        super.setValue(value)
+        this.resourceTypes = null;
     }
 
     getFormTypes() {
-        return this.options.encounter_types.map(
-            (type_name, i) => {
-                const form = new EncounterForms[type_name]()
-                return {
-                    name: type_name,
-                    label: form.options.title
-                };
-            }
-        )
+        if (!this.resourceTypes) {
+            this.resourceTypes = this.options.resourceTypes.map(
+                (type_name, i) => {
+                    const form = new EncounterForms[type_name]()
+                    return {
+                        name: type_name,
+                        label: form.options.title
+                    };
+                }
+            )
+        }
+
+        return this.resourceTypes
     }
 
     generateSubForm(typeName) {

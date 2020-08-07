@@ -181,7 +181,7 @@ class Encounters extends WizardForm {
     constructor(options = {}) {
         super(
             new EncounterListForm({
-                encounter_types: options.encounter_types
+                resourceTypes: options.resourceTypes
             }),
             options
         )
@@ -212,7 +212,7 @@ class ReviewPage extends WizardPage {
         this.admissionDetails = new AdmissionDetailsForm({title: "Admission Details"})
         this.problems = new ProblemsForm({title: "Diagnosis"})
         this.admissionNotes = new AdmissionNotesForm({title: "Admission Notes"})
-        this.investigations = new EncounterListForm({title: "Investigations", encounter_types: [
+        this.investigations = new EncounterListForm({title: "Investigations", resourceTypes: [
             'imaging',
             'endoscopy',
             'histopathology',
@@ -272,7 +272,7 @@ module.exports = class AdmissionWizard extends Wizard {
         this.investigations = new Encounters(
             {
                 title: 'Investigations',
-                encounter_types: [
+                resourceTypes: [
                     'imaging',
                     'endoscopy',
                     'histopathology',
