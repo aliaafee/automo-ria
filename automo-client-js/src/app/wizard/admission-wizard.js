@@ -313,6 +313,9 @@ module.exports = class AdmissionWizard extends Wizard {
 
         if (admission.initial_vitalsigns) {
             admission.initial_vitalsigns.start_time = admission.start_time
+        } else {
+            admission.initial_vitalsigns = {}
+            admission.initial_vitalsigns.start_time = admission.start_time
         }
 
         admission['problems'] = []
