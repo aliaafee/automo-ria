@@ -161,7 +161,7 @@ module.exports = class ListForm extends Form {
     constructor(fieldName, onSaveSubForm, onDeleteSubForm, options={}) {
         super(options)
         /* Options
-         *  subFormTypes = ['name', 'name', ..]
+         *  resourceTypes = ['name', 'name', ..]
          *  onSaveSubForm(item)
          *  onDeleteSubForm(item)
          */
@@ -267,6 +267,9 @@ module.exports = class ListForm extends Form {
 
         let subFormPanels = data.map(
             (item) => {
+                if (!this.options.resourceTypes.includes(item.type)) {
+                    return null
+                }
                 let panel = new SubFormPanel(
                     this.generateSubForm(item.type),
                     (item) => {
@@ -283,7 +286,7 @@ module.exports = class ListForm extends Form {
                 panel.setValue(item)
                 return panel
             }
-        )
+        ).filter((i) => i)
 
         this.formListElement.append(
             ...subFormPanels.map(

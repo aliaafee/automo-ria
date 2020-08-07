@@ -143,40 +143,6 @@ class AdmissionNotes extends WizardForm {
 }
 
 
-/*
-class Encounters extends WizardPage {
-    constructor(options = {}) {
-        options.title = "Encounters"
-        super(options)
-
-        this._encounters = new EncountersList(
-            {
-                encounter_types: options.encounter_types
-            }
-        )
-    }
-
-    setValue(value) {
-        this._encounters.setValue(value)
-    }
-
-    value() {
-        return this._encounters.value()
-    }
-
-    validate() {
-        return this._encounters.validate()
-    }
-    
-    createElement() {
-        super.createElement()
-
-        this.element.appendChild(this._encounters.createElement())   
-        
-        return this.element;
-    }
-}*/
-
 class Encounters extends WizardForm {
     constructor(options = {}) {
         super(
@@ -221,6 +187,14 @@ class ReviewPage extends WizardPage {
             'renalfunctiontest',
             'othertest'
         ]})
+        this.procedures = new EncounterListForm({title: "Procedure Notes", resourceTypes: [
+            'surgicalprocedure'
+        ]})
+        this.progress = new EncounterListForm({title: "Progress Notes", resourceTypes: [
+            'vitalsigns',
+            'measurements',
+            'progress',
+        ]})
         this.dischargeNotes = new DischargeNotesForm({title: "Discharge Prescription"})
         this.prescription = new PrescriptionForm({title: "Prescription"})
     }
@@ -233,6 +207,8 @@ class ReviewPage extends WizardPage {
         this.problems.setValue(wizard.problems.value())
         this.admissionNotes.setValue(wizard.admissionNotes.value())
         this.investigations.setValue(wizard.investigations.value())
+        this.procedures.setValue(wizard.procedures.value())
+        this.progress.setValue(wizard.progress.value())
         this.dischargeNotes.setValue(wizard.dischargeNotes.value())
         this.prescription.setValue(wizard.prescription.value())
 
@@ -241,6 +217,8 @@ class ReviewPage extends WizardPage {
         this.problems.lock()
         this.admissionNotes.lock()
         this.investigations.lockAll()
+        this.procedures.lockAll()
+        this.progress.lockAll()
         this.dischargeNotes.lock()
         this.prescription.lock()
     }
@@ -253,6 +231,8 @@ class ReviewPage extends WizardPage {
         this.element.appendChild(this.problems.createElement())
         this.element.appendChild(this.admissionNotes.createElement())
         this.element.appendChild(this.investigations.createElement())
+        this.element.appendChild(this.procedures.createElement())
+        this.element.appendChild(this.progress.createElement())
         this.element.appendChild(this.dischargeNotes.createElement())
         this.element.appendChild(this.prescription.createElement())
 
@@ -283,11 +263,27 @@ module.exports = class AdmissionWizard extends Wizard {
                 ]
             }
         )
-        
-        
-        //this.proceduresReports = new ProceduresReports()
-        
-        
+
+        this.procedures = new Encounters(
+            {
+                title: 'Procedure Notes',
+                resourceTypes: [
+                    'surgicalprocedure'
+                ]
+            }
+        )
+
+        this.progress = new Encounters(
+            {
+                title: 'Progress Notes',
+                resourceTypes: [
+                    'vitalsigns',
+                    'measurements',
+                    'progress',
+                ]
+            }
+        )
+
         this.dischargeNotes = new DischargeNotes()
         this.prescription = new Prescription()
         this.reviewPage = new ReviewPage()
@@ -297,7 +293,8 @@ module.exports = class AdmissionWizard extends Wizard {
         this.addPage(this.problems)
         this.addPage(this.admissionNotes)
         this.addPage(this.investigations)
-        //this.addPage(this.proceduresReports)
+        this.addPage(this.procedures)
+        this.addPage(this.progress)
         this.addPage(this.dischargeNotes)
         this.addPage(this.prescription)
         this.addPage(this.reviewPage)
@@ -325,8 +322,11 @@ module.exports = class AdmissionWizard extends Wizard {
         })
 
         admission['patient'] = this.newPatient.value()
-        //admission['encounters'] = this.investigations.value().concat(this.proceduresReports.value())
-        admission['encounters'] = this.investigations.value()['encounters']
+        admission['encounters'] = [
+            ...this.investigations.value()['encounters'],
+            ...this.procedures.value()['encounters'],
+            ...this.progress.value()['encounters']
+        ]
         admission['prescription'] = this.prescription.value().prescription
 
         return admission
@@ -338,6 +338,8 @@ module.exports = class AdmissionWizard extends Wizard {
         this.admissionNotes.setValue(data)
         this.dischargeNotes.setValue(data)
         this.investigations.setValue(data)
+        this.procedures.setValue(data)
+        this.progress.setValue(data)
         this.problems.setValue(data)
         this.prescription.setValue(data)
     }
