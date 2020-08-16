@@ -18,7 +18,8 @@ from . import users,\
               icd10,\
               personnel,\
               prescription,\
-              drugs
+              drugs,\
+              hospitals
 
 from ..graphql import schema
 

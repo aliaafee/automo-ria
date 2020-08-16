@@ -20,8 +20,16 @@ def process_command(command_list, conn):
         post_test(conn)
         return True
 
+    if command == 'post2':
+        post_test2(conn)
+        return True
+
     if command == 'new':
         new_test(conn)
+        return True
+
+    if command == 'new2':
+        new_test2(conn)
         return True
 
     if command == 'admit':
@@ -91,6 +99,62 @@ orders = [
     'PO BD x 25 days',
     'PO QID x 10 days'
 ]
+
+
+def post_test2(conn):
+    test_cases = [
+        (
+            'hospitals/1',
+            {
+                'name': 'SMALL CLINIC'
+            },
+            {
+
+            }
+        )
+    ]
+
+    for url, data, result in test_cases:
+        post_response_data = conn.post_json('{}{}'.format(conn.index_url, url), data)
+
+        print(post_response_data)
+
+
+def new_test2(conn):
+    test_cases = [
+        (
+            'hospitals/',
+            {
+                'name': 'IGMH'
+            },
+            {
+
+            }
+        ),
+        (
+            'hospitals/1/wards/',
+            {
+                'name': 'Private Uber Ward'
+            },
+            {
+
+            }
+        ),
+        (
+            'hospitals/1/wards/1/beds/',
+            {
+                'number': 'Yo'
+            },
+            {
+
+            }
+        )
+    ]
+
+    for url, data, result in test_cases:
+        post_response_data = conn.post_json('{}{}'.format(conn.index_url, url), data)
+
+        print(post_response_data)
 
 
 def get_test(conn):

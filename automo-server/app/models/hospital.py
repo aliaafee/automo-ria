@@ -16,8 +16,8 @@ class Hospital(SerializerMixin, ValidatorMixin ,db.Model):
         'phone_no'
     ]
 
-    #def url(self):
-    #    return url_for('api.get_ward', ward_id=self.id, _external=True)
+    def url(self):
+        return url_for('api.get_hospital', hospital_id=self.id, _external=True)
 
 
     id = db.Column(db.Integer, primary_key=True)

@@ -20,7 +20,7 @@ class Bed(SerializerMixin, ValidatorMixin, db.Model):
     ]
 
     def url(self):
-        return url_for('api.get_bed', bed_id=self.id, _external=True)
+        return url_for('api.get_hospital_ward_bed', bed_id=self.id, ward_id=self.ward.id, hospital_id=self.ward.hospital.id, _external=True)
 
     id = db.Column(db.Integer, primary_key=True)
 

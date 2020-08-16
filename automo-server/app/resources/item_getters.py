@@ -109,7 +109,7 @@ def new_item(model):
         result = item.validate_and_insert(data)
         
         if result:
-            db.session.rollback
+            db.session.rollback()
             return errors.invalid_fields(result)
 
         db.session.add(item)

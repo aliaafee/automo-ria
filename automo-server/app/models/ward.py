@@ -17,7 +17,8 @@ class Ward(SerializerMixin,ValidatorMixin ,db.Model):
     ]
 
     def url(self):
-        return url_for('api.get_ward', ward_id=self.id, _external=True)
+        return url_for('api.get_hospital_ward', hospital_id=self.hospital_id, ward_id=self.id, _external=True)
+        #return url_for('api.get_ward', ward_id=self.id, _external=True)
 
 
     id = db.Column(db.Integer, primary_key=True)
