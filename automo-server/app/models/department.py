@@ -15,8 +15,8 @@ class Department(SerializerMixin,ValidatorMixin ,db.Model):
         'active',
     ]
 
-    #def url(self):
-    #    return url_for('api.get_ward', ward_id=self.id, _external=True)
+    def url(self):
+        return url_for('api.get_hospital_department', department_id=self.id, hospital_id=self.hospital.id, _external=True)
 
 
     id = db.Column(db.Integer, primary_key=True)

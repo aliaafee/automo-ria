@@ -17,7 +17,7 @@ class Personnel(db.Model, SerializerMixin, ValidatorMixin):
     ]
 
     def url(self):
-        return url_for('api.get_personnel_one', personnel_id=self.id, _external=True)
+        return url_for('api.get_hospital_department_personnel', personnel_id=self.id, department_id=self.department.id, hospital_id=self.department.hospital.id, _external=True)
     
     id = db.Column(db.Integer, primary_key=True)
 

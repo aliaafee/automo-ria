@@ -30,6 +30,11 @@ def get_hospital(hospital):
         hospital_id = hospital.id,
         _external=True
     )
+    result['departments'] = url_for(
+        'api.get_hospital_departments',
+        hospital_id = hospital.id,
+        _external=True
+    )
     return result
 
 
@@ -103,3 +108,69 @@ def get_hospital_ward_bed(bed):
 @update_object()
 def post_hospital_ward_bed(bed, updated_keys):
     return bed.get_serialized(updated_keys)
+
+
+#---
+
+@api.route("/hospitals/<int:hospital_id>/departments/")
+@get_object_query(md.Hospital, md.Department)
+def get_hospital_departments(departments_query):
+    return paginate_query(departments_query)
+
+
+@api.route("/hospitals/<int:hospital_id>/departments/", methods=['POST'])
+@admin_required
+@new_object(md.Hospital, md.Department)
+def new_hospital_department(new_department):
+    return new_department.get_serialized()
+
+
+@api.route("/hospitals/<int:hospital_id>/departments/<int:department_id>")
+@get_object(md.Hospital, md.Department)
+def get_hospital_department(department):
+    result = department.get_serialized()
+    result['personnel'] = url_for(
+        'api.get_hospital_department_personnels',
+        hospital_id = department.hospital.id,
+        department_id = department.id,
+        _external=True
+    )
+    return result
+
+
+@api.route("/hospitals/<int:hospital_id>/departments/<int:department_id>", methods=['POST'])
+@admin_required
+@get_object(md.Hospital, md.Department)
+@update_object()
+def post_hospital_department(hospital, updated_keys):
+    return hospital.get_serialized(updated_keys)
+
+
+#---
+
+@api.route("/hospitals/<int:hospital_id>/departments/<int:department_id>/personnel/")
+@get_object_query(md.Hospital, md.Department, md.Personnel)
+def get_hospital_department_personnels(personnels_query):
+    return paginate_query(personnels_query)
+
+
+@api.route("/hospitals/<int:hospital_id>/departments/<int:department_id>/personnel/", methods=['POST'])
+@admin_required
+@new_object(md.Hospital, md.Department, md.Personnel)
+def new_hospital_department_personnel(new_personnel):
+    return new_personnel.get_serialized()
+
+
+@api.route("/hospitals/<int:hospital_id>/departments/<int:department_id>/personnel/<int:personnel_id>")
+@get_object(md.Hospital, md.Department, md.Personnel)
+def get_hospital_department_personnel(personnel):
+    result = personnel.get_serialized()
+    return result
+
+
+@api.route("/hospitals/<int:hospital_id>/departments/<int:department_id>/personnel/<int:personnel_id>", methods=['POST'])
+@admin_required
+@get_object(md.Hospital, md.Department, md.Personnel)
+@update_object()
+def post_hospital_department_personnel(personnel, updated_keys):
+    return personnel.get_serialized(updated_keys)
