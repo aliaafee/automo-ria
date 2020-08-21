@@ -1,4 +1,4 @@
-from flask import url_for
+from flask import url_for, request
 
 from .. import models as md
 
@@ -151,7 +151,10 @@ def post_hospital_department(hospital, updated_keys):
 @api.route("/hospitals/<int:hospital_id>/departments/<int:department_id>/personnel/")
 @get_object_query(md.Hospital, md.Department, md.Personnel)
 def get_hospital_department_personnels(personnels_query):
-    return paginate_query(personnels_query)
+    personnel_type = request.args.get('type', None)
+    if personnel_type:
+        personnels_query = personnels_query.filter_by(type=personnel_type)
+    return paginate_query(personnels_query, get_arg_names=['type'])
 
 
 @api.route("/hospitals/<int:hospital_id>/departments/<int:department_id>/personnel/", methods=['POST'])
