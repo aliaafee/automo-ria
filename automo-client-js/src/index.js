@@ -6,11 +6,14 @@ const Icd10CoderDialog = require('./app/dialog/icd10coder-dialog');
 const MainPanel = require('./app/panel/main-panel');
 const AdmissionWizard = require('./app/wizard/admission-wizard')
 const UserDialog = require('./app/dialog/user-dialog')
+const InitialLocalSettingsDialog = require('./app/dialog/initial-local-settings-dialog')
+const StatusDialog = require('./controls/dialog/status-dialog')
 
 const DATEFORMAT = 'D MMM YYYY';
 
 logger = new Logger();
 connection = new Connection(logger);
+window.localSettings = {}
 
 dlgLogin = new LoginDialog();
 dlgUser = new UserDialog();
@@ -22,16 +25,11 @@ admitWizard = new AdmissionWizard(
 );
 
 tryLogin = () =>{    
-    //dlgLogin.form.setValue({
-        //index_url: '/api/',
-        //username: 'admin',
-        //password: 'a'
-    //})
-
     dlgLogin.tryLogin(
         () => {
             console.log("Login Sucessful.");
-            showMainWindow();
+            //showMainWindow();
+            startApp()
         },
         () => {
             console.log("Cancelled.")
@@ -69,6 +67,104 @@ mainPanel = new MainPanel(
 );
 pnlPatientBrowser = new PatientBrowser();
 dlgIcd10 = new Icd10CoderDialog();
+
+
+loadSettings = (onDone, onFailed) => {
+    window.localSettings = JSON.parse(localStorage.getItem('settings'))
+    if (!window.localSettings) {
+        console.log("Failed to load settings")
+        onFailed()
+        return
+    }
+    refreshSettings(onDone, onFailed)
+}
+
+refreshSettings = (onDone, onFailed) => {
+    console.log("Refreshing Settings")
+
+    if (!window.localSettings['hospital']['url']) {
+        console.log("No Hospital URL")
+        onFailed()
+        return
+    }
+    if (!window.localSettings['department']['url']) {
+        console.log("No Hospital URL")
+        onFailed()
+        return
+    }
+
+    var statusDialog = new StatusDialog()
+
+    statusDialog.show(
+        'Loading Settings...',
+        'Please Wait.',
+        false
+    )
+
+    console.log("Getting hospital")
+    connection.get(
+        window.localSettings['hospital']['url'],
+        (hospital) => {
+            console.log("Getting department")
+            connection.get(
+                window.localSettings['department']['url'],
+                (department) => {
+                    let updatedDate = {
+                        ...window.localSettings,
+                        'hospital': hospital,
+                        'department': department,
+                    }
+                    saveSettings(updatedDate)
+                    onDone()
+                    statusDialog.hide()
+                },
+                (error) => {
+                    console.log("Failed to get Department")
+                    console.log(error)
+                    onFailed()
+                }
+            )
+        },
+        () => {
+            console.log("Failed to get Hospital")
+            onFailed()
+        }
+    )
+
+}
+
+saveSettings = (data) => {
+    localStorage.setItem('settings', JSON.stringify(data))
+    window.localSettings = data
+}
+
+
+startApp = () => {
+    loadSettings(
+        () => {
+            showMainWindow()
+        },
+        () => {
+            let settingsDialog = new InitialLocalSettingsDialog()
+            settingsDialog.show(
+                (data) => {
+                    settingsDialog.hide()
+                    refreshSettings(
+                        () => {
+                            showMainWindow()
+                        },
+                        () => {
+                            console.log("Refresh Failed")
+                        }
+                    )
+                },
+                () => {
+                    console.log("Cancelled")
+                }
+            )
+        }
+    )
+}
 
 
 showMainWindow = () => {

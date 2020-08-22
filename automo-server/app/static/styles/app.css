@@ -405,6 +405,25 @@
     color: var(--white);
 }
 
+.menu-bar-title {
+    padding: 5px;
+    background-color: var(--dark);
+    color: var(--white);
+    font-weight: 900;
+    font-size: 13pt;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.menu-bar-subtitle {
+    padding: 5px;
+    background-color: var(--dark);
+    color: var(--mid-light);
+    font-size: 13pt;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
 button.menu-bar-item {
     margin: 0;
     border-radius: 0;
@@ -621,6 +640,10 @@ button.side-bar-item:focus {
     }
 
     .precription-field li button .label{
+        display: none;
+    }
+
+    .menu-bar-subtitle {
         display: none;
     }
 }

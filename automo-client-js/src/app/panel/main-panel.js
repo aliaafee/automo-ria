@@ -105,6 +105,17 @@ module.exports = class MainPanel extends Control {
         this._menuBarElement = document.createElement('div')
         this._menuBarElement.className = 'menu-bar';
 
+        var titleElem = document.createElement('div');
+        titleElem.className = 'menu-bar-title';
+        titleElem.innerText = window.localSettings['department']['name'];
+        this._menuBarElement.appendChild(titleElem)
+        
+        var subTitleElem = document.createElement('div');
+        subTitleElem.className = 'menu-bar-subtitle';
+        subTitleElem.innerText = `(${window.localSettings['hospital']['name']})`;
+        this._menuBarElement.appendChild(subTitleElem)
+        
+
         this._menuItems.forEach((item) => {
             if (item == '_spacer') {
                 var elem = document.createElement('div');

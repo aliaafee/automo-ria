@@ -10,6 +10,7 @@ from . import errors
 @api.route("/")
 def main():
     result = {
+        'hospitals': url_for('api.get_hospitals', _external=True),
         'patients' : url_for('api.get_patients', _external=True),
         'admissions' : url_for('api.get_admissions', _external=True),
         'user': url_for('api.user',username=g.current_user.username, _external=True),
