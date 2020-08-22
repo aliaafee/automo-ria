@@ -119,7 +119,7 @@ module.exports = class ResourceList extends ListBox {
             },
             (error) => {
                 if (this._discardNext == false) {
-                    console.log(error);
+                    //console.log(error);
                     //this.resource_data = {};
                     //this._clear();
                     if (error.status == 404) {

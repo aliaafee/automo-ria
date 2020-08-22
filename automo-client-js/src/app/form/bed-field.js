@@ -49,7 +49,36 @@ module.exports = class BedField extends Field {
                 placeholder: 'Ward',
                 displaySelected: true,
                 displayNull: true,
-                resourceName: 'wards',
+                //resourceName: 'wards',
+                popupHeight: '150px'
+            }
+        )
+
+        this._hospitalSearchBox = new ResourceSearchBox(
+            (item) =>  {
+                return item.id
+            },
+            (item) => {
+                return document.createTextNode(item.name)
+            },
+            (item) => {
+                this._value = null
+                this._wardSearchBox.setValue(null)
+                this._bedSearchBox.setValue(null)
+                if (item == null) {
+                    this._wardSearchBox.lock()
+                    this._bedSearchBox.lock()
+                    return
+                }
+                this._wardSearchBox.unlock()
+                this._bedSearchBox.lock()
+                this._wardSearchBox.setResourceUrl(item.url + "/wards/")
+            },
+            {
+                placeholder: 'Hospital',
+                displaySelected: true,
+                displayNull: true,
+                resourceName: 'hospitals',
                 popupHeight: '150px'
             }
         )
@@ -71,10 +100,22 @@ module.exports = class BedField extends Field {
         this._value = value;
         this._bedSearchBox.setValue(value);
         if (value == null) {
+            this._hospitalSearchBox.setValue(null)
             this._wardSearchBox.setValue(null)
+            if (window.localSettings['hospital']) {
+                this._hospitalSearchBox.hide()
+                this._hospitalSearchBox.setValue(window.localSettings['hospital'])
+                this._wardSearchBox.setResourceUrl(window.localSettings['hospital']['url'] + "/wards/")
+            }
         } else {
+            this._hospitalSearchBox.setValue(value.ward.hospital)
+            this._wardSearchBox.setResourceUrl(value.ward.hospital.url + "/wards/")
             this._wardSearchBox.setValue(value.ward)
             this._bedSearchBox.setResourceUrl(value.ward.url + "/beds/")
+
+            if (value.ward.hospital.id == window.localSettings['hospital']['id']) {
+                this._hospitalSearchBox.hide()
+            }
         }
         super.setValue(value)
     }
@@ -83,13 +124,17 @@ module.exports = class BedField extends Field {
         super.lock()
         this._bedSearchBox.lock()
         this._wardSearchBox.lock()
+        this._hospitalSearchBox.lock()
     }
 
     unlock() {
         super.unlock()
-        this._wardSearchBox.unlock()
-        if (this._wardSearchBox.value() != null) {
-            this._bedSearchBox.unlock()
+        this._hospitalSearchBox.unlock()
+        if (this._hospitalSearchBox.value() != null) {
+            this._wardSearchBox.unlock()
+            if (this._wardSearchBox.value() != null) {
+                this._bedSearchBox.unlock()
+            }
         }
     }
 
@@ -97,10 +142,12 @@ module.exports = class BedField extends Field {
         let body = super.createFieldBody();
 
         body.classList.add('input-group-row')
+        body.appendChild(this._hospitalSearchBox.createElement())
         body.appendChild(this._wardSearchBox.createElement())
         body.appendChild(this._bedSearchBox.createElement())
 
         this._bedSearchBox.lock()
+        this._wardSearchBox.lock()
 
         return body
     }

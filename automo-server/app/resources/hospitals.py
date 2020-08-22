@@ -50,7 +50,7 @@ def post_hospital(hospital, updated_keys):
 @api.route("/hospitals/<int:hospital_id>/wards/")
 @get_object_query(md.Hospital, md.Ward)
 def get_hospital_wards(wards_query):
-    return paginate_query(wards_query)
+    return paginate_query(wards_query, get_arg_names=['q'])
 
 
 @api.route("/hospitals/<int:hospital_id>/wards/", methods=['POST'])

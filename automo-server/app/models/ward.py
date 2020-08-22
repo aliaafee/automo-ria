@@ -14,6 +14,7 @@ class Ward(SerializerMixin,ValidatorMixin ,db.Model):
         'name',
         'bed_prefix',
         'active',
+        'hospital'
     ]
 
     def url(self):

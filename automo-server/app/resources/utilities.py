@@ -13,8 +13,6 @@ def paginate_query(query_result, fields=None, get_arg_names=[]):
         if value:
             get_args[arg_name] = value
 
-    print(request.endpoint)
-
     if per_page > 100:
         per_page = 100
 
@@ -26,11 +24,11 @@ def paginate_query(query_result, fields=None, get_arg_names=[]):
 
     prev = None
     if pagination.has_prev:
-        prev = url_for(request.endpoint, page=page-1, per_page=per_page, _external=True, **get_args)
+        prev = url_for(request.endpoint, page=page-1, per_page=per_page, _external=True, **get_args, **request.view_args)
 
     next = None
     if pagination.has_next:
-        next = url_for(request.endpoint, page=page+1, per_page=per_page, _external=True,  **get_args)
+        next = url_for(request.endpoint, page=page+1, per_page=per_page, _external=True,  **get_args, **request.view_args)
 
     items_list = []
     for item in items:
