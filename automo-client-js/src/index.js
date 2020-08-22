@@ -122,12 +122,14 @@ refreshSettings = (onDone, onFailed) => {
                     console.log("Failed to get Department")
                     console.log(error)
                     onFailed()
-                }
+                    statusDialog.hide()
+                },
             )
         },
         () => {
             console.log("Failed to get Hospital")
             onFailed()
+            statusDialog.hide()
         }
     )
 
@@ -168,7 +170,9 @@ startApp = () => {
 
 
 showMainWindow = () => {
-    document.body.appendChild(mainPanel.createElement());
+    requestAnimationFrame(() => {
+        document.body.appendChild(mainPanel.createElement());
+    })
 }
 
 tryLogin();
