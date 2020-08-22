@@ -13,6 +13,7 @@ class Department(SerializerMixin,ValidatorMixin ,db.Model):
         'id',
         'name',
         'active',
+        'hospital'
     ]
 
     def url(self):
