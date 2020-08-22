@@ -149,6 +149,7 @@ module.exports = class DoctorField extends Field {
     createFieldBody() {
         let body = super.createFieldBody();
 
+        body.classList.add('input-group-row')
         body.appendChild(this._hospitalSearchBox.createElement())
         body.appendChild(this._departmentSearchBox.createElement())
         body.appendChild(this._searchBox.createElement())
