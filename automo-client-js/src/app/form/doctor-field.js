@@ -21,7 +21,6 @@ module.exports = class DoctorField extends Field {
                 placeholder: this.options.placeholder,
                 displaySelected: true,
                 displayNull: true,
-                //resourceName: 'personnel.doctors',
                 popupHeight: '150px'
             }
         )
@@ -47,7 +46,6 @@ module.exports = class DoctorField extends Field {
                 placeholder: 'Department',
                 displaySelected: true,
                 displayNull: true,
-                //resourceName: 'wards',
                 popupHeight: '150px'
             }
         )
@@ -104,6 +102,8 @@ module.exports = class DoctorField extends Field {
                 this._hospitalSearchBox.setValue(window.localSettings['hospital'])
                 this._departmentSearchBox.setResourceUrl(window.localSettings['hospital']['url'] + "/departments/")
                 this._departmentSearchBox.unlock()
+            } else {
+                this._hospitalSearchBox.show()
             }
             if (window.localSettings['department']) {
                 //this._departmentSearchBox.hide()
@@ -119,6 +119,8 @@ module.exports = class DoctorField extends Field {
 
             if (value.department.hospital.id == window.localSettings['hospital']['id']) {
                 this._hospitalSearchBox.hide()
+            } else {
+                this._hospitalSearchBox.show()
             }
 
             //if (value.department.id == window.localSettings['department']['id']) {
@@ -156,5 +158,13 @@ module.exports = class DoctorField extends Field {
 
 
         return body;
+    }
+
+    createElement() {
+        let elem = super.createElement()
+
+        this.setValue(null)
+
+        return elem
     }
 }

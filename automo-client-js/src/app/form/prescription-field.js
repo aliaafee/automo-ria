@@ -151,7 +151,11 @@ module.exports = class PrescriptionField extends Field {
             super.setValue(null)
         }
 
-        this._data = data;
+        if (data == null) {
+            this._data = []
+        } else {
+            this._data = data;
+        }
         this.displayData();
     }
 

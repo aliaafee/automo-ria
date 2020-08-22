@@ -79,6 +79,13 @@ class PatientPage extends WizardForm {
     }
 
     setValue(value) {
+        if (!value) {
+            this._selectedPatient = null
+            this.form.setValue(null)
+            this.form.unlock()
+            return
+        }
+
         if ("id" in value) {
             this._selectedPatient = value
             this._searchBox.setValue(value)
@@ -87,6 +94,7 @@ class PatientPage extends WizardForm {
             this._loadPatient()
             return
         }
+        
         this._selectedPatient = null
         this.form.setValue(value)
         this.form.unlock()
@@ -333,7 +341,11 @@ module.exports = class AdmissionWizard extends Wizard {
     }
 
     setValue(data) {
-        this.newPatient.setValue(data['patient'])
+        if (data) {
+            this.newPatient.setValue(data['patient'])
+        } else {
+            this.newPatient.setValue(null)
+        }
         this.admissionDetails.setValue(data)
         this.admissionNotes.setValue(data)
         this.dischargeNotes.setValue(data)
@@ -367,9 +379,7 @@ module.exports = class AdmissionWizard extends Wizard {
 
         var draftData = this._getWizardDraft()
 
-        if (draftData) {
-            this.setValue(draftData)
-        }
+        this.setValue(draftData)
     }
 
     _invalidFieldsList(invalid_fields) {

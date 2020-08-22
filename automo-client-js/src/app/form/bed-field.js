@@ -49,7 +49,6 @@ module.exports = class BedField extends Field {
                 placeholder: 'Ward',
                 displaySelected: true,
                 displayNull: true,
-                //resourceName: 'wards',
                 popupHeight: '150px'
             }
         )
@@ -106,6 +105,8 @@ module.exports = class BedField extends Field {
                 this._hospitalSearchBox.hide()
                 this._hospitalSearchBox.setValue(window.localSettings['hospital'])
                 this._wardSearchBox.setResourceUrl(window.localSettings['hospital']['url'] + "/wards/")
+            } else {
+                this._hospitalSearchBox.show()
             }
         } else {
             this._hospitalSearchBox.setValue(value.ward.hospital)
@@ -115,6 +116,8 @@ module.exports = class BedField extends Field {
 
             if (value.ward.hospital.id == window.localSettings['hospital']['id']) {
                 this._hospitalSearchBox.hide()
+            } else {
+                this._hospitalSearchBox.show()
             }
         }
         super.setValue(value)
@@ -150,5 +153,13 @@ module.exports = class BedField extends Field {
         this._wardSearchBox.lock()
 
         return body
+    }
+
+    createElement() {
+        let elem = super.createElement()
+
+        this.setValue(null)
+
+        return elem
     }
 }
