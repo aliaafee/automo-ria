@@ -14,5 +14,9 @@
     "feather-icons": "^4.28.0",
     "focus-trap": "^5.1.0",
     "moment": "^2.26.0"
+  },
+  "devDependencies": {
+    "browserify": "^17.0.0",
+    "watchify": "^4.0.0"
   }
 }
