@@ -30,7 +30,7 @@ gunicorn==20.0.4
 html5lib==1.1
 isort==5.1.4
 itsdangerous==1.1.0
-Jinja2==2.11.2
+Jinja2==2.11.3
 lazy-object-proxy==1.5.1
 lxml==4.5.2
 macholib==1.14
